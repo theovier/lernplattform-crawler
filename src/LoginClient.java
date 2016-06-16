@@ -5,7 +5,7 @@ import com.gargoylesoftware.htmlunit.html.*;
 
 import java.io.IOException;
 
-public class Client {
+public class LoginClient {
 
     private String username, password;
     private WebClient webClient;
@@ -14,7 +14,7 @@ public class Client {
     private HtmlTextInput loginUser;
     private HtmlPasswordInput loginPassword;
 
-    public Client(String username, String password) {
+    public LoginClient(String username, String password) {
         this.username = username;
         this.password = password;
         initWebClient();
@@ -67,12 +67,14 @@ public class Client {
         return cookieURL;
     }
 
-    public void login() throws IOException {
-        loginToCampusPortal();
-        loginToLernplattform();
-        System.out.println(currentPage.asText());
-
-        Page page = webClient.getPage("https://campusapp01.hshl.de/pluginfile.php/157024/mod_resource/content/1/BackendTec_00_%C3%9Cbersicht.pdf");
-        Downloader.downloadPDF(page);
+    public WebClient establishConnection() {
+        try {
+            loginToCampusPortal();
+            loginToLernplattform();
+            System.out.println(currentPage.asText());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return webClient;
     }
 }

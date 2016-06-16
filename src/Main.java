@@ -1,14 +1,17 @@
-import java.net.URL;
+import com.gargoylesoftware.htmlunit.Page;
+import com.gargoylesoftware.htmlunit.WebClient;
 
 public class Main {
 
-    public static void main(String[] args ) throws Exception {
+    public static void main(String[] args ) {
 
         String user = "Theo.Harkenbusch"; //Vorname.Nachname
         String password = "Wasserbett3";
 
-		Client client = new Client(user, password);
-        client.login();
+		LoginClient client = new LoginClient(user, password);
+
+        PDFCrawler crawler = new PDFCrawler(client.establishConnection());
+        crawler.start();
     }
 
     //class: activity resource modtype_resource  -> id module-86171
