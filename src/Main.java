@@ -9,9 +9,9 @@ public class Main {
         String password = "Wasserbett3";
 
 		LoginClient client = new LoginClient(user, password);
-
-        PDFCrawler crawler = new PDFCrawler(client.establishConnection());
-        crawler.start();
+        client.establishConnection();
+        PDFCrawler crawler = new PDFCrawler(client.getWebClient());
+        crawler.startDemo();
     }
 
     //class: activity resource modtype_resource  -> id module-86171

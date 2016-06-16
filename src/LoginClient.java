@@ -67,7 +67,7 @@ public class LoginClient {
         return cookieURL;
     }
 
-    public WebClient establishConnection() {
+    public void establishConnection() {
         try {
             loginToCampusPortal();
             loginToLernplattform();
@@ -75,6 +75,9 @@ public class LoginClient {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public WebClient getWebClient() {
         return webClient;
     }
 }
