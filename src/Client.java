@@ -1,4 +1,5 @@
 import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 
@@ -70,5 +71,8 @@ public class Client {
         loginToCampusPortal();
         loginToLernplattform();
         System.out.println(currentPage.asText());
+
+        Page page = webClient.getPage("https://campusapp01.hshl.de/pluginfile.php/157024/mod_resource/content/1/BackendTec_00_%C3%9Cbersicht.pdf");
+        Downloader.downloadPDF(page);
     }
 }
