@@ -1,5 +1,8 @@
+import UI.Window;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
+
+import javax.swing.*;
 
 public class Main {
 
@@ -8,10 +11,15 @@ public class Main {
         String user = "Theo.Harkenbusch"; //Vorname.Nachname
         String password = "password"; //old
 
+
+        Window window = new Window();
+
+        /*
 		LoginClient client = new LoginClient(user, password);
         client.establishConnection();
         PDFCrawler crawler = new PDFCrawler(client.getWebClient());
         crawler.startDemo();
+        */
     }
 
     //class: activity resource modtype_resource  -> id module-86171
