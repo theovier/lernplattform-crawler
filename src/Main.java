@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 public class Main {
 
     public static void main(String[] args ) {
@@ -6,9 +8,22 @@ public class Main {
 
     public static void startLogin(LoginCredentials credentials) {
         LoginClient client = new LoginClient(credentials);
-        client.establishConnection();
-        PDFCrawler crawler = new PDFCrawler(client.getWebClient());
-        crawler.startDemo();
+        boolean success = false;
+
+        try {
+            client.establishConnection();
+            success = true;
+        } catch (WrongCredentialsException e) {
+            System.out.println("falsche credentials");
+        } catch (IOException e) {
+            System.out.println("internet probleme?");
+        }
+
+        if (success) {
+            System.out.println("success");
+            //PDFCrawler crawler = new PDFCrawler(client.getWebClient());
+            //crawler.startDemo();
+        }
     }
 
     //class: activity resource modtype_resource  -> id module-86171

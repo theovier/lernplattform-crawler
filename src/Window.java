@@ -36,6 +36,14 @@ public class Window {
 
     private void setListeners() {
         btnLogin.addActionListener(e -> callLogin());
+        btnLogin.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                super.keyTyped(e);
+                if (e.getKeyChar() == KeyEvent.VK_ENTER)
+                    callLogin();
+            }
+        });
         passwordField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {

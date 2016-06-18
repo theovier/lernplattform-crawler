@@ -2,6 +2,7 @@ import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
+import com.sun.xml.internal.bind.v2.TODO;
 
 import java.io.IOException;
 
@@ -38,7 +39,9 @@ public class LoginClient {
         getLoginWidgets();
         setLoginValues();
         currentPage = loginButton.click();
-        // TODO: 16.06.2016 return boolean if login was successful
+        if (currentPage.asText().contains("Authentication failed")) {
+            throw new WrongCredentialsException();
+        }
     }
 
     private void getLoginWidgets() {
@@ -56,25 +59,25 @@ public class LoginClient {
         currentPage = webClient.getPage("https://campusapp01.hshl.de/auth/ldap/ntlmsso_attempt.php");
         webClient.getPage(getPHPCookieURL());
         currentPage = webClient.getPage("https://campusapp01.hshl.de/auth/ldap/ntlmsso_finish.php");
-        // TODO: 16.06.2016 return boolean if login was successful
     }
 
-    private String getPHPCookieURL() {
-        String source = currentPage.asXml();
-        int begin = source.indexOf("https://campusapp01.hshl.de/auth/ldap/ntlmsso_magic.php?sesskey=");
-        int end = source.indexOf( '\"', begin);
-        String cookieURL = source.substring(begin, end);
+    private String getPHPCookieURL() throws WrongCredentialsException {
+        String cookieURL = "";
+        try {
+            String source = currentPage.asXml();
+            int begin = source.indexOf("https://campusapp01.hshl.de/auth/ldap/ntlmsso_magic.php?sesskey=");
+            int end = source.indexOf( '\"', begin);
+            cookieURL = source.substring(begin, end);
+        } catch (StringIndexOutOfBoundsException e) {
+            //if the string can't be found, you are not logged in into the campusportal.
+            throw new WrongCredentialsException();
+        }
         return cookieURL;
     }
 
-    public void establishConnection() {
-        try {
-            loginToCampusPortal();
-            loginToLernplattform();
-            System.out.println(currentPage.asText());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void establishConnection() throws IOException {
+        loginToCampusPortal();
+        loginToLernplattform();
     }
 
     public WebClient getWebClient() {
