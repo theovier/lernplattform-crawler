@@ -1,6 +1,6 @@
-package UI;
-
 import javax.swing.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Window {
 
@@ -11,31 +11,51 @@ public class Window {
 
     private JFrame frame;
     private JPanel panel;
-    private JFormattedTextField usernameField;
+    private JFormattedTextField userField;
     private JPasswordField passwordField;
     private JButton btnLogin;
     private JComboBox emailList;
 
     public Window() {
         initWidgets();
+        setListeners();
         setWidgetPositions();
         initPanel();
         addPanelContent();
         initFrame();
-        createHints();
         btnLogin.grabFocus();
     }
 
     private void initWidgets() {
         btnLogin = new JButton("login");
         emailList = new JComboBox(EMAILS);
-        usernameField = new JFormattedTextField();
+        userField = new JFormattedTextField();
         passwordField = new JPasswordField();
         createHints();
     }
 
+    private void setListeners() {
+        btnLogin.addActionListener(e -> callLogin());
+        passwordField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                super.keyTyped(e);
+                if (e.getKeyChar() == KeyEvent.VK_ENTER)
+                    callLogin();
+            }
+        });
+        userField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                super.keyTyped(e);
+                if (e.getKeyChar() == KeyEvent.VK_ENTER)
+                    callLogin();
+            }
+        });
+    }
+
     private void setWidgetPositions() {
-        usernameField.setBounds(125, 50, 150, 25);
+        userField.setBounds(125, 50, 150, 25);
         emailList.setBounds(280, 50, 150, 25);
         passwordField.setBounds(125, 100, 150, 25);
         btnLogin.setBounds(125, 150, 75, 20);
@@ -48,7 +68,7 @@ public class Window {
 
     private void addPanelContent() {
         panel.add(btnLogin);
-        panel.add(usernameField);
+        panel.add(userField);
         panel.add(passwordField);
         panel.add(emailList);
     }
@@ -64,7 +84,17 @@ public class Window {
     }
 
     private void createHints() {
-        HintText usernameHint = new HintText(usernameField, "username");
+        HintText usernameHint = new HintText(userField, "Theo.Harkenbusch");
         HintText passwordHint = new HintText(passwordField, "password");
+    }
+
+    private void callLogin() {
+        String user = userField.getText();
+        String password = "";
+        for (char c : passwordField.getPassword()) {
+            password += c;
+        }
+
+       Main.startLogin(user, password);
     }
 }
