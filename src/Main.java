@@ -4,8 +4,8 @@ public class Main {
         Window window = new Window();
     }
 
-    public static void startLogin(String user, String password) {
-        LoginClient client = new LoginClient(user, password);
+    public static void startLogin(LoginCredentials credentials) {
+        LoginClient client = new LoginClient(credentials);
         client.establishConnection();
         PDFCrawler crawler = new PDFCrawler(client.getWebClient());
         crawler.startDemo();

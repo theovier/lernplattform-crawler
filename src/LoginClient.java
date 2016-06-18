@@ -14,9 +14,9 @@ public class LoginClient {
     private HtmlTextInput loginUser;
     private HtmlPasswordInput loginPassword;
 
-    public LoginClient(String username, String password) {
-        this.username = username;
-        this.password = password;
+    public LoginClient(LoginCredentials credentials) {
+        this.username = credentials.getUser();
+        this.password = credentials.getPassword();
         initWebClient();
         disableLogging();
     }

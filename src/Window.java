@@ -14,7 +14,7 @@ public class Window {
     private JFormattedTextField userField;
     private JPasswordField passwordField;
     private JButton btnLogin;
-    private JComboBox emailList;
+    private JComboBox <String> emailList;
 
     public Window() {
         initWidgets();
@@ -28,7 +28,7 @@ public class Window {
 
     private void initWidgets() {
         btnLogin = new JButton("login");
-        emailList = new JComboBox(EMAILS);
+        emailList = new JComboBox <String>(EMAILS);
         userField = new JFormattedTextField();
         passwordField = new JPasswordField();
         createHints();
@@ -95,6 +95,7 @@ public class Window {
             password += c;
         }
 
-       Main.startLogin(user, password);
+        LoginCredentials credentials = new LoginCredentials(user, String.valueOf(emailList.getSelectedItem()), password);
+        Main.startLogin(credentials);
     }
 }
