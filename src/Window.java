@@ -89,13 +89,15 @@ public class Window {
     }
 
     private void callLogin() {
+        Main.startLogin(createCredentials());
+    }
+
+    private LoginCredentials createCredentials() {
         String user = userField.getText();
         String password = "";
         for (char c : passwordField.getPassword()) {
             password += c;
         }
-
-        LoginCredentials credentials = new LoginCredentials(user, String.valueOf(emailList.getSelectedItem()), password);
-        Main.startLogin(credentials);
+        return new LoginCredentials(user, String.valueOf(emailList.getSelectedItem()), password);
     }
 }

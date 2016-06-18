@@ -9,8 +9,6 @@ public class LoginCredentials {
         this.user = user;
         this.emailExtension = emailExtension;
         this.password = password;
-
-        System.out.println(user + emailExtension + " pw: " + password);
     }
 
     public String getUser() {
