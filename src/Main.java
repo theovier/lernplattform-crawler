@@ -1,3 +1,4 @@
+import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import java.io.IOException;
@@ -12,10 +13,12 @@ public class Main {
         LoginClient client = new LoginClient(credentials);
         boolean success = false;
         HtmlPage overviewPage = null;
+        WebClient browser = null;
 
 
         try {
             overviewPage = client.establishConnection();
+            browser = client.getWebClient();
             success = true;
         } catch (WrongCredentialsException e) {
             System.out.println("falsche credentials");
@@ -26,14 +29,30 @@ public class Main {
         if (success) {
             System.out.println("success");
 
+            CourseCrawler courseCrawler = new CourseCrawler();
+            PDFGatewayCrawler gatewayCrawler = new PDFGatewayCrawler();
+            PDFCrawler pdfCrawler = new PDFCrawler();
 
-            PDFGatewayCrawler crawler = new PDFGatewayCrawler(client.getWebClient(), overviewPage);
-            crawler.startDemo();
+            System.out.println("Kurse: ");
+            courseCrawler.fetchCourseLinks(overviewPage).forEach(link -> {
+                System.out.println(link);
+            });
 
-            CourseCrawler courseCrawler = new CourseCrawler(client.getWebClient(), overviewPage);
-            System.out.println(courseCrawler.fetchCourseLinks());
+            try {
+                for (String courseLink : courseCrawler.fetchCourseLinks(overviewPage)) {
+                    HtmlPage page = browser.getPage(courseLink);
+                    for (String gatewayLink : gatewayCrawler.fetchPDFGateLinks(page)) {
+                        page = browser.getPage(gatewayLink);
+                        PDFDocument pdf = pdfCrawler.getPDFDocument(page);
+                        Downloader.downloadPDF(pdf, browser);
+                    }
+                }
+
+            } catch (IOException e) {
+
+            }
+
         }
-
         System.exit(0);
     }
 }

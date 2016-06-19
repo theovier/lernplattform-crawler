@@ -8,11 +8,11 @@ public class CourseCrawler extends Crawler {
 
     private static final String COURSEPATH = "https://campusapp01.hshl.de/course/view.php?id=";
 
-    public CourseCrawler(WebClient browser, HtmlPage currentPage) {
-        super(browser, currentPage);
+    public CourseCrawler() {
+
     }
 
-    public List<String> fetchCourseLinks() {
+    public List<String> fetchCourseLinks(HtmlPage overviewPage) {
         List<String> links = new ArrayList<String>();
         List<String> courseIDs = fetchCourseIDs();
         courseIDs.forEach(id -> links.add(COURSEPATH + id));
@@ -21,12 +21,13 @@ public class CourseCrawler extends Crawler {
 
     private List<String> fetchCourseIDs() {
         List<String> ids = new ArrayList<String>();
+
+        //label mit inhalt "Sommersemester 2016"
+        //die nächste ol -> davon die li -> a  href
+
         ids.add("3072");
         ids.add("3075");
         ids.add("3076");
         return ids;
     }
-
-    //get label mit inhalt "Sommersemester 2016" (Sommersemester/Wintersemester XXXX)
-    //die nächste ol -> davon die lis -> a  href
 }

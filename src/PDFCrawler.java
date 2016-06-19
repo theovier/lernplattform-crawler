@@ -8,25 +8,34 @@ public class PDFCrawler extends Crawler {
     public static final String DOWNLOAD_END = "\',";
     public static final String FILENAME_XPATH = "//div[@role='main']//h2";
 
+    /*
     public PDFCrawler(WebClient browser, HtmlPage currentPage) {
         super(browser, currentPage);
     }
+    */
 
     //todo: exception
-    private String fetchFileName() {
+    private String fetchFileName(HtmlPage currentPage) {
         HtmlHeading2 filename = (HtmlHeading2) currentPage.getFirstByXPath(FILENAME_XPATH);
-        return filename.asText();
+        return clearName(filename.asText());
+    }
+
+    //todo regex
+    private String clearName(String filename) {
+        String clearedName =  filename.replace('/', '&');
+        clearedName = clearedName.replace(':', ';');
+        return clearedName;
     }
 
     //todo: exception
-    private String fetchDownloadLink() {
+    private String fetchDownloadLink(HtmlPage currentPage) {
         String source = currentPage.asXml();
         int begin = source.indexOf(DOWNLOAD_START);
         int end = source.indexOf(DOWNLOAD_END, begin);
         return source.substring(begin + DOWNLOAD_START.length(), end);
     }
 
-    public PDFDocument getPDFDocument() {
-        return new PDFDocument(fetchFileName(), fetchDownloadLink());
+    public PDFDocument getPDFDocument(HtmlPage gatewayPage) {
+        return new PDFDocument(fetchFileName(gatewayPage), fetchDownloadLink(gatewayPage));
     }
 }

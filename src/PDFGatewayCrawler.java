@@ -11,24 +11,13 @@ public class PDFGatewayCrawler extends Crawler {
 
     private static final String RESOURCEPATH = "https://campusapp01.hshl.de/mod/resource/view.php?id=";
 
+    /*
     public PDFGatewayCrawler(WebClient browser, HtmlPage currentPage) {
         super(browser, currentPage);
     }
+    */
 
-    public void startDemo() {
-        String backendPage = "https://campusapp01.hshl.de/course/view.php?id=3072";
-        try {
-            for (String s :  fetchPDFGateLinks(browser.getPage(backendPage))) {
-                System.out.println(s);
-            }
-            currentPage = browser.getPage("https://campusapp01.hshl.de/mod/resource/view.php?id=86171");
-            PDFCrawler c = new PDFCrawler(browser, currentPage);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private List<String> fetchPDFGateLinks(HtmlPage coursePage) {
+    public List<String> fetchPDFGateLinks(HtmlPage coursePage) {
         List<String> downloadLinks = new ArrayList<String>();
         List<String> resourceIDs = fetchResourceIDs(coursePage);
         resourceIDs.forEach(id -> downloadLinks.add(RESOURCEPATH + id));

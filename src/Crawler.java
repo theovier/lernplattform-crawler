@@ -3,6 +3,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class Crawler {
 
+    /*
     protected WebClient browser;
     protected HtmlPage currentPage;
 
@@ -10,4 +11,5 @@ public class Crawler {
         this.browser = browser;
         this.currentPage = currentPage;
     }
+    */
 }
