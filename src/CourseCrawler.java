@@ -10,6 +10,12 @@ import java.util.List;
 
 public class CourseCrawler extends Crawler {
 
+    private String semesteryear;
+
+    public CourseCrawler(String semester, String year) {
+       semester = semester + " " + year;
+    }
+
     //todo refactor
     public List<String> fetchCourseLinks(HtmlPage overviewPage) {
         List<String> links = new ArrayList<String>();

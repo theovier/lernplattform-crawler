@@ -39,7 +39,13 @@ public class PDFGatewayCrawler extends Crawler {
 
     public String fetchCourseName(HtmlPage coursePage) {
         HtmlHeading1 filename = (HtmlHeading1) coursePage.getFirstByXPath("//div[@class='page-header-headings']//h1");
-        return filename.asText();
+        return clearCourseName(filename.asText());
     }
 
+    //todo regex
+    private String clearCourseName(String name) {
+        String clearedName =  name.replace('/', '&');
+        clearedName = clearedName.replace(':', ';');
+        return clearedName;
+    }
 }

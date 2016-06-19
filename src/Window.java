@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+//todo extra thread
 public class Window {
 
     public static final String TITLE = "lailaps";

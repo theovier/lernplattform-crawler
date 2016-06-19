@@ -35,4 +35,13 @@ public class Downloader {
             }
         }
     }
+
+    //todo name it like current semester
+    public static void createRootDirectory() {
+        try {
+            createDirectory(DESKTOP_PATH);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

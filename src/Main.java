@@ -26,9 +26,13 @@ public class Main {
         }
 
         if (success) {
-            CourseCrawler courseCrawler = new CourseCrawler();
+
+            //todo select semester based on current pc time / year
+            CourseCrawler courseCrawler = new CourseCrawler("Sommersemester", "2016");
             PDFGatewayCrawler gatewayCrawler = new PDFGatewayCrawler();
             PDFCrawler pdfCrawler = new PDFCrawler();
+
+            Downloader.createRootDirectory();
 
             try {
                 for (String courseLink : courseCrawler.fetchCourseLinks(overviewPage)) {
