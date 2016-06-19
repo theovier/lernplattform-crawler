@@ -1,3 +1,5 @@
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+
 import java.io.IOException;
 
 public class Main {
@@ -9,9 +11,9 @@ public class Main {
     public static void startLogin(LoginCredentials credentials) {
         LoginClient client = new LoginClient(credentials);
         boolean success = false;
-
+        HtmlPage overviewPage = null;
         try {
-            client.establishConnection();
+            overviewPage = client.establishConnection();
             success = true;
         } catch (WrongCredentialsException e) {
             System.out.println("falsche credentials");
@@ -21,14 +23,15 @@ public class Main {
 
         if (success) {
             System.out.println("success");
-            //PDFCrawler crawler = new PDFCrawler(client.getWebClient());
+            PDFGatewayCrawler crawler = new PDFGatewayCrawler(client.getWebClient(), overviewPage);
             //crawler.startDemo();
+            crawler.startDemo();
         }
+
+        System.exit(0);
     }
 
-    //class: activity resource modtype_resource  -> id module-86171
-    //https://campusapp01.hshl.de/mod/resource/view.php?id=86171
-
-    //window.open (danach folgt der download link)
+    //get label mit inhalt "Sommersemester 2016" (Sommersemester/Wintersemester XXXX)
+    //die nächste ol -> davon die lis -> a  href
 }
 

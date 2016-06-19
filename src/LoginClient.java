@@ -75,9 +75,10 @@ public class LoginClient {
         return cookieURL;
     }
 
-    public void establishConnection() throws IOException {
+    public HtmlPage establishConnection() throws IOException {
         loginToCampusPortal();
         loginToLernplattform();
+        return currentPage;
     }
 
     public WebClient getWebClient() {
