@@ -27,7 +27,7 @@ public class Window {
     }
 
     private void initWidgets() {
-        btnLogin = new JButton("login");
+        btnLogin = new JButton("fetch");
         emailList = new JComboBox <String>(EMAILS);
         userField = new JFormattedTextField();
         passwordField = new JPasswordField();
