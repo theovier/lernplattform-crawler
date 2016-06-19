@@ -28,29 +28,28 @@ public class PDFGatewayCrawler extends Crawler {
         }
     }
 
-
-
-
-
     private List<String> fetchPDFGateLinks(HtmlPage coursePage) {
         List<String> downloadLinks = new ArrayList<String>();
         List<String> resourceIDs = fetchResourceIDs(coursePage);
-        for (String id : resourceIDs) {
-            String link = RESOURCEPATH + id;
-            downloadLinks.add(link);
-        }
+        resourceIDs.forEach(id -> downloadLinks.add(RESOURCEPATH + id));
         return downloadLinks;
     }
 
     private List<String> fetchResourceIDs(HtmlPage coursePage) {
         List<String> courseIDs = new ArrayList<String>();
         List<?> courseListItems = coursePage.getByXPath("//li[contains(@class, 'activity resource modtype_resource')]");
-        courseListItems.forEach(item -> {
+        getIDs(courseListItems).forEach(id -> courseIDs.add(id));
+        return courseIDs;
+    }
+
+    private List<String> getIDs(List<?> uncastedListItems) {
+        List <String> ids = new ArrayList<String>();
+        uncastedListItems.forEach(item -> {
             HtmlListItem listItem = (HtmlListItem) item;
             String numericID = getNumericID(listItem.getId());
-            courseIDs.add(numericID);
+            ids.add(numericID);
         });
-        return courseIDs;
+        return ids;
     }
 
     private String getNumericID(String ID) {

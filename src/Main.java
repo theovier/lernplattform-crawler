@@ -12,6 +12,8 @@ public class Main {
         LoginClient client = new LoginClient(credentials);
         boolean success = false;
         HtmlPage overviewPage = null;
+
+
         try {
             overviewPage = client.establishConnection();
             success = true;
@@ -23,15 +25,16 @@ public class Main {
 
         if (success) {
             System.out.println("success");
+
+
             PDFGatewayCrawler crawler = new PDFGatewayCrawler(client.getWebClient(), overviewPage);
-            //crawler.startDemo();
             crawler.startDemo();
+
+            CourseCrawler courseCrawler = new CourseCrawler(client.getWebClient(), overviewPage);
+            System.out.println(courseCrawler.fetchCourseLinks());
         }
 
         System.exit(0);
     }
-
-    //get label mit inhalt "Sommersemester 2016" (Sommersemester/Wintersemester XXXX)
-    //die nächste ol -> davon die lis -> a  href
 }
 
