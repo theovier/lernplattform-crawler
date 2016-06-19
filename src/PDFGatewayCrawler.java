@@ -1,21 +1,13 @@
-import com.gargoylesoftware.htmlunit.Page;
-import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlHeading1;
 import com.gargoylesoftware.htmlunit.html.HtmlListItem;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PDFGatewayCrawler extends Crawler {
 
     private static final String RESOURCEPATH = "https://campusapp01.hshl.de/mod/resource/view.php?id=";
-
-    /*
-    public PDFGatewayCrawler(WebClient browser, HtmlPage currentPage) {
-        super(browser, currentPage);
-    }
-    */
 
     public List<String> fetchPDFGateLinks(HtmlPage coursePage) {
         List<String> downloadLinks = new ArrayList<String>();
@@ -44,4 +36,10 @@ public class PDFGatewayCrawler extends Crawler {
     private String getNumericID(String ID) {
         return ID.split("-")[1];
     }
+
+    public String fetchCourseName(HtmlPage coursePage) {
+        HtmlHeading1 filename = (HtmlHeading1) coursePage.getFirstByXPath("//div[@class='page-header-headings']//h1");
+        return filename.asText();
+    }
+
 }

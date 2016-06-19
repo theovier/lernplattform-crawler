@@ -9,6 +9,7 @@ public class Main {
         Window window = new Window();
     }
 
+    //todo new manager class?
     public static void startLogin(LoginCredentials credentials) {
         LoginClient client = new LoginClient(credentials);
         boolean success = false;
@@ -28,17 +29,19 @@ public class Main {
             CourseCrawler courseCrawler = new CourseCrawler();
             PDFGatewayCrawler gatewayCrawler = new PDFGatewayCrawler();
             PDFCrawler pdfCrawler = new PDFCrawler();
+
             try {
                 for (String courseLink : courseCrawler.fetchCourseLinks(overviewPage)) {
                     HtmlPage page = browser.getPage(courseLink);
                     for (String gatewayLink : gatewayCrawler.fetchPDFGateLinks(page)) {
+                        String courseName = gatewayCrawler.fetchCourseName(page);
                         page = browser.getPage(gatewayLink);
-                        PDFDocument pdf = pdfCrawler.getPDFDocument(page);
+                        PDFDocument pdf = pdfCrawler.getPDFDocument(page, courseName);
                         Downloader.downloadPDF(pdf, browser);
                     }
                 }
             } catch (IOException e) {
-
+                System.out.println("error beim downloaden");
             }
         }
         System.exit(0);

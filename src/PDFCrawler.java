@@ -1,4 +1,3 @@
-import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlHeading2;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
@@ -29,7 +28,7 @@ public class PDFCrawler extends Crawler {
         return source.substring(begin + DOWNLOAD_START.length(), end);
     }
 
-    public PDFDocument getPDFDocument(HtmlPage gatewayPage) {
-        return new PDFDocument(fetchFileName(gatewayPage), fetchDownloadLink(gatewayPage));
+    public PDFDocument getPDFDocument(HtmlPage gatewayPage, String courseName) {
+        return new PDFDocument(fetchFileName(gatewayPage), fetchDownloadLink(gatewayPage), courseName);
     }
 }

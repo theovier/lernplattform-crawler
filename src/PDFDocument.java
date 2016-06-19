@@ -1,11 +1,12 @@
 
 public class PDFDocument {
 
-    private String name, downloadLink;
+    private String name, downloadLink, courseName;
 
-    public PDFDocument(String name, String downloadLink) {
+    public PDFDocument(String name, String downloadLink, String courseName) {
         this.name = name;
         this.downloadLink = downloadLink;
+        this.courseName = courseName;
     }
 
     public String getDownloadLink() {
@@ -17,7 +18,7 @@ public class PDFDocument {
     }
 
     public String getFolderName() {
-        return "";
+        return courseName;
     }
 
     @Override
