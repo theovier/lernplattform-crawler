@@ -14,6 +14,7 @@ public class Downloader {
     //todo make selectable, get filename
     private static final String DESKTOP_PATH = System.getProperty("user.home") + "/Desktop/lailaps/";
 
+    //todo refactor
     public static void downloadPDF(PDFDocument doc, WebClient browser) throws IOException {
         String path = DESKTOP_PATH + doc.getFolderName() + "/";
         createDirectory(path);

@@ -1,29 +1,24 @@
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.*;
+import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLAnchorElement;
+import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLOListElement;
+import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLObjectElement;
+import org.jcp.xml.dsig.internal.dom.DOMXMLObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CourseCrawler extends Crawler {
 
-    private static final String COURSEPATH = "https://campusapp01.hshl.de/course/view.php?id=";
-
+    //todo refactor
     public List<String> fetchCourseLinks(HtmlPage overviewPage) {
         List<String> links = new ArrayList<String>();
-        List<String> courseIDs = fetchCourseIDs();
-        courseIDs.forEach(id -> links.add(COURSEPATH + id));
+        HtmlLabel kurslisteLabel = (HtmlLabel) overviewPage.getFirstByXPath("//label[@title='Sommersemester 2016']");
+        HtmlOrderedList courseList = (HtmlOrderedList) kurslisteLabel.getNextElementSibling().getNextElementSibling();
+        courseList.getElementsByTagName("a").forEach(course -> {
+            HtmlAnchor anchor = (HtmlAnchor) course;
+            links.add(anchor.getHrefAttribute());
+        });
         return links;
-    }
-
-    private List<String> fetchCourseIDs() {
-        List<String> ids = new ArrayList<String>();
-
-        //label mit inhalt "Sommersemester 2016"
-        //die nächste ol -> davon die li -> a  href
-
-        ids.add("3072");
-        ids.add("3075");
-        ids.add("3076");
-        return ids;
     }
 }
