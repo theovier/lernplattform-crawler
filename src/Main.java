@@ -14,8 +14,6 @@ public class Main {
         boolean success = false;
         HtmlPage overviewPage = null;
         WebClient browser = null;
-
-
         try {
             overviewPage = client.establishConnection();
             browser = client.getWebClient();
@@ -27,17 +25,9 @@ public class Main {
         }
 
         if (success) {
-            System.out.println("success");
-
             CourseCrawler courseCrawler = new CourseCrawler();
             PDFGatewayCrawler gatewayCrawler = new PDFGatewayCrawler();
             PDFCrawler pdfCrawler = new PDFCrawler();
-
-            System.out.println("Kurse: ");
-            courseCrawler.fetchCourseLinks(overviewPage).forEach(link -> {
-                System.out.println(link);
-            });
-
             try {
                 for (String courseLink : courseCrawler.fetchCourseLinks(overviewPage)) {
                     HtmlPage page = browser.getPage(courseLink);
@@ -47,11 +37,9 @@ public class Main {
                         Downloader.downloadPDF(pdf, browser);
                     }
                 }
-
             } catch (IOException e) {
 
             }
-
         }
         System.exit(0);
     }

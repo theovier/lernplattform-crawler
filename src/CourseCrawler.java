@@ -8,10 +8,6 @@ public class CourseCrawler extends Crawler {
 
     private static final String COURSEPATH = "https://campusapp01.hshl.de/course/view.php?id=";
 
-    public CourseCrawler() {
-
-    }
-
     public List<String> fetchCourseLinks(HtmlPage overviewPage) {
         List<String> links = new ArrayList<String>();
         List<String> courseIDs = fetchCourseIDs();

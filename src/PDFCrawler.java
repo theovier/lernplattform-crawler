@@ -8,12 +8,6 @@ public class PDFCrawler extends Crawler {
     public static final String DOWNLOAD_END = "\',";
     public static final String FILENAME_XPATH = "//div[@role='main']//h2";
 
-    /*
-    public PDFCrawler(WebClient browser, HtmlPage currentPage) {
-        super(browser, currentPage);
-    }
-    */
-
     //todo: exception
     private String fetchFileName(HtmlPage currentPage) {
         HtmlHeading2 filename = (HtmlHeading2) currentPage.getFirstByXPath(FILENAME_XPATH);

@@ -16,6 +16,10 @@ public class PDFDocument {
         return name;
     }
 
+    public String getFolderName() {
+        return "";
+    }
+
     @Override
     public String toString() {
         return name + ", " + downloadLink;
