@@ -53,7 +53,7 @@ public class Window {
         });
         btnBrowse.addActionListener(e -> {
 
-            //get from prefs
+            //todo get from prefs
             dirChooser.setCurrentDirectory(new java.io.File("."));
 
             if (dirChooser.showOpenDialog(panel) == JFileChooser.APPROVE_OPTION) {
@@ -125,6 +125,7 @@ public class Window {
         HintText passwordHint = new HintText(passwordField, "password");
     }
 
+    //todo change this
     private void callLogin() {
         Main.startLogin(createCredentials());
     }
