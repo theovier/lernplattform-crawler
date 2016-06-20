@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="lernplattform-crawler:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/lernplattform_crawler_jar</output-path>
+    <root id="archive" name="lernplattform-crawler.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$USER_HOME$/Desktop/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="lernplattform-crawler" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/htmlunit-2.22-OSGi.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
