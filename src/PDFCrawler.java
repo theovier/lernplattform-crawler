@@ -1,27 +1,34 @@
-import com.gargoylesoftware.htmlunit.Page;
-import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlHeading2;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
-import java.io.IOException;
+public class PDFCrawler extends Crawler {
 
-public class PDFCrawler {
-    private WebClient webClient;
+    public static final String DOWNLOAD_START = "window.open('";
+    public static final String DOWNLOAD_END = "\',";
+    public static final String FILENAME_XPATH = "//div[@role='main']//h2";
 
-    public PDFCrawler(WebClient webClient) {
-        this.webClient = webClient;
+    //todo: exception
+    private String fetchFileName(HtmlPage currentPage) {
+        HtmlHeading2 filename = (HtmlHeading2) currentPage.getFirstByXPath(FILENAME_XPATH);
+        return clearName(filename.asText());
     }
 
-    public void startDemo() {
-        String source = "https://campusapp01.hshl.de/pluginfile.php/157024/mod_resource/content/1/BackendTec_00_%C3%9Cbersicht.pdf";
-        try {
-            Page page = webClient.getPage(source);
-            Downloader.downloadPDF(page);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    //todo regex
+    private String clearName(String filename) {
+        String clearedName =  filename.replace('/', '&');
+        clearedName = clearedName.replace(':', ';');
+        return clearedName;
     }
 
-    public void startCrawling() {
-
+    //todo: exception
+    private String fetchDownloadLink(HtmlPage currentPage) {
+        String source = currentPage.asXml();
+        int begin = source.indexOf(DOWNLOAD_START);
+        int end = source.indexOf(DOWNLOAD_END, begin);
+        return source.substring(begin + DOWNLOAD_START.length(), end);
     }
 
+    public PDFDocument getPDFDocument(HtmlPage gatewayPage, String courseName) {
+        return new PDFDocument(fetchFileName(gatewayPage), fetchDownloadLink(gatewayPage), courseName);
+    }
 }

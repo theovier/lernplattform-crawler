@@ -7,7 +7,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="jsoup-1.9.1" level="project" />
     <orderEntry type="library" name="htmlunit-2.22-OSGi" level="project" />
   </component>
 </module>
