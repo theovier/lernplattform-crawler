@@ -12,15 +12,18 @@ public class Window {
 
     private JFrame frame;
     private JPanel panel;
-    private JFormattedTextField userField;
+    private JFormattedTextField userField, directoryField;
     private JPasswordField passwordField;
-    private JButton btnLogin;
+    private JButton btnLogin, btnBrowse;
     private JComboBox <String> emailList;
+    private JFileChooser dirChooser;
 
     public Window() {
         initWidgets();
         setListeners();
         setWidgetPositions();
+        configureDirectoryChooser();
+        configureTextFields();
         initPanel();
         addPanelContent();
         initFrame();
@@ -29,9 +32,12 @@ public class Window {
 
     private void initWidgets() {
         btnLogin = new JButton("fetch");
+        btnBrowse = new JButton("browse");
         emailList = new JComboBox <String>(EMAILS);
         userField = new JFormattedTextField();
+        directoryField = new JFormattedTextField();
         passwordField = new JPasswordField();
+        dirChooser = new JFileChooser("Choose Directory");
         createHints();
     }
 
@@ -43,6 +49,15 @@ public class Window {
                 super.keyTyped(e);
                 if (e.getKeyChar() == KeyEvent.VK_ENTER)
                     callLogin();
+            }
+        });
+        btnBrowse.addActionListener(e -> {
+
+            //todo get from prefs
+            dirChooser.setCurrentDirectory(new java.io.File("."));
+
+            if (dirChooser.showOpenDialog(panel) == JFileChooser.APPROVE_OPTION) {
+                directoryField.setText(dirChooser.getSelectedFile().toString());
             }
         });
         passwordField.addKeyListener(new KeyAdapter() {
@@ -68,6 +83,17 @@ public class Window {
         emailList.setBounds(280, 50, 150, 25);
         passwordField.setBounds(125, 100, 150, 25);
         btnLogin.setBounds(125, 150, 75, 20);
+        btnBrowse.setBounds(400, 190, 75, 25);
+        directoryField.setBounds(125, 190, 270, 25);
+    }
+
+    private void configureDirectoryChooser() {
+        dirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        dirChooser.setAcceptAllFileFilterUsed(false);
+    }
+
+    private void configureTextFields() {
+        directoryField.setEditable(false);
     }
 
     private void initPanel() {
@@ -80,6 +106,8 @@ public class Window {
         panel.add(userField);
         panel.add(passwordField);
         panel.add(emailList);
+        panel.add(btnBrowse);
+        panel.add(directoryField);
     }
 
     private void initFrame() {
@@ -97,6 +125,7 @@ public class Window {
         HintText passwordHint = new HintText(passwordField, "password");
     }
 
+    //todo change this
     private void callLogin() {
         Main.startLogin(createCredentials());
     }
