@@ -17,6 +17,7 @@ public class Window {
     private JButton btnLogin, btnBrowse;
     private JComboBox <String> emailList;
     private JFileChooser dirChooser;
+    private String currentDir;
 
     public Window() {
         initWidgets();
@@ -27,7 +28,6 @@ public class Window {
         initPanel();
         addPanelContent();
         initFrame();
-        btnLogin.grabFocus();
     }
 
     private void initWidgets() {
@@ -52,12 +52,13 @@ public class Window {
             }
         });
         btnBrowse.addActionListener(e -> {
+            dirChooser.setCurrentDirectory(new java.io.File(currentDir));
 
-            //todo get from prefs
-            dirChooser.setCurrentDirectory(new java.io.File("."));
-
+            //todo extract method?
             if (dirChooser.showOpenDialog(panel) == JFileChooser.APPROVE_OPTION) {
-                directoryField.setText(dirChooser.getSelectedFile().toString());
+                currentDir = dirChooser.getSelectedFile().toString();
+                directoryField.setText(currentDir);
+                PreferenceManager.getInstance().setDirectory(currentDir);
             }
         });
         passwordField.addKeyListener(new KeyAdapter() {
@@ -90,10 +91,12 @@ public class Window {
     private void configureDirectoryChooser() {
         dirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         dirChooser.setAcceptAllFileFilterUsed(false);
+        currentDir = PreferenceManager.getInstance().getDirectory();
     }
 
     private void configureTextFields() {
         directoryField.setEditable(false);
+        directoryField.setText(currentDir);
     }
 
     private void initPanel() {
