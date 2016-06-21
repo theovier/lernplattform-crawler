@@ -33,13 +33,10 @@ public class Main {
         }
 
         if (success) {
-
-            //todo select semester based on current pc time / year
+            Downloader.rootName = "Sommersemester 2016";
             CourseCrawler courseCrawler = new CourseCrawler("Sommersemester", "2016");
             PDFGatewayCrawler gatewayCrawler = new PDFGatewayCrawler();
             PDFCrawler pdfCrawler = new PDFCrawler();
-
-            Downloader.createRootDirectory();
 
             try {
                 for (String courseLink : courseCrawler.fetchCourseLinks(overviewPage)) {
@@ -51,11 +48,20 @@ public class Main {
                         Downloader.downloadPDF(pdf, browser);
                     }
                 }
+                Downloader.showCreatedFolder();
             } catch (IOException e) {
                 System.out.println("error beim downloaden");
             }
+
         }
-        System.exit(0);
+
+   //     System.exit(0);
     }
+
+
+
+
+    //todo show changelog/liste wenn fertig mit download?
+    //todo select semester based dropdown (based on current year +-2)
 }
 

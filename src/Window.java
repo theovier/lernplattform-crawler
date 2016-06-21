@@ -33,7 +33,7 @@ public class Window {
     private void initWidgets() {
         btnLogin = new JButton("fetch");
         btnBrowse = new JButton("browse");
-        emailList = new JComboBox <String>(EMAILS);
+        emailList = new JComboBox <>(EMAILS);
         userField = new JFormattedTextField();
         directoryField = new JFormattedTextField();
         passwordField = new JPasswordField();
@@ -58,7 +58,7 @@ public class Window {
             if (dirChooser.showOpenDialog(panel) == JFileChooser.APPROVE_OPTION) {
                 currentDir = dirChooser.getSelectedFile().toString();
                 directoryField.setText(currentDir);
-                PreferenceManager.getInstance().setDirectory(currentDir);
+                PreferencesManager.getInstance().setDirectory(currentDir);
             }
         });
         passwordField.addKeyListener(new KeyAdapter() {
@@ -91,7 +91,7 @@ public class Window {
     private void configureDirectoryChooser() {
         dirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         dirChooser.setAcceptAllFileFilterUsed(false);
-        currentDir = PreferenceManager.getInstance().getDirectory();
+        currentDir = PreferencesManager.getInstance().getDirectory();
     }
 
     private void configureTextFields() {

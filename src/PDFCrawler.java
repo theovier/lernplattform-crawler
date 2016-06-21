@@ -28,6 +28,11 @@ public class PDFCrawler extends Crawler {
         return source.substring(begin + DOWNLOAD_START.length(), end);
     }
 
+    //todo
+    private String fetchFileExtension(String link) {
+        return null;
+    }
+
     public PDFDocument getPDFDocument(HtmlPage gatewayPage, String courseName) {
         return new PDFDocument(fetchFileName(gatewayPage), fetchDownloadLink(gatewayPage), courseName);
     }
