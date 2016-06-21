@@ -9,13 +9,14 @@ public class Window {
     public static final int WIDTH = 500;
     public static final int HEIGHT = 250;
     public static final String[] EMAILS = {"@stud.hshl.de", "@hshl.de"};
+    public static final String[] TERMS = {"Sommersemester 2016", "Wintersemester 2015"}; //todo
 
     private JFrame frame;
     private JPanel panel;
     private JFormattedTextField userField, directoryField;
     private JPasswordField passwordField;
     private JButton btnLogin, btnBrowse;
-    private JComboBox <String> emailList;
+    private JComboBox <String> emailList, termList;
     private JFileChooser dirChooser;
     private String currentDir;
 
@@ -34,6 +35,7 @@ public class Window {
         btnLogin = new JButton("fetch");
         btnBrowse = new JButton("browse");
         emailList = new JComboBox <>(EMAILS);
+        termList = new JComboBox<>(TERMS);
         userField = new JFormattedTextField();
         directoryField = new JFormattedTextField();
         passwordField = new JPasswordField();
@@ -86,6 +88,7 @@ public class Window {
         btnLogin.setBounds(125, 150, 75, 20);
         btnBrowse.setBounds(400, 190, 75, 25);
         directoryField.setBounds(125, 190, 270, 25);
+        termList.setBounds(280, 100, 150, 25);
     }
 
     private void configureDirectoryChooser() {
@@ -108,6 +111,7 @@ public class Window {
         panel.add(btnLogin);
         panel.add(userField);
         panel.add(passwordField);
+        panel.add(termList);
         panel.add(emailList);
         panel.add(btnBrowse);
         panel.add(directoryField);
