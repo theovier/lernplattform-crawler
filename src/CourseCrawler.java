@@ -1,9 +1,4 @@
-import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
-import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLAnchorElement;
-import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLOListElement;
-import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLObjectElement;
-import org.jcp.xml.dsig.internal.dom.DOMXMLObject;
 
 import java.util.ArrayList;
 import java.util.List;

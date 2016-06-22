@@ -59,9 +59,7 @@ public class Main {
     }
 
 
-
-
     //todo show changelog/liste wenn fertig mit download?
-    //todo select semester based dropdown (based on current year +-2)
+    //todo select semester based dropdown (based on current year +-2) ? BEST SOLUTION?
 }
 

@@ -9,7 +9,7 @@ public class Window {
     public static final int WIDTH = 500;
     public static final int HEIGHT = 250;
     public static final String[] EMAILS = {"@stud.hshl.de", "@hshl.de"};
-    public static final String[] TERMS = {"Sommersemester 2016", "Wintersemester 2015"}; //todo
+    public static final String[] TERMS = {"Sommersemester 2016", "Wintersemester 2015/6"}; //todo
 
     private JFrame frame;
     private JPanel panel;
