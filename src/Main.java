@@ -7,6 +7,8 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args ) {
+
+        //todo put in window
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }
@@ -33,19 +35,24 @@ public class Main {
         }
 
         if (success) {
-            Downloader.rootName = "Sommersemester 2016";
-            CourseCrawler courseCrawler = new CourseCrawler("Sommersemester", "2016");
+            Downloader.rootName = "Sommersemester 2016"; //todo get it somehow
+
+            CourseCrawler courseCrawler = new CourseCrawler();
             PDFGatewayCrawler gatewayCrawler = new PDFGatewayCrawler();
             PDFCrawler pdfCrawler = new PDFCrawler();
 
             try {
                 for (String courseLink : courseCrawler.fetchCourseLinks(overviewPage)) {
-                    HtmlPage page = browser.getPage(courseLink);
-                    for (String gatewayLink : gatewayCrawler.fetchPDFGateLinks(page)) {
-                        String courseName = gatewayCrawler.fetchCourseName(page);
-                        page = browser.getPage(gatewayLink);
-                        PDFDocument pdf = pdfCrawler.getPDFDocument(page, courseName);
-                        Downloader.downloadPDF(pdf, browser);
+                    HtmlPage coursePage = browser.getPage(courseLink);
+                    for (String gatewayLink : gatewayCrawler.fetchPDFGateLinks(coursePage)) {
+                        String courseName = gatewayCrawler.fetchCourseName(coursePage);
+                        HtmlPage gatewayPage = browser.getPage(gatewayLink);
+                        PDFDocument pdf = pdfCrawler.getPDFDocument(gatewayPage, courseName);
+
+                        //todo refactor
+                        if (!Downloader.downloadPDF(pdf, browser))
+                            System.out.println("Skipped download of: " + pdf);
+
                     }
                 }
                 Downloader.showCreatedFolder();
@@ -61,5 +68,7 @@ public class Main {
 
     //todo show changelog/liste wenn fertig mit download?
     //todo select semester based dropdown (based on current year +-2) ? BEST SOLUTION?
+    //todo warum klappt es ohne storm manchmal nicht?
+    //todo benachrichtgen, wenn download übersprungen wurde.
 }
 
