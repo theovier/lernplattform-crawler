@@ -1,14 +1,17 @@
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Main {
 
     public static void main(String[] args ) {
-
-        //todo put in window
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }
@@ -23,10 +26,9 @@ public class Main {
         LoginClient client = new LoginClient(credentials);
         boolean success = false;
         HtmlPage overviewPage = null;
-        WebClient browser = null;
+        final WebClient browser = client.getWebClient();
         try {
             overviewPage = client.establishConnection();
-            browser = client.getWebClient();
             success = true;
         } catch (WrongCredentialsException e) {
             System.out.println("falsche credentials");
@@ -35,40 +37,82 @@ public class Main {
         }
 
         if (success) {
-            Downloader.rootName = "Sommersemester 2016"; //todo get it somehow
-
-            CourseCrawler courseCrawler = new CourseCrawler();
+            Downloader.rootName = "Sommersemester 2016";
+            CourseCrawler courseCrawler = new CourseCrawler("Sommersemester", "2016");
             PDFGatewayCrawler gatewayCrawler = new PDFGatewayCrawler();
             PDFCrawler pdfCrawler = new PDFCrawler();
 
-            try {
-                for (String courseLink : courseCrawler.fetchCourseLinks(overviewPage)) {
-                    HtmlPage coursePage = browser.getPage(courseLink);
-                    for (String gatewayLink : gatewayCrawler.fetchPDFGateLinks(coursePage)) {
-                        String courseName = gatewayCrawler.fetchCourseName(coursePage);
-                        HtmlPage gatewayPage = browser.getPage(gatewayLink);
-                        PDFDocument pdf = pdfCrawler.getPDFDocument(gatewayPage, courseName);
 
-                        //todo refactor
-                        if (!Downloader.downloadPDF(pdf, browser))
-                            System.out.println("Skipped download of: " + pdf);
+            List<String> courseLinks = courseCrawler.fetchCourseLinks(overviewPage);
 
+            Map<HtmlPage, List<String>> pdfLinks = new HashMap<>();
+
+            courseLinks.stream().forEach((link) -> {
+                try {
+                    final HtmlPage page = browser.getPage(link);
+                    pdfLinks.put(page, gatewayCrawler.fetchPDFGateLinks(page));
+                } catch (IOException e) {
+                    System.out.println("error beim downloaden");
+                }
+            });
+
+            List<PDFDocument> pdfDocuments = new ArrayList<>();
+
+            pdfLinks.entrySet().stream().forEach((set) -> {
+                String courseName = gatewayCrawler.fetchCourseName(set.getKey());
+
+                set.getValue().forEach(gatewayLink -> {
+                    try {
+                        Page pagee = browser.getPage(gatewayLink);
+
+                        if (pagee instanceof HtmlPage) {
+                            HtmlPage pageee = (HtmlPage) pagee;
+
+                            pdfDocuments.add(pdfCrawler.getPDFDocument(pageee, courseName));
+                        } else {
+                            System.err.println(pagee.getUrl());
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            });
+
+            pdfDocuments.parallelStream().forEach(pdfDocument -> {
+                try {
+                    Downloader.downloadPDF(pdfDocument, browser);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            Downloader.showCreatedFolder();
+
+
+            /*try {
+                for (String courseLink : ) {
+                    HtmlPage page = browser.getPage(courseLink);
+                    for (String gatewayLink : gatewayCrawler.fetchPDFGateLinks(page)) {
+                        String courseName = gatewayCrawler.fetchCourseName(page);
+                        page = browser.getPage(gatewayLink);
+                        PDFDocument pdf = pdfCrawler.getPDFDocument(page, courseName);
+                        Downloader.downloadPDF(pdf, browser);
                     }
                 }
-                Downloader.showCreatedFolder();
+
             } catch (IOException e) {
                 System.out.println("error beim downloaden");
             }
-
+*/
         }
 
    //     System.exit(0);
     }
 
 
+
+
     //todo show changelog/liste wenn fertig mit download?
-    //todo select semester based dropdown (based on current year +-2) ? BEST SOLUTION?
-    //todo warum klappt es ohne storm manchmal nicht?
-    //todo benachrichtgen, wenn download übersprungen wurde.
+    //todo select semester based dropdown (based on current year +-2)
 }
 
