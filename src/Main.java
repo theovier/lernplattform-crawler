@@ -23,6 +23,7 @@ public class Main {
 
     //todo new manager class?
     public static void startLogin(LoginCredentials credentials) {
+
         new Thread(() -> {
             Thread.currentThread().setName("Downloader");
             System.out.println("qwhjeqkwhej");
@@ -43,41 +44,18 @@ public class Main {
 
         if (success) {
             Downloader.rootName = "Sommersemester 2016";
-            CourseCrawler courseCrawler = new CourseCrawler();
-            PDFGatewayCrawler gatewayCrawler = new PDFGatewayCrawler();
-            PDFCrawler pdfCrawler = new PDFCrawler();
 
+            LinkedBlockingQueue<PDFDocument> downloadableDocuments = new LinkedBlockingQueue<>(100);
 
-            //todo linkedblockingQueue
+            WebClient downloadBrowser = new WebClient();
+            downloadBrowser.setCookieManager(browser.getCookieManager());
 
-
-            //LinkedBlockingQueue queue = new LinkedBlockingQueue(10); //generic
-
-            //todo beat 1:40min
-            List<PDFDocument> pdfDocuments = new ArrayList<>();
-
-            try {
-                for (String courseLink : courseCrawler.fetchCourseLinks(overviewPage)) {
-                    HtmlPage page = browser.getPage(courseLink);
-                    for (String gatewayLink : gatewayCrawler.fetchPDFGateLinks(page)) {
-                        String courseName = gatewayCrawler.fetchCourseName(page);
-                        page = browser.getPage(gatewayLink);
-                        pdfDocuments.add(pdfCrawler.getPDFDocument(page, courseName));
-                    }
-                }
-            } catch (IOException e) {
-                System.out.println("error beim downloaden");
-            }
-
-            pdfDocuments.parallelStream().forEach(pdfDocument -> {
-                try {
-                    Downloader.downloadPDF(pdfDocument, browser);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-
-            Downloader.showCreatedFolder();
+            Producer producer = new Producer(downloadableDocuments, browser, overviewPage);
+            Consumer consumer = new Consumer(downloadableDocuments, downloadBrowser, producer);
+            Thread producerThread = new Thread(producer);
+            Thread consumerThread = new Thread(consumer);
+            producerThread.start();
+            consumerThread.start();
         }
     }
 
