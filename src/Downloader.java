@@ -9,46 +9,77 @@ import java.nio.file.StandardCopyOption;
 
 public class Downloader {
 
-    public static String rootName = "Sommersemester 2016";
-    private static String directory;
+    private String rootDirName = "Sommersemester 2016";
+    private WebClient browser;
+    private String rootDirectory;
 
-    //todo refactor! rename!
-    public static boolean downloadPDF(PDFDocument doc, WebClient browser) throws IOException {
-        directory = PreferencesManager.getInstance().getDirectory() + getRoot();
-        String courseDirectory = directory + doc.getFolderName() + "/";
-        String documentDirectory = courseDirectory + doc.getName() + doc.getFileExtension();
-        Path target = Paths.get(documentDirectory);
-        if (Files.exists(target)) return false;
-        createDirectory(courseDirectory);
-        Page downloadPage = browser.getPage(doc.getDownloadLink());
-        downloadFile(downloadPage, target);
-        System.out.println(doc); //todo add to log
-        return true;
+    public Downloader (WebClient browser) {
+        this.browser = browser;
+        rootDirectory = fetchRootDir();
     }
 
-    public static void createDirectory(String dirPath) throws IOException {
-        Path path = Paths.get(dirPath);
-        if (!Files.exists(path)) {
-            Files.createDirectories(path);
+    private String fetchRootDir() {
+        return PreferencesManager.getInstance().getDirectory() + "/" + rootDirName + "/";
+    }
+
+    public void startDownload(PDFDocument doc) {
+        Path target = getFilePath(doc);
+        boolean alreadyExists = Files.exists(target);
+        if (!alreadyExists) {
+            download(doc, target);
         }
     }
 
-    private static String getRoot() {
-        return "/" + rootName + "/";
+    private Path getFilePath(PDFDocument doc) {
+        String courseDirectory = rootDirectory + doc.getFolderName() + "/";
+        String documentDirectory = courseDirectory + doc.getName() + doc.getFileExtension();
+        return Paths.get(documentDirectory);
     }
 
-    //rename
-    private static void downloadFile(Page downloadPage, Path target) throws IOException {
+    private void download(PDFDocument doc, Path target) {
+        try {
+            Files.createDirectories(target);
+            Page downloadPage = browser.getPage(doc.getDownloadLink());
+            copyFileToDisc(downloadPage, target);
+            notifyProgress(doc);
+        } catch (IOException e) {
+            System.err.println("Error while downloading " + doc);
+        }
+    }
+
+    private static void copyFileToDisc(Page downloadPage, Path target) throws IOException {
         try (InputStream source = downloadPage.getWebResponse().getContentAsStream()) {
             Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 
-    public static void showCreatedFolder() {
+    private void notifyProgress(PDFDocument addedDocument) {
+        System.out.println(addedDocument);
+    }
+
+    public void showRootFolder() {
         try {
-            Runtime.getRuntime().exec("explorer.exe /select," + Paths.get(directory));
+            Runtime.getRuntime().exec("explorer.exe /select," + Paths.get(rootDirectory));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    public void setRootDirName (String root) {
+        rootDirName = root;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

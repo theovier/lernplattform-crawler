@@ -21,6 +21,7 @@ public class Window {
     private String currentDir;
 
     public Window() {
+        setLookAndFeel();
         initWidgets();
         setListeners();
         setWidgetPositions();
@@ -29,6 +30,15 @@ public class Window {
         initPanel();
         addPanelContent();
         initFrame();
+    }
+
+    private void setLookAndFeel() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (Exception e) {
+            //todo differentiate
+        }
     }
 
     private void initWidgets() {

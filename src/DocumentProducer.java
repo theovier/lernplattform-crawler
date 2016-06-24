@@ -4,7 +4,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class Producer implements Runnable{
+public class DocumentProducer implements Runnable{
 
     private LinkedBlockingQueue<PDFDocument> queue;
     private CourseCrawler courseCrawler;
@@ -16,7 +16,7 @@ public class Producer implements Runnable{
 
     private boolean running;
 
-    public Producer(LinkedBlockingQueue queue, WebClient browser, HtmlPage overviewPage) {
+    public DocumentProducer(LinkedBlockingQueue queue, WebClient browser, HtmlPage overviewPage) {
         this.queue = queue;
         this.browser = browser;
         this.overviewPage = overviewPage;

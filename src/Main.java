@@ -3,22 +3,12 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Main {
 
     public static void main(String[] args ) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        }
-        catch (Exception e) {
-            //todo differentiate
-        }
         Window window = new Window();
-        //window.show();
     }
 
     //todo new manager class?
@@ -43,16 +33,19 @@ public class Main {
         }
 
         if (success) {
-            Downloader.rootName = "Sommersemester 2016";
+
 
             LinkedBlockingQueue<PDFDocument> downloadableDocuments = new LinkedBlockingQueue<>(100);
 
             WebClient downloadBrowser = new WebClient();
             downloadBrowser.setCookieManager(browser.getCookieManager());
 
-            Producer producer = new Producer(downloadableDocuments, browser, overviewPage);
-            Consumer consumer = new Consumer(downloadableDocuments, downloadBrowser, producer);
-            Thread producerThread = new Thread(producer);
+            Downloader downloader = new Downloader(downloadBrowser);
+            downloader.setRootDirName("Sommersemester 2016");
+
+            DocumentProducer documentProducer = new DocumentProducer(downloadableDocuments, browser, overviewPage);
+            DocumentConsumer consumer = new DocumentConsumer(downloadableDocuments, downloader, documentProducer);
+            Thread producerThread = new Thread(documentProducer);
             Thread consumerThread = new Thread(consumer);
             producerThread.start();
             consumerThread.start();
