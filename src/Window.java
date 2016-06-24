@@ -54,13 +54,13 @@ public class Window {
     }
 
     private void setListeners() {
-        btnLogin.addActionListener(e -> callLogin());
+        btnLogin.addActionListener(e -> login());
         btnLogin.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
                 super.keyTyped(e);
                 if (e.getKeyChar() == KeyEvent.VK_ENTER)
-                    callLogin();
+                    login();
             }
         });
         btnBrowse.addActionListener(e -> {
@@ -78,7 +78,7 @@ public class Window {
             public void keyTyped(KeyEvent e) {
                 super.keyTyped(e);
                 if (e.getKeyChar() == KeyEvent.VK_ENTER)
-                    callLogin();
+                    login();
             }
         });
         userField.addKeyListener(new KeyAdapter() {
@@ -86,7 +86,7 @@ public class Window {
             public void keyTyped(KeyEvent e) {
                 super.keyTyped(e);
                 if (e.getKeyChar() == KeyEvent.VK_ENTER)
-                    callLogin();
+                    login();
             }
         });
     }
@@ -134,7 +134,6 @@ public class Window {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setContentPane(panel);
-        frame.setVisible(true);
     }
 
     private void createHints() {
@@ -142,10 +141,9 @@ public class Window {
         HintText passwordHint = new HintText(passwordField, "password");
     }
 
-    //todo change this
-    private void callLogin() {
-
-        Main.startLogin(createCredentials());
+    private void login() {
+        Director director = new Director(this);
+        director.start(createCredentials());
     }
 
     private LoginCredentials createCredentials() {
@@ -155,5 +153,9 @@ public class Window {
             password += c;
         }
         return new LoginCredentials(user, String.valueOf(emailList.getSelectedItem()), password);
+    }
+
+    public void show() {
+        frame.setVisible(true);
     }
 }
