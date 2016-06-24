@@ -12,6 +12,7 @@ public class Consumer implements Runnable {
         this.queue = queue;
         this.browser = browser;
         this.producer = producer;
+        
     }
 
     @Override
