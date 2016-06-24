@@ -1,7 +1,6 @@
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -35,7 +34,7 @@ public class Main {
         if (success) {
 
 
-            LinkedBlockingQueue<PDFDocument> downloadableDocuments = new LinkedBlockingQueue<>(100);
+            LinkedBlockingQueue<DownloadableDocument> downloadableDocuments = new LinkedBlockingQueue<>(100);
 
             WebClient downloadBrowser = new WebClient();
             downloadBrowser.setCookieManager(browser.getCookieManager());
@@ -43,9 +42,9 @@ public class Main {
             Downloader downloader = new Downloader(downloadBrowser);
             downloader.setRootDirName("Sommersemester 2016");
 
-            DocumentProducer documentProducer = new DocumentProducer(downloadableDocuments, browser, overviewPage);
-            DocumentConsumer consumer = new DocumentConsumer(downloadableDocuments, downloader, documentProducer);
-            Thread producerThread = new Thread(documentProducer);
+            DocumentProducer producer = new DocumentProducer(downloadableDocuments, browser, overviewPage);
+            DownloadScheduler consumer = new DownloadScheduler(downloadableDocuments, downloader, producer);
+            Thread producerThread = new Thread(producer);
             Thread consumerThread = new Thread(consumer);
             producerThread.start();
             consumerThread.start();

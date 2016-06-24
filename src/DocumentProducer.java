@@ -7,12 +7,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class DocumentProducer implements Runnable{
 
-    private LinkedBlockingQueue<PDFDocument> queue;
+    private LinkedBlockingQueue<DownloadableDocument> queue;
     private WebClient browser;
     private HtmlPage overviewPage;
     private CourseCrawler courseCrawler;
-    private PDFGatewayCrawler gatewayCrawler;
-    private PDFCrawler pdfCrawler;
+    private GatewayCrawler gatewayCrawler;
+    private DocumentCrawler documentCrawler;
     private int produced;
     private boolean running;
 
@@ -31,8 +31,8 @@ public class DocumentProducer implements Runnable{
 
     private void initCrawlers() {
         courseCrawler = new CourseCrawler();
-        gatewayCrawler = new PDFGatewayCrawler();
-        pdfCrawler = new PDFCrawler();
+        gatewayCrawler = new GatewayCrawler();
+        documentCrawler = new DocumentCrawler();
     }
 
     public boolean isRunning() {
@@ -54,6 +54,7 @@ public class DocumentProducer implements Runnable{
         }
     }
 
+    //todo rename?
     private void crawlWebsite() throws IOException {
         List<String> courseLinks = courseCrawler.fetchCourseLinks(overviewPage);
         for (String link : courseLinks) {
@@ -61,22 +62,23 @@ public class DocumentProducer implements Runnable{
         }
     }
 
+    //todo rename?
     private void crawlCourse(String courseLink) throws IOException {
         HtmlPage coursePage = browser.getPage(courseLink);
         List<String> downloadLinks = gatewayCrawler.fetchDownloadLinks(coursePage);
         for (String link : downloadLinks) {
-            PDFDocument doc = fetchDocument(coursePage, link);
+            DownloadableDocument doc = fetchDocument(coursePage, link);
             enqueue(doc);
         }
     }
 
-    private PDFDocument fetchDocument(HtmlPage coursePage, String downloadPageURL) throws IOException {
+    private DownloadableDocument fetchDocument(HtmlPage coursePage, String downloadPageURL) throws IOException {
         String courseName = gatewayCrawler.fetchCourseName(coursePage);
         HtmlPage downloadPage = browser.getPage(downloadPageURL);
-        return pdfCrawler.getPDFDocument(downloadPage, courseName);
+        return documentCrawler.getDocument(downloadPage, courseName);
     }
 
-    private void enqueue(PDFDocument doc) {
+    private void enqueue(DownloadableDocument doc) {
         try {
             queue.put(doc);
             produced++;

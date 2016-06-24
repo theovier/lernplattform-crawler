@@ -1,12 +1,12 @@
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class DocumentConsumer implements Runnable {
+public class DownloadScheduler implements Runnable {
 
-    private LinkedBlockingQueue<PDFDocument> queue;
+    private LinkedBlockingQueue<DownloadableDocument> queue;
     private DocumentProducer documentProducer;
     private Downloader downloader;
 
-    public DocumentConsumer(LinkedBlockingQueue queue, Downloader downloader, DocumentProducer documentProducer) {
+    public DownloadScheduler(LinkedBlockingQueue queue, Downloader downloader, DocumentProducer documentProducer) {
         this.queue = queue;
         this.documentProducer = documentProducer;
         this.downloader = downloader;
@@ -22,8 +22,8 @@ public class DocumentConsumer implements Runnable {
 
     public void downloadFromDocumentQueue() {
         try {
-            PDFDocument pdfDocument = queue.take();
-            downloader.startDownload(pdfDocument);
+            DownloadableDocument document = queue.take();
+            downloader.startDownload(document);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

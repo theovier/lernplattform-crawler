@@ -22,7 +22,7 @@ public class Downloader {
         return PreferencesManager.getInstance().getDirectory() + "/" + rootDirName + "/";
     }
 
-    public void startDownload(PDFDocument doc) {
+    public void startDownload(DownloadableDocument doc) {
         Path target = getFilePath(doc);
         boolean alreadyExists = Files.exists(target);
         if (!alreadyExists) {
@@ -30,13 +30,13 @@ public class Downloader {
         }
     }
 
-    private Path getFilePath(PDFDocument doc) {
+    private Path getFilePath(DownloadableDocument doc) {
         String courseDirectory = rootDirectory + doc.getFolderName() + "/";
         String documentDirectory = courseDirectory + doc.getName() + doc.getFileExtension();
         return Paths.get(documentDirectory);
     }
 
-    private void download(PDFDocument doc, Path target) {
+    private void download(DownloadableDocument doc, Path target) {
         try {
             Files.createDirectories(target);
             Page downloadPage = browser.getPage(doc.getDownloadLink());
@@ -53,7 +53,7 @@ public class Downloader {
         }
     }
 
-    private void notifyProgress(PDFDocument addedDocument) {
+    private void notifyProgress(DownloadableDocument addedDocument) {
         System.out.println(addedDocument);
     }
 

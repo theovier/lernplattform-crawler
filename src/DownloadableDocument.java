@@ -1,10 +1,10 @@
 
-public class PDFDocument {
+public class DownloadableDocument {
 
     //todo change to DownloadableDocument -> auch .doc
     private String name, downloadLink, courseName;
 
-    public PDFDocument(String name, String downloadLink, String courseName) {
+    public DownloadableDocument(String name, String downloadLink, String courseName) {
         this.name = name;
         this.downloadLink = downloadLink;
         this.courseName = courseName;
