@@ -9,7 +9,7 @@ public class PDFGatewayCrawler extends Crawler {
 
     private static final String RESOURCEPATH = "https://campusapp01.hshl.de/mod/resource/view.php?id=";
 
-    public List<String> fetchPDFGateLinks(HtmlPage coursePage) {
+    public List<String> fetchDownloadLinks(HtmlPage coursePage) {
         List<String> downloadLinks = new ArrayList<String>();
         List<String> resourceIDs = fetchResourceIDs(coursePage);
         resourceIDs.forEach(id -> downloadLinks.add(RESOURCEPATH + id));
