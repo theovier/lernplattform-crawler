@@ -2,12 +2,13 @@
 public class DownloadableDocument {
 
     //todo change to DownloadableDocument -> auch .doc
-    private String name, downloadLink, courseName;
+    private String name, downloadLink, courseName, fileExtension;
 
-    public DownloadableDocument(String name, String downloadLink, String courseName) {
+    public DownloadableDocument(String name, String downloadLink, String courseName, String fileExtension) {
         this.name = name;
         this.downloadLink = downloadLink;
         this.courseName = courseName;
+        this.fileExtension = fileExtension;
     }
 
     public String getDownloadLink() {
@@ -23,7 +24,7 @@ public class DownloadableDocument {
     }
 
     public String getFileExtension() {
-        return ".pdf";
+        return fileExtension;
     }
 
     @Override

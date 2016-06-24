@@ -28,10 +28,10 @@ public class DocumentCrawler extends Crawler {
 
     //todo
     private String fetchFileExtension(String link) {
-        return null;
+        return ".pdf";
     }
 
     public DownloadableDocument getDocument(HtmlPage gatewayPage, String courseName) {
-        return new DownloadableDocument(fetchFileName(gatewayPage), fetchDownloadLink(gatewayPage), courseName);
+        return new DownloadableDocument(fetchFileName(gatewayPage), fetchDownloadLink(gatewayPage), courseName, fetchFileExtension(""));
     }
 }

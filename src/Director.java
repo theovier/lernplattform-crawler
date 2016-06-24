@@ -23,10 +23,10 @@ public class Director {
     public void start(LoginCredentials credentials) {
         new Thread(() -> {
             Thread.currentThread().setName("Director");
-            System.out.println("director started");
 
             boolean success = login(credentials);
             if (success) {
+                System.out.println("Erfolgreich eingeloggt. Beginne mit Download.");
                 startDownload();
             }
         }).start();
