@@ -50,7 +50,7 @@ public class DocumentProducer implements Runnable{
         try {
             crawlWebsite();
         } catch (IOException e) {
-            System.err.println("Error beim Parsen der Webseiten");
+            System.err.println("Error beim Parsen der Webseiten!");
         }
     }
 
