@@ -5,6 +5,7 @@ import com.lailaps.Browser;
 import com.lailaps.crawler.CourseCrawler;
 import com.lailaps.crawler.DocumentCrawler;
 import com.lailaps.crawler.GatewayCrawler;
+import com.lailaps.crawler.TermCrawler;
 import com.lailaps.download.DownloadableDocument;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ public class DocumentProducer implements Runnable{
     private CourseCrawler courseCrawler;
     private GatewayCrawler gatewayCrawler;
     private DocumentCrawler documentCrawler;
+    private TermCrawler termCrawler;
     private int produced;
     private boolean running;
 
@@ -36,7 +38,8 @@ public class DocumentProducer implements Runnable{
     }
 
     private void initCrawlers() {
-        courseCrawler = new CourseCrawler(Downloader.getRootDirName()); //todo change
+        termCrawler = new TermCrawler(overviewPage);
+        courseCrawler = new CourseCrawler();
         gatewayCrawler = new GatewayCrawler();
         documentCrawler = new DocumentCrawler();
     }
@@ -62,10 +65,16 @@ public class DocumentProducer implements Runnable{
 
     //todo rename
     private void crawlWebsite() throws IOException {
+        crawlTerm();
         List<String> courseLinks = courseCrawler.fetchCourseLinks(overviewPage);
         for (String link : courseLinks) {
             crawlCourse(link);
         }
+    }
+
+    private void crawlTerm() {
+        String term = termCrawler.fetchCurrentTerm();
+        Downloader.setRootDirName(term);
     }
 
     //todo rename, more than 1 effect.

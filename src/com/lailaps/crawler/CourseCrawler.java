@@ -1,17 +1,12 @@
 package com.lailaps.crawler;
 
 import com.gargoylesoftware.htmlunit.html.*;
+import com.lailaps.download.Downloader;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CourseCrawler extends Crawler {
-
-    private String term;
-
-    public CourseCrawler(String term) {
-        this.term = term;
-    }
 
     public List<String> fetchCourseLinks(HtmlPage overviewPage) {
         List<String> links = new ArrayList<>();
@@ -24,7 +19,7 @@ public class CourseCrawler extends Crawler {
     }
 
     private List<HtmlElement> fetchCourses(HtmlPage overviewPage) {
-        HtmlLabel courseListLabel = overviewPage.getFirstByXPath("//label[@title='" + term + "']");
+        HtmlLabel courseListLabel = overviewPage.getFirstByXPath("//label[@title='" + Downloader.getRootDirName() + "']");
         HtmlOrderedList courseList = (HtmlOrderedList) courseListLabel.getNextElementSibling().getNextElementSibling();
         return courseList.getElementsByTagName("a");
     }

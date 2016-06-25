@@ -1,6 +1,5 @@
 package com.lailaps;
 
-import com.lailaps.crawler.TermCrawler;
 import com.lailaps.download.DocumentProducer;
 import com.lailaps.download.DownloadScheduler;
 import com.lailaps.download.DownloadableDocument;
@@ -81,11 +80,6 @@ public class Director {
 
     private void initDownloader() {
         downloader = new Downloader(downloadBrowser);
-
-        TermCrawler termCrawler = new TermCrawler(browser.getCurrentPage());
-        String term = termCrawler.fetchCurrentTerm();
-
-        downloader.setRootDirName(term); //todo refactor
     }
 
     private void initQueue() {
