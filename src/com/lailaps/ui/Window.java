@@ -8,23 +8,22 @@ import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-//todo extra thread
 public class Window {
 
     public static final String TITLE = "lailaps";
     public static final int WIDTH = 500;
     public static final int HEIGHT = 250;
     public static final String[] EMAILS = {"@stud.hshl.de", "@hshl.de"};
-    public static final String[] TERMS = {"Sommersemester 2016", "Wintersemester 2015/6"}; //todo
 
     private JFrame frame;
     private JPanel panel;
     private JFormattedTextField userField, directoryField;
     private JPasswordField passwordField;
     private JButton btnLogin, btnBrowse;
-    private JComboBox <String> emailList, termList;
+    private JComboBox <String> emailList;
     private JFileChooser dirChooser;
     private String currentDir;
+    private Director director;
 
     public Window() {
         setLookAndFeel();
@@ -36,6 +35,7 @@ public class Window {
         initPanel();
         addPanelContent();
         initFrame();
+        initController();
     }
 
     private void setLookAndFeel() {
@@ -43,7 +43,7 @@ public class Window {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }
         catch (Exception e) {
-            //todo differentiate
+            //won't happen
         }
     }
 
@@ -51,7 +51,6 @@ public class Window {
         btnLogin = new JButton("fetch");
         btnBrowse = new JButton("browse");
         emailList = new JComboBox <>(EMAILS);
-        termList = new JComboBox<>(TERMS);
         userField = new JFormattedTextField();
         directoryField = new JFormattedTextField();
         passwordField = new JPasswordField();
@@ -60,13 +59,13 @@ public class Window {
     }
 
     private void setListeners() {
-        btnLogin.addActionListener(e -> login());
+        btnLogin.addActionListener(e -> startLogin());
         btnLogin.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
                 super.keyTyped(e);
                 if (e.getKeyChar() == KeyEvent.VK_ENTER)
-                    login();
+                    startLogin();
             }
         });
         btnBrowse.addActionListener(e -> {
@@ -84,7 +83,7 @@ public class Window {
             public void keyTyped(KeyEvent e) {
                 super.keyTyped(e);
                 if (e.getKeyChar() == KeyEvent.VK_ENTER)
-                    login();
+                    startLogin();
             }
         });
         userField.addKeyListener(new KeyAdapter() {
@@ -92,7 +91,7 @@ public class Window {
             public void keyTyped(KeyEvent e) {
                 super.keyTyped(e);
                 if (e.getKeyChar() == KeyEvent.VK_ENTER)
-                    login();
+                    startLogin();
             }
         });
     }
@@ -104,7 +103,6 @@ public class Window {
         btnLogin.setBounds(125, 150, 75, 20);
         btnBrowse.setBounds(400, 190, 75, 25);
         directoryField.setBounds(125, 190, 270, 25);
-        termList.setBounds(280, 100, 150, 25);
     }
 
     private void configureDirectoryChooser() {
@@ -127,7 +125,6 @@ public class Window {
         panel.add(btnLogin);
         panel.add(userField);
         panel.add(passwordField);
-        panel.add(termList);
         panel.add(emailList);
         panel.add(btnBrowse);
         panel.add(directoryField);
@@ -142,14 +139,18 @@ public class Window {
         frame.setContentPane(panel);
     }
 
+    private void initController() {
+        director = new Director(this);
+    }
+
     private void createHints() {
         HintText usernameHint = new HintText(userField, "Theo.Harkenbusch");
         HintText passwordHint = new HintText(passwordField, "password");
     }
 
-    private void login() {
-        Director director = new Director(this);
-        director.start(createCredentials());
+    private void startLogin() {
+        LoginCredentials credentials = createCredentials();
+        director.start(credentials);
     }
 
     private LoginCredentials createCredentials() {
