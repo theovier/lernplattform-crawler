@@ -13,7 +13,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class DocumentProducer implements Runnable{
 
     private LinkedBlockingQueue<DownloadableDocument> queue;
-    private WebClient browser;
+    private Browser browser;
     private HtmlPage overviewPage;
     private CourseCrawler courseCrawler;
     private GatewayCrawler gatewayCrawler;
@@ -21,10 +21,10 @@ public class DocumentProducer implements Runnable{
     private int produced;
     private boolean running;
 
-    public DocumentProducer(LinkedBlockingQueue queue, WebClient browser, HtmlPage overviewPage) {
+    public DocumentProducer(LinkedBlockingQueue queue, Browser browser) {
         this.queue = queue;
         this.browser = browser;
-        this.overviewPage = overviewPage;
+        this.overviewPage = browser.getCurrentPage(); //todo extract?
         initDefaultValues();
         initCrawlers();
     }

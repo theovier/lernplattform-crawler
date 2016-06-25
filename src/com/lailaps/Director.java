@@ -1,7 +1,5 @@
 package com.lailaps;
 
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.lailaps.login.LoginClient;
 import com.lailaps.login.LoginCredentials;
 import com.lailaps.login.WrongCredentialsException;
@@ -14,8 +12,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Director {
 
     private Window view;
-    private HtmlPage overviewPage;
-    private WebClient browser, downloadBrowser;
+    private LoginClient loginClient;
+    private Browser browser, downloadBrowser;
     private Downloader downloader;
     private DocumentProducer producer;
     private DownloadScheduler consumer;
@@ -24,6 +22,7 @@ public class Director {
 
     public Director (Window view) {
         this.view = view;
+        loginClient = new LoginClient();
     }
 
     public void start(LoginCredentials credentials) {
@@ -39,34 +38,40 @@ public class Director {
     }
 
     private boolean login(LoginCredentials credentials) {
-        LoginClient loginClient = new LoginClient(credentials);
-        browser = loginClient.getWebClient();
         try {
-            overviewPage = loginClient.establishConnection();
-            return true;
+            return loginClient.login(credentials);
         } catch (WrongCredentialsException e) {
-            System.out.println("falsche credentials"); //todo send to view
+            System.out.println("wrong login credentials"); //todo send to view
         } catch (IOException e) {
-            System.out.println("internet probleme?"); //todo send to view
+            System.out.println("connection problems"); //todo send to view
         }
         return false;
     }
 
     private void startDownload() {
         prepareDownload();
+        startThreads();
+    }
+
+    private void startThreads() {
         producerThread.start();
         consumerThread.start();
     }
 
     private void prepareDownload() {
+        initBrowser();
         initDownloadBrowser();
         initDownloader();
         initQueue();
         initThreads();
     }
 
+    private void initBrowser() {
+        browser = loginClient.getBrowser();
+    }
+
     private void initDownloadBrowser() {
-        downloadBrowser = new WebClient();
+        downloadBrowser = new Browser();
         downloadBrowser.setCookieManager(browser.getCookieManager());
     }
 
@@ -77,7 +82,7 @@ public class Director {
 
     private void initQueue() {
         downloadableDocuments = new LinkedBlockingQueue<>(100);
-        producer = new DocumentProducer(downloadableDocuments, browser, overviewPage);
+        producer = new DocumentProducer(downloadableDocuments, browser);
         consumer = new DownloadScheduler(downloadableDocuments, downloader, producer);
     }
 
