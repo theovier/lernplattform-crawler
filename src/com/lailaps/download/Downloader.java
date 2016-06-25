@@ -71,18 +71,4 @@ public class Downloader {
     public void setRootDirName (String root) {
         rootDirName = root;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
