@@ -14,16 +14,15 @@ import java.nio.file.StandardCopyOption;
 
 public class Downloader {
 
-    private static String rootDirName = "Sommersemester 2016";
+    private static String rootDirName; //fucked up.
+    private static String rootDirectory;
     private Browser browser;
-    private String rootDirectory;
 
     public Downloader (Browser browser) {
         this.browser = browser;
-        rootDirectory = fetchRootDir();
     }
 
-    private String fetchRootDir() {
+    private static String fetchRootDir() {
         return PreferencesManager.getInstance().getDirectory() + "/" + rootDirName + "/";
     }
 
@@ -70,8 +69,9 @@ public class Downloader {
         }
     }
 
-    public static void setRootDirName (String root) {
-        rootDirName = root;
+    public static void changeRootDir(String rootDirectoryName) {
+        rootDirName = rootDirectoryName;
+        rootDirectory = fetchRootDir();
     }
 
     public static String getRootDirName() {

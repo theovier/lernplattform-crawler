@@ -74,7 +74,7 @@ public class DocumentProducer implements Runnable{
 
     private void crawlTerm() {
         String term = termCrawler.fetchCurrentTerm(overviewPage);
-        Downloader.setRootDirName(term);
+        Downloader.changeRootDir(term);
     }
 
     //todo rename, more than 1 effect.
