@@ -28,9 +28,8 @@ public class Director {
     public void start(LoginCredentials credentials) {
         new Thread(() -> {
             Thread.currentThread().setName("com.lailaps.Director");
-
-            boolean success = login(credentials);
-            if (success) {
+            boolean loginSuccess = login(credentials);
+            if (loginSuccess) {
                 System.out.println("Erfolgreich eingeloggt. Beginne mit Download.");
                 startDownload();
             }

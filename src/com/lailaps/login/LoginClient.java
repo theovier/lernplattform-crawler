@@ -35,7 +35,7 @@ public class LoginClient {
         loginToLernplattform();
         return true;
     }
-    
+
     private void loginToCampusPortal(LoginCredentials credentials) throws IOException {
         currentPage = browser.getPage("https://campusportal.hshl.de");
         getLoginWidgets();
