@@ -7,6 +7,12 @@ import java.util.List;
 
 public class CourseCrawler extends Crawler {
 
+    private String term;
+
+    public CourseCrawler(String term) {
+        this.term = term;
+    }
+
     public List<String> fetchCourseLinks(HtmlPage overviewPage) {
         List<String> links = new ArrayList<>();
         List<HtmlElement> courses = fetchCourses(overviewPage);
@@ -18,7 +24,7 @@ public class CourseCrawler extends Crawler {
     }
 
     private List<HtmlElement> fetchCourses(HtmlPage overviewPage) {
-        HtmlLabel courseListLabel = overviewPage.getFirstByXPath("//label[@title='Sommersemester 2016']");
+        HtmlLabel courseListLabel = overviewPage.getFirstByXPath("//label[@title='" + term + "']");
         HtmlOrderedList courseList = (HtmlOrderedList) courseListLabel.getNextElementSibling().getNextElementSibling();
         return courseList.getElementsByTagName("a");
     }

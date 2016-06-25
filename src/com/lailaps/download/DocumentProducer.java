@@ -36,7 +36,7 @@ public class DocumentProducer implements Runnable{
     }
 
     private void initCrawlers() {
-        courseCrawler = new CourseCrawler();
+        courseCrawler = new CourseCrawler(Downloader.getRootDirName()); //todo change
         gatewayCrawler = new GatewayCrawler();
         documentCrawler = new DocumentCrawler();
     }

@@ -2,7 +2,9 @@ package com.lailaps.download;
 
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.lailaps.Browser;
 import com.lailaps.PreferencesManager;
+import com.lailaps.crawler.TermCrawler;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -12,11 +14,11 @@ import java.nio.file.StandardCopyOption;
 
 public class Downloader {
 
-    private String rootDirName = "Sommersemester 2016";
-    private WebClient browser;
+    private static String rootDirName = "Sommersemester 2016";
+    private Browser browser;
     private String rootDirectory;
 
-    public Downloader (WebClient browser) {
+    public Downloader (Browser browser) {
         this.browser = browser;
         rootDirectory = fetchRootDir();
     }
@@ -68,7 +70,11 @@ public class Downloader {
         }
     }
 
-    public void setRootDirName (String root) {
+    public static void setRootDirName (String root) {
         rootDirName = root;
+    }
+
+    public static String getRootDirName() {
+        return rootDirName;
     }
 }
