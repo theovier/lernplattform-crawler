@@ -19,14 +19,14 @@ public class GatewayCrawler extends Crawler {
     }
 
     private List<String> fetchResourceIDs(HtmlPage coursePage) {
-        List<String> courseIDs = new ArrayList<String>();
+        List<String> courseIDs = new ArrayList<>();
         List<?> courseListItems = coursePage.getByXPath("//li[contains(@class, 'activity resource modtype_resource')]");
         getIDs(courseListItems).forEach(id -> courseIDs.add(id));
         return courseIDs;
     }
 
     private List<String> getIDs(List<?> uncastedListItems) {
-        List <String> ids = new ArrayList<String>();
+        List <String> ids = new ArrayList<>();
         uncastedListItems.forEach(item -> {
             HtmlListItem listItem = (HtmlListItem) item;
             String numericID = getNumericID(listItem.getId());
@@ -40,7 +40,7 @@ public class GatewayCrawler extends Crawler {
     }
 
     public String fetchCourseName(HtmlPage coursePage) {
-        HtmlHeading1 filename = (HtmlHeading1) coursePage.getFirstByXPath("//div[@class='page-header-headings']//h1");
+        HtmlHeading1 filename = coursePage.getFirstByXPath("//div[@class='page-header-headings']//h1");
         return clearCourseName(filename.asText());
     }
 
