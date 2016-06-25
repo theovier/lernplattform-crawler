@@ -18,7 +18,7 @@ public class CourseCrawler extends Crawler {
     }
 
     private List<HtmlElement> fetchCourses(HtmlPage overviewPage) {
-        HtmlLabel courseListLabel = overviewPage.getFirstByXPath("//label[@title='Sommersemester 2016']");
+        HtmlLabel courseListLabel = overviewPage.getFirstByXPath("//label[@title='Sommersemester 2016']"); //todo get from string
         HtmlOrderedList courseList = (HtmlOrderedList) courseListLabel.getNextElementSibling().getNextElementSibling();
         return courseList.getElementsByTagName("a");
     }
