@@ -1,3 +1,4 @@
+package com.lailaps.login;
 
 public class LoginCredentials {
 

@@ -1,3 +1,6 @@
+package com.lailaps;
+
+import com.lailaps.ui.Window;
 
 public class Main {
 

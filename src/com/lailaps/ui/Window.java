@@ -1,3 +1,9 @@
+package com.lailaps.ui;
+
+import com.lailaps.Director;
+import com.lailaps.login.LoginCredentials;
+import com.lailaps.PreferencesManager;
+
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;

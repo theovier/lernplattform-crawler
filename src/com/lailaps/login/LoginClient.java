@@ -1,8 +1,8 @@
+package com.lailaps.login;
+
 import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
-import com.sun.xml.internal.bind.v2.TODO;
 
 import java.io.IOException;
 

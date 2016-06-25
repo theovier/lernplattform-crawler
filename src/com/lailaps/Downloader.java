@@ -1,3 +1,5 @@
+package com.lailaps;
+
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 

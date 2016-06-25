@@ -1,3 +1,5 @@
+package com.lailaps;
+
 import java.util.prefs.Preferences;
 
 public class PreferencesManager {

@@ -1,5 +1,8 @@
+package com.lailaps.crawler;
+
 import com.gargoylesoftware.htmlunit.html.HtmlHeading2;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.lailaps.DownloadableDocument;
 
 public class DocumentCrawler extends Crawler {
 

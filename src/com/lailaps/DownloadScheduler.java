@@ -1,3 +1,5 @@
+package com.lailaps;
+
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class DownloadScheduler implements Runnable {

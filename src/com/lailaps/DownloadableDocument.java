@@ -1,7 +1,8 @@
+package com.lailaps;
 
 public class DownloadableDocument {
 
-    //todo change to DownloadableDocument -> auch .doc
+    //todo change to com.lailaps.DownloadableDocument -> auch .doc
     private String name, downloadLink, courseName, fileExtension;
 
     public DownloadableDocument(String name, String downloadLink, String courseName, String fileExtension) {

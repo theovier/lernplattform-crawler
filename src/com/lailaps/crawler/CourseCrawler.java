@@ -1,3 +1,5 @@
+package com.lailaps.crawler;
+
 import com.gargoylesoftware.htmlunit.html.*;
 
 import java.util.ArrayList;

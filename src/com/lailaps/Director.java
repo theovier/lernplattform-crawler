@@ -1,5 +1,11 @@
+package com.lailaps;
+
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.lailaps.login.LoginClient;
+import com.lailaps.login.LoginCredentials;
+import com.lailaps.login.WrongCredentialsException;
+import com.lailaps.ui.Window;
 
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -22,7 +28,7 @@ public class Director {
 
     public void start(LoginCredentials credentials) {
         new Thread(() -> {
-            Thread.currentThread().setName("Director");
+            Thread.currentThread().setName("com.lailaps.Director");
 
             boolean success = login(credentials);
             if (success) {
