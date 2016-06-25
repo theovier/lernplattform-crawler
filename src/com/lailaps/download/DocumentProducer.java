@@ -27,18 +27,18 @@ public class DocumentProducer implements Runnable{
     public DocumentProducer(LinkedBlockingQueue queue, Browser browser) {
         this.queue = queue;
         this.browser = browser;
-        this.overviewPage = browser.getCurrentPage(); //todo extract?
         initDefaultValues();
         initCrawlers();
     }
 
     private void initDefaultValues() {
+        overviewPage = browser.getCurrentPage();
         running = true;
         produced = 0;
     }
 
     private void initCrawlers() {
-        termCrawler = new TermCrawler(overviewPage);
+        termCrawler = new TermCrawler();
         courseCrawler = new CourseCrawler();
         gatewayCrawler = new GatewayCrawler();
         documentCrawler = new DocumentCrawler();
@@ -73,7 +73,7 @@ public class DocumentProducer implements Runnable{
     }
 
     private void crawlTerm() {
-        String term = termCrawler.fetchCurrentTerm();
+        String term = termCrawler.fetchCurrentTerm(overviewPage);
         Downloader.setRootDirName(term);
     }
 
