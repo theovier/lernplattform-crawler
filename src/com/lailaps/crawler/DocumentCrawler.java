@@ -10,6 +10,8 @@ public class DocumentCrawler extends Crawler {
     public static final String DOWNLOAD_END = "\',";
     public static final String FILENAME_XPATH = "//div[@role='main']//h2";
 
+    private static final String DEFAULT_EXTENSION = ".pdf";
+
     private String fetchFileName(HtmlPage currentPage) {
         HtmlHeading2 filename = currentPage.getFirstByXPath(FILENAME_XPATH);
         return clearName(filename.asText());
@@ -22,19 +24,28 @@ public class DocumentCrawler extends Crawler {
         return clearedName;
     }
 
-    private String fetchDownloadLink(HtmlPage currentPage) {
-        String source = currentPage.asXml();
-        int begin = source.indexOf(DOWNLOAD_START);
-        int end = source.indexOf(DOWNLOAD_END, begin);
-        return source.substring(begin + DOWNLOAD_START.length(), end);
+    private String fetchDownloadLink(String content) {
+        int begin = content.indexOf(DOWNLOAD_START);
+        int end = content.indexOf(DOWNLOAD_END, begin);
+        return content.substring(begin + DOWNLOAD_START.length(), end);
     }
 
-    //todo
     private String fetchFileExtension(String link) {
-        return ".pdf";
+        String fileExtension;
+        int lastDotIndex = link.lastIndexOf('.');
+        if (lastDotIndex > 0) {
+            fileExtension = link.substring(lastDotIndex);
+        } else {
+            fileExtension = DEFAULT_EXTENSION;
+        }
+        return fileExtension;
     }
 
     public DownloadableDocument getDocument(HtmlPage gatewayPage, String courseName) {
-        return new DownloadableDocument(fetchFileName(gatewayPage), fetchDownloadLink(gatewayPage), courseName, fetchFileExtension(""));
+        String pageContent = gatewayPage.asXml();
+        String name = fetchFileName(gatewayPage);
+        String downloadLink = fetchDownloadLink(pageContent);
+        String extension = fetchFileExtension(downloadLink);
+        return new DownloadableDocument(name, downloadLink, courseName, extension);
     }
 }

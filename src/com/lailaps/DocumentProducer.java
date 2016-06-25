@@ -1,6 +1,5 @@
 package com.lailaps;
 
-import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.lailaps.crawler.CourseCrawler;
 import com.lailaps.crawler.DocumentCrawler;
