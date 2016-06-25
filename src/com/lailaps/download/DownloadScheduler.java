@@ -1,4 +1,4 @@
-package com.lailaps;
+package com.lailaps.download;
 
 import java.util.concurrent.LinkedBlockingQueue;
 

@@ -1,7 +1,8 @@
-package com.lailaps;
+package com.lailaps.download;
 
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.lailaps.PreferencesManager;
 
 import java.io.*;
 import java.nio.file.Files;

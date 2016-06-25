@@ -1,4 +1,4 @@
-package com.lailaps;
+package com.lailaps.download;
 
 public class DownloadableDocument {
 

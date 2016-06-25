@@ -1,9 +1,11 @@
-package com.lailaps;
+package com.lailaps.download;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.lailaps.Browser;
 import com.lailaps.crawler.CourseCrawler;
 import com.lailaps.crawler.DocumentCrawler;
 import com.lailaps.crawler.GatewayCrawler;
+import com.lailaps.download.DownloadableDocument;
 
 import java.io.IOException;
 import java.util.List;
@@ -58,7 +60,7 @@ public class DocumentProducer implements Runnable{
         }
     }
 
-    //todo rename?
+    //todo rename
     private void crawlWebsite() throws IOException {
         List<String> courseLinks = courseCrawler.fetchCourseLinks(overviewPage);
         for (String link : courseLinks) {
@@ -66,7 +68,7 @@ public class DocumentProducer implements Runnable{
         }
     }
 
-    //todo rename?
+    //todo rename, more than 1 effect.
     private void crawlCourse(String courseLink) throws IOException {
         HtmlPage coursePage = browser.getPage(courseLink);
         List<String> downloadLinks = gatewayCrawler.fetchDownloadLinks(coursePage);

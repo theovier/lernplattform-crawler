@@ -1,5 +1,9 @@
 package com.lailaps;
 
+import com.lailaps.download.DocumentProducer;
+import com.lailaps.download.DownloadScheduler;
+import com.lailaps.download.DownloadableDocument;
+import com.lailaps.download.Downloader;
 import com.lailaps.login.LoginClient;
 import com.lailaps.login.LoginCredentials;
 import com.lailaps.login.WrongCredentialsException;
