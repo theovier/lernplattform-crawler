@@ -80,7 +80,7 @@ public class ProgressWindow implements DownloadObserver {
             frame.setTitle("Finished downloading");
             infoLabel.setText("finished. Downloaded: #" + downloadCounter);
             textArea.append("====================================================" + System.lineSeparator());
-            textArea.append("FINISHED DOWNLOADING: # " + downloadCounter + "FILES CREATED");
+            textArea.append("FINISHED DOWNLOADING");
         } else {
             downloadCounter++;
             infoLabel.setText("Files downloaded: #" + downloadCounter);
