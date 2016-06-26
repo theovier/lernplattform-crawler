@@ -11,9 +11,9 @@ import java.awt.event.KeyEvent;
 public class Window {
 
     public static final String TITLE = "lailaps";
-    public static final int WIDTH = 500;
-    public static final int HEIGHT = 250;
-    public static final String[] EMAILS = {"@stud.hshl.de", "@hshl.de"};
+    public static final int WIDTH = 650;
+    public static final int HEIGHT = 350;
+    public static final String[] EMAILS = {"@stud.hshl.de"};
 
     private JFrame frame;
     private JPanel panel;
