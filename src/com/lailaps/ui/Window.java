@@ -40,7 +40,7 @@ public class Window {
         initController();
 
         try {
-            frame.setIconImage(ImageIO.read(getClass().getResource("/resources/images/lailaps_32x32.png")));
+            frame.setIconImage(ImageIO.read(getClass().getResource("/resources/images/lailaps2_32x32.png")));
         } catch (IOException e) {
 
         }
