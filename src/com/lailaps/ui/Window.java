@@ -24,6 +24,9 @@ public class Window {
     private JButton btnLogin, btnBrowse;
     private JComboBox <String> emailList;
     private JFileChooser dirChooser;
+    private JMenuBar menuBar;
+    private JMenu helpMenu;
+    private JMenuItem aboutItem, checkForUpdateItem;
     private String currentDir;
     private Director director;
 
@@ -34,22 +37,18 @@ public class Window {
         setWidgetPositions();
         configureDirectoryChooser();
         configureTextFields();
+        configureMenus();
         initPanel();
         addPanelContent();
         initFrame();
+        setIcon();
         initController();
-
-        try {
-            frame.setIconImage(ImageIO.read(getClass().getResource("/resources/images/lailaps2_32x32.png")));
-        } catch (IOException e) {
-
-        }
-
     }
 
     private void setLookAndFeel() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.getDefaults().put("Button.showMnemonics", Boolean.TRUE);
         }
         catch (Exception e) {
             //won't happen
@@ -64,6 +63,10 @@ public class Window {
         directoryField = new JFormattedTextField();
         passwordField = new JPasswordField();
         dirChooser = new JFileChooser("Choose Directory");
+        menuBar = new JMenuBar();
+        helpMenu = new JMenu("Help");
+        aboutItem = new JMenuItem("About");
+        checkForUpdateItem = new JMenuItem("Check for Updates");
         createHints();
     }
 
@@ -125,6 +128,13 @@ public class Window {
         directoryField.setText(currentDir);
     }
 
+    private void configureMenus() {
+        helpMenu.setMnemonic('H');
+        menuBar.add(helpMenu);
+        helpMenu.add(aboutItem);
+        helpMenu.add(checkForUpdateItem);
+    }
+
     private void initPanel() {
         panel = new JPanel();
         panel.setLayout(null);
@@ -145,7 +155,16 @@ public class Window {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
+        frame.setJMenuBar(menuBar);
         frame.setContentPane(panel);
+    }
+
+    private void setIcon()  {
+        try {
+            frame.setIconImage(ImageIO.read(getClass().getResource("/resources/images/lailaps2_32x32.png")));
+        } catch (IOException e) {
+
+        }
     }
 
     private void initController() {
