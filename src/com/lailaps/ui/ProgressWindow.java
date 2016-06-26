@@ -1,19 +1,25 @@
 package com.lailaps.ui;
 
 
+import com.lailaps.DownloadObserver;
+import com.lailaps.download.DownloadableDocument;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 
 //todo extract baseclass WINDOW
-public class ProgressWindow {
+public class ProgressWindow implements DownloadObserver {
 
     private JFrame frame;
     private JPanel panel;
     private JLabel infoLabel;
     private JTextArea textArea;
     private JScrollPane scrollPane;
-    
+    private int downloadCounter;
+    private static final String DEFAULT_INFO = "Please wait...";
+
     public ProgressWindow() {
         setLookAndFeel();
         initWidgets();
@@ -21,6 +27,7 @@ public class ProgressWindow {
         initPanel();
         addPanelContent();
         initFrame();
+        downloadCounter = 0;
     }
 
     private void setLookAndFeel() {
@@ -33,7 +40,7 @@ public class ProgressWindow {
     }
 
     private void initWidgets() {
-        infoLabel = new JLabel("Please wait...", SwingConstants.CENTER);
+        infoLabel = new JLabel(DEFAULT_INFO, SwingConstants.CENTER);
         textArea = new JTextArea();
         scrollPane = new JScrollPane(textArea);
     }
@@ -45,11 +52,13 @@ public class ProgressWindow {
 
     private void configureTextArea() {
         textArea.setEditable(false);
+        DefaultCaret caret = (DefaultCaret)textArea.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
     }
 
     private void addPanelContent() {
         panel.add(infoLabel, BorderLayout.NORTH);
-        panel.add(textArea, BorderLayout.CENTER);
+        panel.add(scrollPane, BorderLayout.CENTER);
     }
 
     private void initFrame() {
@@ -62,5 +71,12 @@ public class ProgressWindow {
 
     public void show() {
         frame.setVisible(true);
+    }
+
+    @Override
+    public void addDownload(DownloadableDocument document) {
+        downloadCounter++;
+        infoLabel.setText("Files downloaded: #"+downloadCounter);
+        textArea.append(document.toString() +  System.lineSeparator());
     }
 }

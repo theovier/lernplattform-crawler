@@ -7,6 +7,7 @@ import com.lailaps.download.Downloader;
 import com.lailaps.login.LoginClient;
 import com.lailaps.login.LoginCredentials;
 import com.lailaps.login.WrongCredentialsException;
+import com.lailaps.ui.ProgressWindow;
 import com.lailaps.ui.Window;
 
 import java.io.IOException;
@@ -80,6 +81,9 @@ public class Director {
 
     private void initDownloader() {
         downloader = new Downloader(downloadBrowser);
+        ProgressWindow p = new ProgressWindow();
+        p.show();
+        downloader.addObserver(p);
     }
 
     private void initQueue() {

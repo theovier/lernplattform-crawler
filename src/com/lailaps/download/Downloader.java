@@ -3,6 +3,8 @@ package com.lailaps.download;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.lailaps.Browser;
+import com.lailaps.DownloadObserver;
+import com.lailaps.Observable;
 import com.lailaps.PreferencesManager;
 import com.lailaps.crawler.TermCrawler;
 
@@ -11,15 +13,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Downloader {
+public class Downloader implements Observable {
 
     private static String rootDirName;
     private static String rootDirectory;
     private Browser browser;
+    private List<DownloadObserver> observers;
 
     public Downloader (Browser browser) {
         this.browser = browser;
+        observers = new ArrayList<>(); //todo extract
     }
 
     private static String fetchRootDir() {
@@ -45,7 +51,8 @@ public class Downloader {
             Files.createDirectories(target);
             Page downloadPage = browser.getPage(doc.getDownloadLink());
             copyFileToDisc(downloadPage, target);
-            notifyProgress(doc);
+            notifyObservers(doc);
+            System.out.println(doc); //todo remove
         } catch (IOException e) {
             System.err.println("Error while downloading " + doc);
         }
@@ -55,10 +62,6 @@ public class Downloader {
         try (InputStream source = downloadPage.getWebResponse().getContentAsStream()) {
             Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
         }
-    }
-
-    private void notifyProgress(DownloadableDocument addedDocument) {
-        System.out.println(addedDocument);
     }
 
     public void showRootFolder() {
@@ -76,5 +79,20 @@ public class Downloader {
 
     public static String getRootDirName() {
         return rootDirName;
+    }
+
+    @Override
+    public void addObserver(DownloadObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(DownloadObserver observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(DownloadableDocument downloadedDocument) {
+        observers.forEach(observer -> observer.addDownload(downloadedDocument));
     }
 }
