@@ -64,7 +64,7 @@ public class ProgressWindow implements DownloadObserver {
     private void initFrame() {
         frame = new JFrame("Downloading...");
         frame.setSize(600, 400);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //todo hide on close? and button to show again?
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setContentPane(panel);
     }
@@ -75,8 +75,16 @@ public class ProgressWindow implements DownloadObserver {
 
     @Override
     public void addDownload(DownloadableDocument document) {
-        downloadCounter++;
-        infoLabel.setText("Files downloaded: #"+downloadCounter);
-        textArea.append(document.toString() +  System.lineSeparator());
+        if (document == null) {
+         //todo change this
+            frame.setTitle("Finished downloading");
+            infoLabel.setText("finished. Downloaded: #" + downloadCounter);
+            textArea.append("====================================================" + System.lineSeparator());
+            textArea.append("FINISHED DOWNLOADING: # " + downloadCounter + "FILES CREATED");
+        } else {
+            downloadCounter++;
+            infoLabel.setText("Files downloaded: #" + downloadCounter);
+            textArea.append(document.toString() +  System.lineSeparator());
+        }
     }
 }

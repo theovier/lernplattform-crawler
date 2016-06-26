@@ -30,7 +30,6 @@ public class DownloadableDocument {
 
     @Override
     public String toString() {
-        return courseName + ": " + name;
-        //return name + ", " + courseName;
+        return courseName + ": " + name + fileExtension;
     }
 }

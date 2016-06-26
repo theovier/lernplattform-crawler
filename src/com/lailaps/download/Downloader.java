@@ -2,10 +2,7 @@ package com.lailaps.download;
 
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.lailaps.Browser;
-import com.lailaps.DownloadObserver;
-import com.lailaps.Observable;
-import com.lailaps.PreferencesManager;
+import com.lailaps.*;
 import com.lailaps.crawler.TermCrawler;
 
 import java.io.*;
@@ -16,7 +13,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Downloader implements Observable {
+public class Downloader implements Observable, Completable {
 
     private static String rootDirName;
     private static String rootDirectory;
@@ -25,7 +22,7 @@ public class Downloader implements Observable {
 
     public Downloader (Browser browser) {
         this.browser = browser;
-        observers = new ArrayList<>(); //todo extract
+        observers = new ArrayList<>();
     }
 
     private static String fetchRootDir() {
@@ -94,5 +91,11 @@ public class Downloader implements Observable {
     @Override
     public void notifyObservers(DownloadableDocument downloadedDocument) {
         observers.forEach(observer -> observer.addDownload(downloadedDocument));
+    }
+
+    @Override
+    public void finish() {
+        showRootFolder();
+        notifyObservers(null);  //todo tell observers it finished on another way
     }
 }
