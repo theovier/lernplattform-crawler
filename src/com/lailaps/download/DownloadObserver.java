@@ -1,6 +1,5 @@
-package com.lailaps;
+package com.lailaps.download;
 
-import com.lailaps.download.DownloadableDocument;
 
 public interface DownloadObserver {
     void addDownload(DownloadableDocument document);

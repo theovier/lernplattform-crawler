@@ -1,9 +1,7 @@
 package com.lailaps.download;
 
 import com.gargoylesoftware.htmlunit.Page;
-import com.gargoylesoftware.htmlunit.WebClient;
 import com.lailaps.*;
-import com.lailaps.crawler.TermCrawler;
 
 import java.io.*;
 import java.nio.file.Files;

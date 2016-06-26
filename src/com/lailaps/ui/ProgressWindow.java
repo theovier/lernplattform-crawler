@@ -1,7 +1,7 @@
 package com.lailaps.ui;
 
 
-import com.lailaps.DownloadObserver;
+import com.lailaps.download.DownloadObserver;
 import com.lailaps.download.DownloadableDocument;
 
 import javax.swing.*;
