@@ -4,9 +4,11 @@ import com.lailaps.Director;
 import com.lailaps.login.LoginCredentials;
 import com.lailaps.PreferencesManager;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 public class Window {
 
@@ -36,6 +38,13 @@ public class Window {
         addPanelContent();
         initFrame();
         initController();
+
+        try {
+            frame.setIconImage(ImageIO.read(getClass().getResource("/resources/images/lailaps_32x32.png")));
+        } catch (IOException e) {
+
+        }
+
     }
 
     private void setLookAndFeel() {

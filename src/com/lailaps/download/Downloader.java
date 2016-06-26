@@ -23,10 +23,6 @@ public class Downloader implements Observable, Completable {
         observers = new ArrayList<>();
     }
 
-    private static String fetchRootDir() {
-        return PreferencesManager.getInstance().getDirectory() + "/" + rootDirName + "/";
-    }
-
     public void startDownload(DownloadableDocument doc) {
         Path target = getFilePath(doc);
         boolean alreadyExists = Files.exists(target);
@@ -70,6 +66,10 @@ public class Downloader implements Observable, Completable {
     public static void changeRootDir(String rootDirectoryName) {
         rootDirName = rootDirectoryName;
         rootDirectory = fetchRootDir();
+    }
+
+    private static String fetchRootDir() {
+        return PreferencesManager.getInstance().getDirectory() + "/" + rootDirName + "/";
     }
 
     public static String getRootDirName() {
