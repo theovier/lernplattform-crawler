@@ -10,7 +10,9 @@ import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
 
-//todo stop button.
+//todo final strings for text
+//todo font with same size for characters?
+//todo calculate space needed
 public class ProgressWindow extends Window implements DownloadObserver {
 
     private JLabel infoLabel;
@@ -63,14 +65,14 @@ public class ProgressWindow extends Window implements DownloadObserver {
         downloadCounter++;
         infoLabel.setText("Files downloaded: #" + downloadCounter);
         textArea.append("Downloaded: ");
-        textArea.append(document.toShortString(80));
+        textArea.append(document.toShortString(80)); //todo
         textArea.append(System.lineSeparator());
     }
 
     @Override
     public void skippedDownload(DownloadableDocument skippedDocument) {
         textArea.append("File already exists (skipped): ");
-        textArea.append(skippedDocument.toShortString(60));
+        textArea.append(skippedDocument.toShortString(60)); //todo
         textArea.append(System.lineSeparator());
     }
 
