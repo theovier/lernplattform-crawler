@@ -5,7 +5,9 @@ import com.lailaps.download.DownloadableDocument;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 
 //todo stop button.
@@ -16,10 +18,13 @@ public class ProgressWindow extends Window implements DownloadObserver {
     private JScrollPane scrollPane;
     private int downloadCounter;
     private static final String DEFAULT_INFO = "Please wait...";
+    private Font defaultFont;
 
     public ProgressWindow() {
         super(600, 400, "Downloading...");
         downloadCounter = 0;
+        frame.setResizable(true);
+        setFonts();
         configureTextArea();
     }
 
@@ -42,8 +47,13 @@ public class ProgressWindow extends Window implements DownloadObserver {
         panel.add(scrollPane, BorderLayout.CENTER);
     }
 
+    private void setFonts() {
+        defaultFont = UIManager.getDefaults().getFont("TextPane.font");
+    }
+
     private void configureTextArea() {
         textArea.setEditable(false);
+        textArea.setFont(defaultFont);
         DefaultCaret caret = (DefaultCaret)textArea.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
     }
@@ -52,14 +62,15 @@ public class ProgressWindow extends Window implements DownloadObserver {
     public void addDownload(DownloadableDocument document) {
         downloadCounter++;
         infoLabel.setText("Files downloaded: #" + downloadCounter);
-        textArea.append(document.toString());
+        textArea.append("Downloaded: ");
+        textArea.append(document.toShortString(80));
         textArea.append(System.lineSeparator());
     }
 
     @Override
     public void skippedDownload(DownloadableDocument skippedDocument) {
         textArea.append("File already exists (skipped): ");
-        textArea.append(skippedDocument.toString());
+        textArea.append(skippedDocument.toShortString(60));
         textArea.append(System.lineSeparator());
     }
 
@@ -67,7 +78,7 @@ public class ProgressWindow extends Window implements DownloadObserver {
     public void finishedDownloading() {
         frame.setTitle("Finished Downloading");
         infoLabel.setText("finished. Downloaded: #" + downloadCounter);
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 60; i++) {
             textArea.append("=");
         }
     }

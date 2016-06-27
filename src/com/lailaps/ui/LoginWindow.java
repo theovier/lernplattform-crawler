@@ -18,9 +18,6 @@ public class LoginWindow extends Window {
     private JButton btnLogin, btnBrowse;
     private JComboBox <String> emailList;
     private JFileChooser dirChooser;
-    private JMenuBar menuBar;
-    private JMenu helpMenu;
-    private JMenuItem aboutItem, checkForUpdateItem;
     private String currentDir;
     private Director director;
 
@@ -28,7 +25,6 @@ public class LoginWindow extends Window {
         super();
         configureDirectoryChooser();
         configureTextFields();
-        configureMenus();
         initController();
     }
 
@@ -41,10 +37,6 @@ public class LoginWindow extends Window {
         directoryField = new JFormattedTextField();
         passwordField = new JPasswordField();
         dirChooser = new JFileChooser("Choose Directory");
-        menuBar = new JMenuBar();
-        helpMenu = new JMenu("Help");
-        aboutItem = new JMenuItem("About");
-        checkForUpdateItem = new JMenuItem("Check for Updates");
         createHints();
     }
 
@@ -114,7 +106,6 @@ public class LoginWindow extends Window {
 
     protected void initFrame() {
         super.initFrame();
-        frame.setJMenuBar(menuBar);
         frame.setContentPane(panel);
     }
 
@@ -127,13 +118,6 @@ public class LoginWindow extends Window {
     private void configureTextFields() {
         directoryField.setEditable(false);
         directoryField.setText(currentDir);
-    }
-
-    private void configureMenus() {
-        helpMenu.setMnemonic('H');
-        menuBar.add(helpMenu);
-        helpMenu.add(aboutItem);
-        helpMenu.add(checkForUpdateItem);
     }
 
     private void initController() {

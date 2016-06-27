@@ -1,6 +1,5 @@
 package com.lailaps.download;
 
-//todo implements Downloadable?
 public class DownloadableDocument {
 
     private String name, downloadLink, courseName, fileExtension;
@@ -31,5 +30,15 @@ public class DownloadableDocument {
     @Override
     public String toString() {
         return courseName + ": " + name + fileExtension;
+    }
+
+    public String toShortString(int maxLength) {
+        String displayName = courseName + ": " + name;
+        if (displayName.length() > maxLength) {
+            displayName = displayName.substring(0, maxLength);
+            displayName += "[...]";
+        }
+        displayName += fileExtension;
+        return displayName;
     }
 }

@@ -12,6 +12,9 @@ public class Window {
 
     protected JFrame frame;
     protected JPanel panel;
+    protected JMenuBar menuBar;
+    protected JMenu helpMenu;
+    protected JMenuItem aboutItem, checkForUpdateItem;
 
     public Window(int width, int height, String title) {
         this.width = width;
@@ -29,6 +32,7 @@ public class Window {
         initWidgets();
         setListeners();
         setWidgetPositions();
+        configureMenus();
         initPanel();
         addPanelContent();
         initFrame();
@@ -46,7 +50,10 @@ public class Window {
     }
 
     protected void initWidgets() {
-
+        menuBar = new JMenuBar();
+        helpMenu = new JMenu("Help");
+        aboutItem = new JMenuItem("About");
+        checkForUpdateItem = new JMenuItem("Check for Updates");
     }
 
     protected void setListeners() {
@@ -55,6 +62,13 @@ public class Window {
 
     protected void setWidgetPositions() {
 
+    }
+
+    protected void configureMenus() {
+        helpMenu.setMnemonic('H');
+        menuBar.add(helpMenu);
+        helpMenu.add(aboutItem);
+        helpMenu.add(checkForUpdateItem);
     }
 
     protected void initPanel() {
@@ -72,6 +86,7 @@ public class Window {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setContentPane(panel);
+        frame.setJMenuBar(menuBar);
     }
 
     private void setIcon()  {
