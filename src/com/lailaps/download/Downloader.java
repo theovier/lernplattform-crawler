@@ -11,7 +11,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Downloader implements Observable, Completable {
+public class Downloader implements Observable {
 
     private static String rootDirName;
     private static String rootDirectory;
@@ -28,6 +28,8 @@ public class Downloader implements Observable, Completable {
         boolean alreadyExists = Files.exists(target);
         if (!alreadyExists) {
             download(doc, target);
+        } else {
+            notifyObserversSkipped(doc);
         }
     }
 
@@ -42,7 +44,7 @@ public class Downloader implements Observable, Completable {
             Files.createDirectories(target);
             Page downloadPage = browser.getPage(doc.getDownloadLink());
             copyFileToDisc(downloadPage, target);
-            notifyObservers(doc);
+            notifyObserversSuccess(doc);
             System.out.println(doc); //todo remove
         } catch (IOException e) {
             System.err.println("Error while downloading " + doc);
@@ -76,24 +78,28 @@ public class Downloader implements Observable, Completable {
         return rootDirName;
     }
 
+    public void finishDownloading() {
+        showRootFolder();
+        notifyObserversEnd();
+    }
+
     @Override
     public void addObserver(DownloadObserver observer) {
         observers.add(observer);
     }
 
     @Override
-    public void removeObserver(DownloadObserver observer) {
-        observers.remove(observer);
-    }
-
-    @Override
-    public void notifyObservers(DownloadableDocument downloadedDocument) {
+    public void notifyObserversSuccess(DownloadableDocument downloadedDocument) {
         observers.forEach(observer -> observer.addDownload(downloadedDocument));
     }
 
     @Override
-    public void finish() {
-        showRootFolder();
-        notifyObservers(null);  //todo tell observers it finished on another way
+    public void notifyObserversSkipped(DownloadableDocument skippedDocument) {
+        observers.forEach(observer -> observer.skippedDownload(skippedDocument));
+    }
+
+    @Override
+    public void notifyObserversEnd() {
+        observers.forEach(observer -> observer.finishedDownloading());
     }
 }

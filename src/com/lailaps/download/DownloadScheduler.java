@@ -19,7 +19,7 @@ public class DownloadScheduler implements Runnable {
         while (documentProducer.isRunning() || !queue.isEmpty()) {
             downloadFromDocumentQueue();
         }
-        downloader.finish();
+        downloader.finishDownloading();
     }
 
     public void downloadFromDocumentQueue() {

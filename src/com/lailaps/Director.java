@@ -81,8 +81,10 @@ public class Director {
 
     private void initDownloader() {
         downloader = new Downloader(downloadBrowser);
+        //todo extract
         ProgressWindow p = new ProgressWindow();
         p.show();
+        view.hide();
         downloader.addObserver(p);
     }
 
