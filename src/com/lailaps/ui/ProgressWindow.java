@@ -23,7 +23,6 @@ public class ProgressWindow extends Window implements DownloadObserver {
     private static final String SUCCESS = "Downloaded: ";
     private static final String SKIPPED = "File already exists (skipped): ";
 
-
     public ProgressWindow() {
         super(600, 400, TITLE);
         downloadCounter = 0;
