@@ -29,7 +29,7 @@ public class Downloader implements Observable {
         if (!alreadyExists) {
             download(doc, target);
         } else {
-            notifyObserversSkipped(doc);
+            notifyObserversSkipped(doc, false);
         }
     }
 
@@ -45,9 +45,10 @@ public class Downloader implements Observable {
             Page downloadPage = browser.getPage(doc.getDownloadLink());
             copyFileToDisc(downloadPage, target);
             notifyObserversSuccess(doc);
-            System.out.println(doc); //todo remove
+            System.out.println("Downloaded: " + doc);
         } catch (IOException e) {
-            System.err.println("Error while downloading " + doc);
+            notifyObserversSkipped(doc, true);
+            System.err.println("Error While Downloading " + doc);
         }
     }
 
@@ -58,6 +59,7 @@ public class Downloader implements Observable {
     }
 
     public void showRootFolder() {
+        //todo on mac not explorer.exe
         try {
             Runtime.getRuntime().exec("explorer.exe /select," + Paths.get(rootDirectory));
         } catch (IOException e) {
@@ -94,8 +96,8 @@ public class Downloader implements Observable {
     }
 
     @Override
-    public void notifyObserversSkipped(DownloadableDocument skippedDocument) {
-        observers.forEach(observer -> observer.skippedDownload(skippedDocument));
+    public void notifyObserversSkipped(DownloadableDocument skippedDocument, boolean isError) {
+        observers.forEach(observer -> observer.skippedDownload(skippedDocument, isError));
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.lailaps.download.Downloader;
 import com.lailaps.login.LoginClient;
 import com.lailaps.login.LoginCredentials;
 import com.lailaps.login.WrongCredentialsException;
+import com.lailaps.ui.LoginWindow;
 import com.lailaps.ui.ProgressWindow;
 import com.lailaps.ui.Window;
 
@@ -16,7 +17,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 //todo find a better name
 public class Director {
 
-    private Window view;
+    private LoginWindow view;
     private LoginClient loginClient;
     private Browser browser, downloadBrowser;
     private Downloader downloader;
@@ -25,7 +26,7 @@ public class Director {
     private Thread producerThread, consumerThread;
     private LinkedBlockingQueue<DownloadableDocument> downloadableDocuments;
 
-    public Director (Window view) {
+    public Director (LoginWindow view) {
         this.view = view;
         loginClient = new LoginClient();
     }
