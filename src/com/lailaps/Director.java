@@ -9,7 +9,6 @@ import com.lailaps.login.LoginCredentials;
 import com.lailaps.login.WrongCredentialsException;
 import com.lailaps.ui.LoginWindow;
 import com.lailaps.ui.ProgressWindow;
-import com.lailaps.ui.Window;
 
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -17,17 +16,18 @@ import java.util.concurrent.LinkedBlockingQueue;
 //todo find a better name
 public class Director {
 
-    private LoginWindow view;
+    private LoginWindow loginWindow;
+    private ProgressWindow progressWindow;
     private LoginClient loginClient;
-    private Browser browser, downloadBrowser;
+    private Browser crawlBrowser, downloadBrowser;
     private Downloader downloader;
     private DocumentProducer producer;
     private DownloadScheduler consumer;
     private Thread producerThread, consumerThread;
     private LinkedBlockingQueue<DownloadableDocument> downloadableDocuments;
 
-    public Director (LoginWindow view) {
-        this.view = view;
+    public Director (LoginWindow loginWindow) {
+        this.loginWindow = loginWindow;
         loginClient = new LoginClient();
     }
 
@@ -36,8 +36,7 @@ public class Director {
             Thread.currentThread().setName("com.lailaps.Director");
             boolean loginSuccess = login(credentials);
             if (loginSuccess) {
-                System.out.println("Erfolgreich eingeloggt. Beginne mit Download.");
-                PreferencesManager.getInstance().setUsername(credentials.getUser());
+                saveUsername(credentials.getUser());
                 startDownload();
             }
         }).start();
@@ -47,11 +46,15 @@ public class Director {
         try {
             return loginClient.login(credentials);
         } catch (WrongCredentialsException e) {
-            System.out.println("wrong login credentials"); //todo send to view
+            System.out.println("wrong login credentials"); //todo send to loginWindow
         } catch (IOException e) {
-            System.out.println("connection problems"); //todo send to view
+            System.out.println("connection problems"); //todo send to loginWindow
         }
         return false;
+    }
+
+    private void saveUsername(String username) {
+        PreferencesManager.getInstance().setUsername(username);
     }
 
     private void startDownload() {
@@ -65,39 +68,46 @@ public class Director {
     }
 
     private void prepareDownload() {
-        initBrowser();
-        initDownloadBrowser();
+        initBrowsers();
         initDownloader();
         initQueue();
         initThreads();
+        initProgressWindow();
     }
 
-    private void initBrowser() {
-        browser = loginClient.getBrowser();
+    private void initBrowsers() {
+        initCrawlBrowser();
+        initDownloadBrowser();
+    }
+
+    private void initCrawlBrowser() {
+        crawlBrowser = loginClient.getBrowser();
     }
 
     private void initDownloadBrowser() {
         downloadBrowser = new Browser();
-        downloadBrowser.setCookieManager(browser.getCookieManager());
+        downloadBrowser.setCookieManager(crawlBrowser.getCookieManager());
     }
 
     private void initDownloader() {
         downloader = new Downloader(downloadBrowser);
-        //todo extract
-        ProgressWindow p = new ProgressWindow();
-        p.show();
-        view.hide();
-        downloader.addObserver(p);
     }
 
     private void initQueue() {
         downloadableDocuments = new LinkedBlockingQueue<>(100);
-        producer = new DocumentProducer(downloadableDocuments, browser);
+        producer = new DocumentProducer(downloadableDocuments, crawlBrowser);
         consumer = new DownloadScheduler(downloadableDocuments, downloader, producer);
     }
 
     private void initThreads() {
         producerThread = new Thread(producer);
         consumerThread = new Thread(consumer);
+    }
+
+    private void initProgressWindow() {
+        loginWindow.hide();
+        progressWindow = new ProgressWindow();
+        progressWindow.show();
+        downloader.addObserver(progressWindow); //todo extract
     }
 }
