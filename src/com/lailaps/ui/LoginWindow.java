@@ -1,5 +1,8 @@
 package com.lailaps.ui;
 
+import com.bric.plaf.AquaThrobberUI;
+import com.bric.plaf.ThrobberUI;
+import com.bric.swing.JThrobber;
 import com.lailaps.Director;
 import com.lailaps.login.LoginCredentials;
 import com.lailaps.PreferencesManager;
@@ -20,12 +23,15 @@ public class LoginWindow extends Window {
     private JFileChooser dirChooser;
     private String currentDir;
     private Director director;
+    private JThrobber throbber;
 
     public LoginWindow() {
         super();
         configureDirectoryChooser();
         configureTextFields();
         initController();
+        configureThrobber();
+        createHints();
         userField.setText(PreferencesManager.getUsername());
     }
 
@@ -38,7 +44,7 @@ public class LoginWindow extends Window {
         directoryField = new JFormattedTextField();
         passwordField = new JPasswordField();
         dirChooser = new JFileChooser("Choose Directory");
-        createHints();
+        throbber = new JThrobber();
     }
 
     protected void setListeners() {
@@ -88,6 +94,7 @@ public class LoginWindow extends Window {
         btnLogin.setBounds(125, 150, 75, 20);
         btnBrowse.setBounds(400, 190, 75, 25);
         directoryField.setBounds(125, 190, 270, 25);
+        throbber.setBounds(50, 75, 50, 50);
     }
 
     protected void initPanel() {
@@ -103,6 +110,7 @@ public class LoginWindow extends Window {
         panel.add(emailList);
         panel.add(btnBrowse);
         panel.add(directoryField);
+        panel.add(throbber);
     }
 
     protected void initFrame() {
@@ -125,6 +133,12 @@ public class LoginWindow extends Window {
         director = new Director(this);
     }
 
+    private void configureThrobber() {
+        throbber.setUI(new AquaThrobberUI());
+        throbber.putClientProperty(ThrobberUI.PERIOD_MULTIPLIER_KEY, 2);
+        throbber.setActive(false);
+    }
+
     private void createHints() {
         //todo rewrite
         //HintText usernameHint = new HintText(userField, "Theo.Harkenbusch");
@@ -132,6 +146,7 @@ public class LoginWindow extends Window {
     }
 
     private void startLogin() {
+        throbber.setActive(true);
         LoginCredentials credentials = createCredentials();
         director.start(credentials);
     }
