@@ -30,14 +30,13 @@ public class LoginClient {
         java.util.logging.Logger.getLogger("com.gargoylesoftware").setLevel(java.util.logging.Level.OFF);
     }
 
-    //todo nullpointer exception
-    public boolean login(LoginCredentials credentials) throws IOException {
+    public boolean login(LoginCredentials credentials) throws IOException, NullPointerException {
         loginToCampusPortal(credentials);
         loginToLernplattform();
         return true;
     }
 
-    private void loginToCampusPortal(LoginCredentials credentials) throws IOException {
+    private void loginToCampusPortal(LoginCredentials credentials) throws IOException, NullPointerException {
         currentPage = browser.getPage("https://campusportal.hshl.de");
         getLoginWidgets();
         setLoginValues(credentials);
@@ -45,14 +44,13 @@ public class LoginClient {
         checkForLoginError();
     }
 
-    //todo scheint nicht zu klappen manchmal? Nullpointer =>
     private void getLoginWidgets() {
         loginButton = (HtmlSubmitInput) currentPage.getElementById("submit_button");
         loginUser = (HtmlTextInput) currentPage.getElementById("user_name");
         loginPassword = (HtmlPasswordInput) currentPage.getElementById("password");
     }
 
-    private void setLoginValues(LoginCredentials credentials) {
+    private void setLoginValues(LoginCredentials credentials) throws NullPointerException {
         loginUser.setValueAttribute(credentials.getUser());
         loginPassword.setValueAttribute(credentials.getPassword());
     }
