@@ -10,6 +10,5 @@ public class Main {
     }
 
     //todo wait logo while logging in and downloading
-    //todo xml for strings like in Android?
 }
 

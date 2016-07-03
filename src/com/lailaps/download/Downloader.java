@@ -45,10 +45,8 @@ public class Downloader implements Observable {
             Page downloadPage = browser.getPage(doc.getDownloadLink());
             copyFileToDisc(downloadPage, target);
             notifyObserversSuccess(doc);
-            System.out.println("Downloaded: " + doc);
         } catch (IOException e) {
             notifyObserversSkipped(doc, true);
-            System.err.println("Error While Downloading " + doc);
         }
     }
 

@@ -26,6 +26,7 @@ public class LoginWindow extends Window {
         configureDirectoryChooser();
         configureTextFields();
         initController();
+        userField.setText(PreferencesManager.getUsername());
     }
 
     protected void initWidgets() {
@@ -125,8 +126,9 @@ public class LoginWindow extends Window {
     }
 
     private void createHints() {
-        HintText usernameHint = new HintText(userField, "Theo.Harkenbusch");
-        HintText passwordHint = new HintText(passwordField, "password");
+        //todo rewrite
+        //HintText usernameHint = new HintText(userField, "Theo.Harkenbusch");
+        //HintText passwordHint = new HintText(passwordField, "password");
     }
 
     private void startLogin() {

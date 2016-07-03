@@ -37,6 +37,7 @@ public class Director {
             boolean loginSuccess = login(credentials);
             if (loginSuccess) {
                 System.out.println("Erfolgreich eingeloggt. Beginne mit Download.");
+                PreferencesManager.getInstance().setUsername(credentials.getUser());
                 startDownload();
             }
         }).start();

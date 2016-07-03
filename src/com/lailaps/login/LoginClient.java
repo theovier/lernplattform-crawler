@@ -30,6 +30,7 @@ public class LoginClient {
         java.util.logging.Logger.getLogger("com.gargoylesoftware").setLevel(java.util.logging.Level.OFF);
     }
 
+    //todo nullpointer exception
     public boolean login(LoginCredentials credentials) throws IOException {
         loginToCampusPortal(credentials);
         loginToLernplattform();
@@ -44,6 +45,7 @@ public class LoginClient {
         checkForLoginError();
     }
 
+    //todo scheint nicht zu klappen manchmal? Nullpointer =>
     private void getLoginWidgets() {
         loginButton = (HtmlSubmitInput) currentPage.getElementById("submit_button");
         loginUser = (HtmlTextInput) currentPage.getElementById("user_name");

@@ -72,6 +72,7 @@ public class ProgressWindow extends Window implements DownloadObserver {
         textArea.append(SUCCESS);
         textArea.append(document.toShortString(80));
         textArea.append(System.lineSeparator());
+        System.out.println("Downloaded: " + document);
     }
 
     @Override
@@ -79,6 +80,8 @@ public class ProgressWindow extends Window implements DownloadObserver {
         textArea.append(SKIPPED);
         textArea.append(skippedDocument.toShortString(60));
         textArea.append(System.lineSeparator());
+        if (isError)
+            System.err.println("Error While Downloading " + skippedDocument);
     }
 
     @Override
