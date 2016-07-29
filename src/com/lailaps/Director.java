@@ -45,13 +45,8 @@ public class Director {
     private boolean login(LoginCredentials credentials) {
         try {
             return loginClient.login(credentials);
-        } catch (WrongCredentialsException e) {
-            System.out.println("wrong login credentials"); //todo send to loginWindow
-        } catch (IOException e) {
-            System.out.println("connection problems"); //todo send to loginWindow
-        } catch (NullPointerException e) {
-            System.out.println("problems with loading the site"); //todo send to loginWindow
-            e.getMessage();
+        } catch (Exception e) {
+            loginWindow.showLoginError(e);
         }
         return false;
     }

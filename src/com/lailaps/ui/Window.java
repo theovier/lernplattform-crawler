@@ -69,6 +69,7 @@ public class Window {
         menuBar.add(helpMenu);
         helpMenu.add(aboutItem);
         helpMenu.add(checkForUpdateItem);
+        //todo add new window which pops up at "aboutItem"
     }
 
     protected void initPanel() {

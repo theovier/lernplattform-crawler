@@ -6,6 +6,7 @@ import com.bric.swing.JThrobber;
 import com.lailaps.Director;
 import com.lailaps.login.LoginCredentials;
 import com.lailaps.PreferencesManager;
+import com.lailaps.login.WrongCredentialsException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -158,5 +159,19 @@ public class LoginWindow extends Window {
             password += c;
         }
         return new LoginCredentials(user, String.valueOf(emailList.getSelectedItem()), password);
+    }
+
+    //todo extract interface?
+    public void showLoginError(Exception e) {
+        if (e instanceof WrongCredentialsException) {
+            System.out.println("wrong login credentials");
+        } else if (e instanceof IOException) {
+            System.out.println("connection problems");
+        } else if (e instanceof  NullPointerException) {
+            System.out.println("problems with loading the site");
+            e.getMessage();
+        } else {
+            //todo
+        }
     }
 }
