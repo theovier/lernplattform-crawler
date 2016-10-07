@@ -7,6 +7,7 @@ import com.lailaps.Director;
 import com.lailaps.login.LoginCredentials;
 import com.lailaps.PreferencesManager;
 import com.lailaps.login.WrongCredentialsException;
+import org.apache.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,6 +17,7 @@ import java.io.IOException;
 
 public class LoginWindow extends Window {
 
+    private static final Logger LOG = Logger.getLogger(LoginWindow.class);
     private final static String[] EMAILS = {"@stud.hshl.de"};
     private JFormattedTextField userField, directoryField;
     private JPasswordField passwordField;
@@ -154,24 +156,24 @@ public class LoginWindow extends Window {
 
     private LoginCredentials createCredentials() {
         String user = userField.getText();
-        String password = "";
+        StringBuilder passwordBuilder = new StringBuilder();
         for (char c : passwordField.getPassword()) {
-            password += c;
+            passwordBuilder.append(c);
         }
-        return new LoginCredentials(user, String.valueOf(emailList.getSelectedItem()), password);
+        String password = passwordBuilder.toString();
+        return new LoginCredentials(user, emailList.getSelectedItem().toString(), password);
     }
 
     //todo extract interface?
     public void showLoginError(Exception e) {
         if (e instanceof WrongCredentialsException) {
-            System.out.println("wrong login credentials");
+            LOG.debug("wrong login credentials");
         } else if (e instanceof IOException) {
-            System.out.println("connection problems");
-        } else if (e instanceof  NullPointerException) {
-            System.out.println("problems with loading the site");
-            e.getMessage();
+            LOG.debug("connection problems");
         } else {
-            //todo
+            LOG.error(e);
         }
+        throbber.setActive(false);
+        //todo show error
     }
 }

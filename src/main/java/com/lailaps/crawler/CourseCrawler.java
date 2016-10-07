@@ -20,7 +20,7 @@ public class CourseCrawler extends Crawler {
 
     private List<HtmlElement> fetchCourses(HtmlPage overviewPage) {
         HtmlLabel courseListLabel = overviewPage.getFirstByXPath("//label[@title='" + Downloader.getRootDirName() + "']");
-        HtmlOrderedList courseList = (HtmlOrderedList) courseListLabel.getNextElementSibling().getNextElementSibling();
+        HtmlOrderedList courseList = (HtmlOrderedList) courseListLabel.getNextElementSibling().getNextElementSibling(); //todo refactor
         return courseList.getElementsByTagName("a");
     }
 }

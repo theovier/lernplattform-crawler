@@ -9,6 +9,7 @@ import java.io.IOException;
 
 public class LoginClient {
 
+    private static final Logger LOG = Logger.getLogger(LoginClient.class);
     private Browser browser;
     private HtmlPage currentPage;
     private HtmlSubmitInput loginButton;
@@ -26,6 +27,7 @@ public class LoginClient {
         browser.getOptions().setRedirectEnabled(true);
         browser.getOptions().setThrowExceptionOnScriptError(false);
         browser.getCookieManager().setCookiesEnabled(true);
+        browser.getCache().setMaxSize(0);
     }
 
     private void disableHttpLogging() {
@@ -41,8 +43,8 @@ public class LoginClient {
         return true;
     }
 
-    private void loginToCampusPortal(LoginCredentials credentials) throws IOException, NullPointerException {
-        currentPage = browser.getPage("https://campusportal.hshl.de");
+    private void loginToCampusPortal(LoginCredentials credentials) throws IOException {
+        currentPage = browser.getPage("https://campusportal.hshl.de"); //todo how to wait for side to end loading?
         getLoginWidgets();
         setLoginValues(credentials);
         currentPage = loginButton.click();
@@ -50,12 +52,15 @@ public class LoginClient {
     }
 
     private void getLoginWidgets() {
+        if (currentPage == null)
+            LOG.error("CampusPortalSeite konnte nicht geladen werden. Null.");
         loginButton = (HtmlSubmitInput) currentPage.getElementById("submit_button");
         loginUser = (HtmlTextInput) currentPage.getElementById("user_name");
         loginPassword = (HtmlPasswordInput) currentPage.getElementById("password");
     }
 
-    private void setLoginValues(LoginCredentials credentials) throws NullPointerException {
+    //todo: schmeißt bei caro nullpointer. CurrentPage wird null sein
+    private void setLoginValues(LoginCredentials credentials) {
         loginUser.setValueAttribute(credentials.getUser());
         loginPassword.setValueAttribute(credentials.getPassword());
     }
