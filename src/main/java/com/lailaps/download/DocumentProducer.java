@@ -27,13 +27,14 @@ public class DocumentProducer implements Runnable{
     public DocumentProducer(LinkedBlockingQueue queue, Browser browser) {
         this.queue = queue;
         this.browser = browser;
+        this.running = true;
         initDefaultValues();
         initCrawlers();
     }
 
+    //todo don't do this. init as defaults
     private void initDefaultValues() {
         overviewPage = browser.getCurrentPage();
-        running = true;
         produced = 0;
     }
 
