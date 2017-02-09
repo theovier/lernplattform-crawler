@@ -17,11 +17,9 @@ public class DocumentCrawler extends Crawler {
         return clearName(filename.asText());
     }
 
-    //todo regex
     private String clearName(String filename) {
         String clearedName =  filename.replace('/', '&');
-        clearedName = clearedName.replace(':', ';');
-        return clearedName;
+        return clearedName.replace(':', ';');
     }
 
     private String fetchDownloadLink(String content) {
