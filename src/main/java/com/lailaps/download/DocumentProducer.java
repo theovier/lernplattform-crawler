@@ -21,21 +21,15 @@ public class DocumentProducer implements Runnable{
     private GatewayCrawler gatewayCrawler;
     private DocumentCrawler documentCrawler;
     private TermCrawler termCrawler;
-    private int produced;
+    private int produced = 0;
     private boolean running;
 
     public DocumentProducer(LinkedBlockingQueue queue, Browser browser) {
         this.queue = queue;
         this.browser = browser;
         this.running = true;
-        initDefaultValues();
+        this.overviewPage = browser.getCurrentPage();
         initCrawlers();
-    }
-
-    //todo don't do this. init as defaults
-    private void initDefaultValues() {
-        overviewPage = browser.getCurrentPage();
-        produced = 0;
     }
 
     private void initCrawlers() {
