@@ -31,14 +31,12 @@ public class DocumentCrawler extends Crawler {
     }
 
     private String fetchFileExtension(String link) {
-        String fileExtension;
         int lastDotIndex = link.lastIndexOf('.');
         if (lastDotIndex > 0) {
-            fileExtension = link.substring(lastDotIndex);
+            return link.substring(lastDotIndex);
         } else {
-            fileExtension = DEFAULT_EXTENSION;
+            return DEFAULT_EXTENSION;
         }
-        return fileExtension;
     }
 
     public DownloadableDocument getDocument(HtmlPage gatewayPage, String courseName) {
