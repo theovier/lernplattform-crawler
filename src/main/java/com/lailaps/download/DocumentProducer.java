@@ -6,7 +6,7 @@ import com.lailaps.crawler.CourseCrawler;
 import com.lailaps.crawler.DocumentCrawler;
 import com.lailaps.crawler.GatewayCrawler;
 import com.lailaps.crawler.TermCrawler;
-import com.lailaps.download.DownloadableDocument;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,6 +14,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class DocumentProducer implements Runnable{
 
+    private static final Logger LOG = Logger.getLogger(DocumentProducer.class);
     private LinkedBlockingQueue<DownloadableDocument> queue;
     private Browser browser;
     private HtmlPage overviewPage;
@@ -46,7 +47,7 @@ public class DocumentProducer implements Runnable{
     @Override
     public void run() {
         produceDocuments();
-        System.out.println("Producer Completed: " + produced);
+        LOG.info("Producer Completed: " + produced);
         running = false;
     }
 
@@ -54,7 +55,7 @@ public class DocumentProducer implements Runnable{
         try {
             crawlWebsite();
         } catch (IOException e) {
-            System.err.println("Error beim Parsen der Webseiten!");
+            LOG.error("Error beim Parsen der Webseiten!");
         }
     }
 

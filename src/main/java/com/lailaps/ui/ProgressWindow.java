@@ -2,6 +2,7 @@ package com.lailaps.ui;
 
 import com.lailaps.download.DownloadObserver;
 import com.lailaps.download.DownloadableDocument;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -10,6 +11,7 @@ import java.awt.*;
 
 public class ProgressWindow extends Window implements DownloadObserver {
 
+    private static final Logger LOG = Logger.getLogger(ProgressWindow.class);
     private JLabel downloadCounterLabel;
     private JTextArea textArea;
     private JScrollPane scrollPane;
@@ -72,7 +74,7 @@ public class ProgressWindow extends Window implements DownloadObserver {
         textArea.append(SUCCESS);
         textArea.append(document.toShortString(80));
         textArea.append(System.lineSeparator());
-        System.out.println("Downloaded: " + document);
+        LOG.info("Downloaded: " + document);
     }
 
     @Override
@@ -81,7 +83,7 @@ public class ProgressWindow extends Window implements DownloadObserver {
         textArea.append(skippedDocument.toShortString(60));
         textArea.append(System.lineSeparator());
         if (isError)
-            System.err.println("Error While Downloading " + skippedDocument);
+            LOG.error("Error While Downloading " + skippedDocument);
     }
 
     @Override
