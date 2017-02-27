@@ -25,14 +25,12 @@ public class LoginWindow extends Window {
     private JComboBox <String> emailList;
     private JFileChooser dirChooser;
     private String currentDir;
-    private Director director;
     private JThrobber throbber;
 
     public LoginWindow() {
         super();
         configureDirectoryChooser();
         configureTextFields();
-        initController();
         configureThrobber();
         createHints();
         userField.setText(PreferencesManager.getUsername());
@@ -132,10 +130,6 @@ public class LoginWindow extends Window {
         directoryField.setText(currentDir);
     }
 
-    private void initController() {
-        director = new Director(this);
-    }
-
     private void configureThrobber() {
         throbber.setUI(new AquaThrobberUI());
         throbber.putClientProperty(ThrobberUI.PERIOD_MULTIPLIER_KEY, 2);
@@ -151,6 +145,7 @@ public class LoginWindow extends Window {
     private void startLogin() {
         throbber.setActive(true);
         LoginCredentials credentials = createCredentials();
+        Director director = new Director(this);
         director.start(credentials);
     }
 
@@ -164,7 +159,6 @@ public class LoginWindow extends Window {
         return new LoginCredentials(user, emailList.getSelectedItem().toString(), password);
     }
 
-    //todo extract interface?
     public void showLoginError(Exception e) {
         if (e instanceof WrongCredentialsException) {
             LOG.debug("wrong login credentials");
