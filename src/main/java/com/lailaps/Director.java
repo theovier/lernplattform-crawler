@@ -18,7 +18,7 @@ public class Director {
 
     private LoginWindow loginWindow;
     private ProgressWindow progressWindow;
-    private LoginClient loginClient;
+    private LoginClient loginClient = new LoginClient();
     private Browser crawlBrowser, downloadBrowser;
     private Downloader downloader;
     private DocumentProducer producer;
@@ -28,7 +28,6 @@ public class Director {
 
     public Director (LoginWindow loginWindow) {
         this.loginWindow = loginWindow;
-        loginClient = new LoginClient();
     }
 
     public void start(LoginCredentials credentials) {
