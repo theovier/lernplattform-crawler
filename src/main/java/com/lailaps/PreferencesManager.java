@@ -37,4 +37,9 @@ public class PreferencesManager {
         return prefs.get(PREF_USER, DEFAULT_USER);
     }
 
+    public static boolean hasUsernamePreference() {
+        String username = getUsername();
+        if (DEFAULT_USER.equals(username)) return false;
+        return true;
+    }
 }

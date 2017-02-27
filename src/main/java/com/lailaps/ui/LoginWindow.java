@@ -9,7 +9,6 @@ import com.lailaps.PreferencesManager;
 import com.lailaps.login.WrongCredentialsException;
 import org.apache.log4j.Logger;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -35,6 +34,7 @@ public class LoginWindow extends Window {
         createHints();
     }
 
+    @Override
     protected void initWidgets() {
         super.initWidgets();
         btnLogin = new JButton("fetch");
@@ -47,7 +47,10 @@ public class LoginWindow extends Window {
         throbber = new JThrobber();
     }
 
+    @Override
     protected void setListeners() {
+        super.setListeners();
+
         btnLogin.addActionListener(e -> startLogin());
         btnLogin.addKeyListener(new KeyAdapter() {
             @Override
@@ -85,6 +88,7 @@ public class LoginWindow extends Window {
         });
     }
 
+    @Override
     protected void setWidgetPositions() {
         userField.setBounds(125, 50, 150, 25);
         emailList.setBounds(280, 50, 150, 25);
@@ -95,11 +99,13 @@ public class LoginWindow extends Window {
         throbber.setBounds(50, 75, 50, 50);
     }
 
+    @Override
     protected void initPanel() {
         super.initPanel();
         panel.setLayout(null);
     }
 
+    @Override
     protected void addPanelContent() {
         panel.add(btnLogin);
         panel.add(userField);
@@ -110,9 +116,18 @@ public class LoginWindow extends Window {
         panel.add(throbber);
     }
 
+    @Override
     protected void initFrame() {
         super.initFrame();
         frame.setContentPane(panel);
+    }
+
+    @Override
+    protected void setInitialFocusOnWidget() {
+        //focus on password when the user once logged in successfully
+        if (PreferencesManager.hasUsernamePreference()) {
+            passwordField.requestFocusInWindow();
+        }
     }
 
     private void configureDirectoryChooser() {

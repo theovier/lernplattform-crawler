@@ -34,6 +34,7 @@ public class ProgressWindow extends Window implements DownloadObserver {
         configureScrollBehaviour();
     }
 
+    @Override
     protected void initWidgets() {
         super.initWidgets();
         downloadCounterLabel = new JLabel(DEFAULT_INFO, SwingConstants.CENTER);
@@ -41,20 +42,19 @@ public class ProgressWindow extends Window implements DownloadObserver {
         scrollPane = new JScrollPane(textArea);
     }
 
+    @Override
     protected void setWidgetPositions() {
         //done by Panel-Layout
     }
 
-    protected void setListeners() {
-        //no interaction to listen for here
-    }
-
+    @Override
     protected void initPanel() {
         super.initPanel();
         panel = new JPanel(new BorderLayout(0,10));
         panel.setBorder(new EmptyBorder(10, 10, 20, 10));
     }
 
+    @Override
     protected void addPanelContent() {
         panel.add(downloadCounterLabel, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);

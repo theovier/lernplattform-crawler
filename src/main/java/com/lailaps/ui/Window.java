@@ -5,15 +5,17 @@ import org.apache.log4j.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 public abstract class Window {
 
+    private static final Logger LOG = Logger.getLogger(Window.class);
+
     public static String title = "lailaps";
     public static int width = 650;
     public static int height = 350;
-
-    private static final Logger LOG = Logger.getLogger(Window.class);
 
     protected JFrame frame;
     protected JPanel panel;
@@ -35,12 +37,12 @@ public abstract class Window {
     private void prepareWindow() {
         setLookAndFeel();
         initWidgets();
-        setListeners();
         setWidgetPositions();
         configureMenus();
         initPanel();
         addPanelContent();
         initFrame();
+        setListeners();
         setIcon();
     }
 
@@ -61,7 +63,9 @@ public abstract class Window {
         checkForUpdateItem = new JMenuItem("Check for Updates");
     }
 
-    abstract void setListeners();
+    protected void setInitialFocusOnWidget() {
+        //no need to force subclasses to inherit it via abstract
+    }
 
     abstract void setWidgetPositions();
 
@@ -87,6 +91,17 @@ public abstract class Window {
         frame.setLocationRelativeTo(null);
         frame.setContentPane(panel);
         frame.setJMenuBar(menuBar);
+    }
+
+    protected void setListeners() {
+        frame.addWindowListener(new WindowAdapter(){
+            @Override
+            public void windowOpened( WindowEvent e){
+                SwingUtilities.invokeLater( () ->
+                        setInitialFocusOnWidget()
+                );
+            }
+        });
     }
 
     private void setIcon()  {
