@@ -1,15 +1,19 @@
 package com.lailaps.ui;
 
+import org.apache.log4j.Logger;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
-public class Window {
+public abstract class Window {
 
     public static String title = "lailaps";
     public static int width = 650;
     public static int height = 350;
+
+    private static final Logger LOG = Logger.getLogger(Window.class);
 
     protected JFrame frame;
     protected JPanel panel;
@@ -46,7 +50,7 @@ public class Window {
             UIManager.getDefaults().put("Button.showMnemonics", Boolean.TRUE);
         }
         catch (Exception e) {
-            //won't happen
+            LOG.warn("look and feel could not be changed!");
         }
     }
 
@@ -57,13 +61,9 @@ public class Window {
         checkForUpdateItem = new JMenuItem("Check for Updates");
     }
 
-    protected void setListeners() {
+    abstract void setListeners();
 
-    }
-
-    protected void setWidgetPositions() {
-
-    }
+    abstract void setWidgetPositions();
 
     protected void configureMenus() {
         helpMenu.setMnemonic('H');
@@ -77,9 +77,7 @@ public class Window {
         panel = new JPanel();
     }
 
-    protected void addPanelContent() {
-
-    }
+    abstract void addPanelContent();
 
     protected void initFrame() {
         frame = new JFrame(title);
@@ -96,7 +94,7 @@ public class Window {
             Image icon = ImageIO.read(getClass().getClassLoader().getResourceAsStream("images/lailaps2_32x32.png"));
             frame.setIconImage(icon);
         } catch (IOException e) {
-
+            LOG.warn("IconImage could not be set.");
         }
     }
 

@@ -33,7 +33,6 @@ public class LoginWindow extends Window {
         configureTextFields();
         configureThrobber();
         createHints();
-        userField.setText(PreferencesManager.getUsername());
     }
 
     protected void initWidgets() {
@@ -49,7 +48,6 @@ public class LoginWindow extends Window {
     }
 
     protected void setListeners() {
-        super.setListeners();
         btnLogin.addActionListener(e -> startLogin());
         btnLogin.addKeyListener(new KeyAdapter() {
             @Override
@@ -88,7 +86,6 @@ public class LoginWindow extends Window {
     }
 
     protected void setWidgetPositions() {
-        super.setWidgetPositions();
         userField.setBounds(125, 50, 150, 25);
         emailList.setBounds(280, 50, 150, 25);
         passwordField.setBounds(125, 100, 150, 25);
@@ -104,7 +101,6 @@ public class LoginWindow extends Window {
     }
 
     protected void addPanelContent() {
-        super.addPanelContent();
         panel.add(btnLogin);
         panel.add(userField);
         panel.add(passwordField);
@@ -137,6 +133,8 @@ public class LoginWindow extends Window {
     }
 
     private void createHints() {
+        userField.setText(PreferencesManager.getUsername());
+
         //todo rewrite
         //HintText usernameHint = new HintText(userField, "Theo.Harkenbusch");
         //HintText passwordHint = new HintText(passwordField, "password");
