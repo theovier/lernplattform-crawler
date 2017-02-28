@@ -15,7 +15,7 @@ public class ProgressWindow extends Window implements DownloadObserver {
     private JLabel downloadCounterLabel;
     private JTextArea textArea;
     private JScrollPane scrollPane;
-    private int downloadCounter;
+    private int downloadCounter = 0;
     private Font defaultFont;
     private static final String DEFAULT_INFO = "Please wait...";
     private static final String TITLE = "Downloading...";
@@ -27,7 +27,6 @@ public class ProgressWindow extends Window implements DownloadObserver {
 
     public ProgressWindow() {
         super(600, 400, TITLE);
-        downloadCounter = 0;
         frame.setResizable(true);
         setFonts();
         configureTextArea();
