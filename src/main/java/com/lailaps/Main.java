@@ -10,7 +10,6 @@ public class Main {
     }
 
     //todo wait logo while logging in and downloading
-    //todo wrong credentials error message
     //todo properties nur wenn in admin mode
 }
 

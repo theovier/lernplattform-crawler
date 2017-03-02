@@ -7,14 +7,11 @@ import com.lailaps.Director;
 import com.lailaps.login.LoginCredentials;
 import com.lailaps.PreferencesManager;
 import com.lailaps.login.LoginErrorInterpreter;
-import com.lailaps.login.WrongCredentialsException;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 
 public class LoginWindow extends Window {
 
@@ -27,13 +24,11 @@ public class LoginWindow extends Window {
     private JFileChooser dirChooser;
     private String currentDir;
     private JThrobber throbber;
-    private JLabel errorLabel;
 
     public LoginWindow() {
         super();
         configureDirectoryChooser();
         configureTextFields();
-        configureErrorLabel();
         configureThrobber();
         createHints();
     }
@@ -49,7 +44,6 @@ public class LoginWindow extends Window {
         passwordField = new JPasswordField();
         dirChooser = new JFileChooser("Choose Directory");
         throbber = new JThrobber();
-        errorLabel = new JLabel();
     }
 
     @Override
@@ -102,7 +96,6 @@ public class LoginWindow extends Window {
         btnBrowse.setBounds(400, 190, 75, 25);
         directoryField.setBounds(125, 190, 270, 25);
         throbber.setBounds(50, 75, 50, 50);
-        errorLabel.setBounds(280,100,150,25);
     }
 
     @Override
@@ -120,7 +113,6 @@ public class LoginWindow extends Window {
         panel.add(btnBrowse);
         panel.add(directoryField);
         panel.add(throbber);
-        panel.add(errorLabel);
     }
 
     @Override
@@ -154,11 +146,6 @@ public class LoginWindow extends Window {
         throbber.setActive(false);
     }
 
-    private void configureErrorLabel() {
-        errorLabel.setVisible(false);
-        errorLabel.setForeground(Color.red);
-    }
-
     private void createHints() {
         userField.setText(PreferencesManager.getUsername());
 
@@ -168,8 +155,22 @@ public class LoginWindow extends Window {
     }
 
     private void startLogin() {
+        if (hasPasswordEntered()) {
+            login();
+        } else {
+            JOptionPane.showMessageDialog(frame,
+                    "Password can't be blank.",
+                    "Please enter a password",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private boolean hasPasswordEntered() {
+        return passwordField.getPassword().length > 0;
+    }
+
+    private void login() {
         throbber.setActive(true);
-        errorLabel.setVisible(false);
         LoginCredentials credentials = createCredentials();
         Director director = new Director(this);
         director.start(credentials);
@@ -186,9 +187,9 @@ public class LoginWindow extends Window {
     }
 
     public void showLoginError(Exception e) {
-        String error = LoginErrorInterpreter.getErrorMsg(e);
-        errorLabel.setText(error);
-        errorLabel.setVisible(true);
         throbber.setActive(false);
+        String error = LoginErrorInterpreter.getErrorMsg(e);
+        JOptionPane.showMessageDialog(frame, error,"login failed", JOptionPane.ERROR_MESSAGE);
     }
+
 }
