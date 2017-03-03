@@ -52,6 +52,7 @@ public class LoginWindow extends Window {
 
         btnLogin.addActionListener(e -> startLogin());
         btnLogin.addKeyListener(new KeyAdapter() {
+
             @Override
             public void keyTyped(KeyEvent e) {
                 super.keyTyped(e);
@@ -62,7 +63,6 @@ public class LoginWindow extends Window {
         btnBrowse.addActionListener(e -> {
             dirChooser.setCurrentDirectory(new java.io.File(currentDir));
 
-            //todo extract method?
             if (dirChooser.showOpenDialog(super.panel) == JFileChooser.APPROVE_OPTION) {
                 currentDir = dirChooser.getSelectedFile().toString();
                 directoryField.setText(currentDir);
@@ -155,14 +155,24 @@ public class LoginWindow extends Window {
     }
 
     private void startLogin() {
-        if (hasPasswordEntered()) {
-            login();
-        } else {
+        if (!hasUsernameEntered()) {
+            JOptionPane.showMessageDialog(frame,
+                    "Username can't be blank.",
+                    "Username enter a password",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        else if (!hasPasswordEntered()) {
             JOptionPane.showMessageDialog(frame,
                     "Password can't be blank.",
                     "Please enter a password",
                     JOptionPane.ERROR_MESSAGE);
+        } else {
+            login();
         }
+    }
+
+    private boolean hasUsernameEntered() {
+        return userField.getText().length() > 0;
     }
 
     private boolean hasPasswordEntered() {
