@@ -37,7 +37,8 @@ public class LoginClient {
         Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF);
     }
 
-    public boolean login(LoginCredentials credentials) throws IOException, NullPointerException {
+    //todo can throw nullpointer?
+    public boolean login(LoginCredentials credentials) throws IOException {
         loginToCampusPortal(credentials);
         loginToLernplattform();
         return true;
@@ -51,6 +52,7 @@ public class LoginClient {
         checkForLoginError();
     }
 
+    //todo extract login widget names as static final strings
     private void getLoginWidgets() {
         if (currentPage == null)
             LOG.error("CampusPortalSeite konnte nicht geladen werden. Null.");
@@ -80,7 +82,6 @@ public class LoginClient {
         browser.getPage(getPHPCookieURL());
     }
 
-    //todo remove throw? Cant be here if already entered wrong credentials
     private String getPHPCookieURL() throws WrongCredentialsException {
         String cookieURL;
         try {
