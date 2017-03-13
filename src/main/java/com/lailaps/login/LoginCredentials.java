@@ -23,4 +23,8 @@ public class LoginCredentials {
     public String getPassword() {
         return password;
     }
+
+    public String toString() {
+        return "user: " + this.user + "; password: " + this.password;
+    }
 }
