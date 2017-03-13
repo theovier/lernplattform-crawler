@@ -8,7 +8,7 @@ public class Main {
         LoginWindow window = new LoginWindow();
         window.show();
     }
-    //todo properties nur wenn in admin mode
+    //todo properties nur aufrufen wenn in admin mode
 }
 
 
