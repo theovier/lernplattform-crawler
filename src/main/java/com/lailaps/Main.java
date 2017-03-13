@@ -8,8 +8,6 @@ public class Main {
         LoginWindow window = new LoginWindow();
         window.show();
     }
-
-    //todo wait logo while logging in and downloading
     //todo properties nur wenn in admin mode
 }
 
