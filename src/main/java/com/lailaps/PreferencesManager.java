@@ -9,7 +9,7 @@ public class PreferencesManager {
     private static final String PREF_DIR = "directory";
     private static final String PREF_USER = "";
     private static final String DEFAULT_DIR = System.getProperty("user.home");
-    private static final String DEFAULT_USER = "Vorname.Nachname";
+    private static final String DEFAULT_USER = "";
 
     public static PreferencesManager getInstance() {
         if (prefManager == null)

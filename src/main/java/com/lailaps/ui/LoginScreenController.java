@@ -1,5 +1,6 @@
 package com.lailaps.ui;
 
+import com.lailaps.Director;
 import com.lailaps.PreferencesManager;
 import com.lailaps.login.LoginCredentials;
 import com.lailaps.login.LoginErrorInterpreter;
@@ -17,8 +18,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class LoginScreenController implements Initializable {
-
-    private static final Logger LOG = Logger.getLogger(LoginScreenController.class);
 
     private DirectoryChooser dirChooser = new DirectoryChooser();
     private String currentDir = PreferencesManager.getInstance().getDirectory();
@@ -61,10 +60,12 @@ public class LoginScreenController implements Initializable {
         startLogin();
     }
 
+    //todo rename. does 2 things
     private void setInitialFocus() {
-        //focus on password when the user once logged in successfully
         if (PreferencesManager.hasUsernamePreference()) {
             passwordField.requestFocus();
+        } else {
+            emailList.requestFocus();
         }
     }
 
@@ -97,8 +98,8 @@ public class LoginScreenController implements Initializable {
     private void login() {
         throbber.setVisible(true);
         LoginCredentials credentials = createCredentials();
-        LOG.info(credentials);
-        //call director...
+        Director director = new Director(this);
+        director.start(credentials);
     }
 
     private LoginCredentials createCredentials() {
