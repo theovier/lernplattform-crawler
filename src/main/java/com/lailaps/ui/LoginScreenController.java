@@ -11,7 +11,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.net.URL;
@@ -59,7 +58,7 @@ public class LoginScreenController implements Initializable {
     private void onEnterPressed(final ActionEvent e) {
         startLogin();
     }
-    
+
     private void setInitialFocus() {
         if (PreferencesManager.hasUsernamePreference()) {
             passwordField.requestFocus();
