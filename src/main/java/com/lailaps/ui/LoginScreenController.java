@@ -59,8 +59,7 @@ public class LoginScreenController implements Initializable {
     private void onEnterPressed(final ActionEvent e) {
         startLogin();
     }
-
-    //todo rename. does 2 things
+    
     private void setInitialFocus() {
         if (PreferencesManager.hasUsernamePreference()) {
             passwordField.requestFocus();
