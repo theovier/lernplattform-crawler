@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
@@ -22,7 +23,6 @@ public class LoginScreenController implements Initializable, Controllable {
     private String currentDir = PreferencesManager.getInstance().getDirectory();
     private ScreenManager parent;
 
-
     @FXML
     private TextField userField, directoryField;
 
@@ -35,9 +35,16 @@ public class LoginScreenController implements Initializable, Controllable {
     @FXML
     private ProgressIndicator throbber;
 
+    @FXML
+    private MenuBar menubar;
+
+    @FXML
+    private VBox vbox;
+
     @Override
     public void initialize(final URL url, final ResourceBundle rb) {
         Platform.runLater(()->setInitialFocus());
+        Platform.runLater(()->bindMenuBarWidthToWindow());
         userField.setText(PreferencesManager.getUsername());
         directoryField.setText(currentDir);
         emailList.getSelectionModel().selectFirst();
@@ -77,6 +84,13 @@ public class LoginScreenController implements Initializable, Controllable {
         } else {
             emailList.requestFocus();
         }
+    }
+
+    //todo interface?
+    private void bindMenuBarWidthToWindow() {
+        Stage stage = (Stage) menubar.getScene().getWindow();
+        vbox.prefWidthProperty().bind(stage.widthProperty());
+        menubar.prefWidthProperty().bind(stage.widthProperty());
     }
 
     private void startLogin() {

@@ -14,9 +14,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="315.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lailaps.ui.LoginScreenController">
+<VBox fx:id="vbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="315.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lailaps.ui.LoginScreenController">
     <children>
-        <MenuBar VBox.vgrow="NEVER">
+        <MenuBar fx:id="menubar" VBox.vgrow="NEVER">
             <menus>
                 <Menu text="_Help">
                     <items>
@@ -30,8 +30,8 @@
         </MenuBar>
         <Pane prefHeight="379.0" prefWidth="600.0">
             <children>
-                <TextField fx:id="userField" layoutX="125.0" layoutY="68.0" prefWidth="170" onAction="#onEnterPressed" promptText="Vorname.Nachname" />
-                <PasswordField fx:id="passwordField" layoutX="125.0" layoutY="118.0" prefWidth="170" onAction="#onEnterPressed" promptText="Password" />
+                <TextField fx:id="userField" layoutX="125.0" layoutY="68.0" onAction="#onEnterPressed" prefWidth="170" promptText="Vorname.Nachname" />
+                <PasswordField fx:id="passwordField" layoutX="125.0" layoutY="118.0" onAction="#onEnterPressed" prefWidth="170" promptText="Password" />
                 <Button fx:id="loginButton" layoutX="125.0" layoutY="168.0" maxHeight="20.0" maxWidth="75.0" mnemonicParsing="false" onAction="#handleLoginButtonAction" prefHeight="20.0" prefWidth="75.0" text="fetch" />
                 <TextField fx:id="directoryField" disable="true" editable="false" layoutX="125.0" layoutY="208.0" prefWidth="270.0" text="C:\Users\Theo\Desktop" />
                 <Button fx:id="dirChooseButton" layoutX="400.0" layoutY="208.0" mnemonicParsing="false" onAction="#handleDirChooseButtonAction" prefWidth="75.0" text="browse" />
