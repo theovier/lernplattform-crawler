@@ -34,8 +34,8 @@ public class ScreenManager extends StackPane {
             URL screenLocation = getClass().getClassLoader().getResource(resource);
             FXMLLoader loader = new FXMLLoader(screenLocation);
             Parent root = loader.load();
-            //(ControlledScreen) loader.getController();
-            //setScreenParent(this);
+            Controllable controller = loader.getController();
+            controller.setParentScreen(this);
             addScreen(name, root);
             return true;
         } catch (IOException e) {
@@ -69,16 +69,16 @@ public class ScreenManager extends StackPane {
         return screens.get(screenName) == null;
     }
 
+    private boolean hasMultipleScreens() {
+        return !getChildren().isEmpty();
+    }
+
     private void displayScreenDirectly(final String screenName) {
         getChildren().add(0, screens.get(screenName));
     }
 
     private void removeCurrentScreen() {
         getChildren().remove(0);
-    }
-
-    private boolean hasMultipleScreens() {
-        return !getChildren().isEmpty();
     }
 
     private void fadeToScreen(final String newScreenName) {

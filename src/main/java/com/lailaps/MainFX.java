@@ -4,16 +4,19 @@ import com.lailaps.ui.ScreenManager;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 
+
 public class MainFX extends Application {
+
+    public static String title = "lailaps";
 
     public static final String LOGIN_SCREEN = "login";
     public static final String LOGIN_SCREEN_FILE = "fxml/login.fxml";
     public static final String DOWNLOAD_SCREEN = "download";
     public static final String DOWNLOAD_SCREEN_FILE = "fxml/download.fxml";
-
 
     public static void main(String[] args) {
         Application.launch(MainFX.class, args);
@@ -25,11 +28,15 @@ public class MainFX extends Application {
         screenManager.loadScreen(LOGIN_SCREEN, LOGIN_SCREEN_FILE);
         screenManager.loadScreen(DOWNLOAD_SCREEN, DOWNLOAD_SCREEN_FILE);
         screenManager.showScreen(LOGIN_SCREEN);
-        screenManager.showScreen(DOWNLOAD_SCREEN);
+    //    screenManager.showScreen(DOWNLOAD_SCREEN);
 
         Group root = new Group();
         root.getChildren().addAll(screenManager);
         stage.setScene(new Scene(root));
         stage.show();
+
+        Image icon = new Image(getClass().getClassLoader().getResourceAsStream("images/lailaps2_32x32.png"));
+        stage.getIcons().add(icon);
+        stage.setTitle(title);
     }
 }

@@ -16,10 +16,12 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class LoginScreenController implements Initializable {
+public class LoginScreenController implements Initializable, Controllable {
 
     private DirectoryChooser dirChooser = new DirectoryChooser();
     private String currentDir = PreferencesManager.getInstance().getDirectory();
+    private ScreenManager parent;
+
 
     @FXML
     private TextField userField, directoryField;
@@ -39,6 +41,16 @@ public class LoginScreenController implements Initializable {
         userField.setText(PreferencesManager.getUsername());
         directoryField.setText(currentDir);
         emailList.getSelectionModel().selectFirst();
+    }
+
+    @Override
+    public void setParentScreen(ScreenManager parent) {
+        this.parent = parent;
+    }
+
+    @Override
+    public ScreenManager getParentScreen() {
+        return parent;
     }
 
     @FXML

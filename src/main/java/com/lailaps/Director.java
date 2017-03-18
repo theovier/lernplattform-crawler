@@ -6,18 +6,19 @@ import com.lailaps.download.DownloadableDocument;
 import com.lailaps.download.Downloader;
 import com.lailaps.login.LoginClient;
 import com.lailaps.login.LoginCredentials;
-import com.lailaps.login.WrongCredentialsException;
 import com.lailaps.ui.LoginScreenController;
 import com.lailaps.ui.LoginWindow;
 import com.lailaps.ui.ProgressWindow;
+import com.lailaps.ui.ScreenManager;
 import javafx.application.Platform;
+import org.apache.log4j.Logger;
 
-import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
 
 //todo find a better name
 public class Director {
 
+    private static final Logger LOG = Logger.getLogger(Director.class);
     private LoginWindow loginWindow;
     private ProgressWindow progressWindow;
     private LoginClient loginClient = new LoginClient();
@@ -29,6 +30,7 @@ public class Director {
     private LinkedBlockingQueue<DownloadableDocument> downloadableDocuments;
 
     private LoginScreenController loginScreenController;
+    private ScreenManager screenManager;
 
     public Director (LoginWindow loginWindow) {
         this.loginWindow = loginWindow;
@@ -36,6 +38,7 @@ public class Director {
 
     public Director (LoginScreenController loginScreenController) {
         this.loginScreenController = loginScreenController;
+        this.screenManager = loginScreenController.getParentScreen();
     }
 
     public void start(LoginCredentials credentials) {
@@ -112,8 +115,9 @@ public class Director {
 
     private void initProgressWindow() {
        // loginWindow.hide();
-        progressWindow = new ProgressWindow();
-        progressWindow.show();
-        downloader.addObserver(progressWindow); //todo extract
+        screenManager.showScreen(MainFX.DOWNLOAD_SCREEN);
+        //progressWindow = new ProgressWindow();
+        //progressWindow.show();
+        //downloader.addObserver(progressWindow); //todo extract
     }
 }
