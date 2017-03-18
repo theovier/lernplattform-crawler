@@ -29,18 +29,6 @@ public class ScreenManager extends StackPane {
         super();
     }
 
-    public void addScreen(String name, Node screen) {
-        screens.put(name, screen);
-    }
-
-    public void unloadScreen(String name) {
-        screens.remove(name);
-    }
-
-    public Node getScreen(String name) {
-        return screens.get(name);
-    }
-
     public boolean loadScreen(String name, String resource) {
         try {
             URL screenLocation = getClass().getClassLoader().getResource(resource);
@@ -54,6 +42,14 @@ public class ScreenManager extends StackPane {
             LOG.error(e);
             return false;
         }
+    }
+
+    public void addScreen(String name, Node screen) {
+        screens.put(name, screen);
+    }
+
+    public void unloadScreen(String name) {
+        screens.remove(name);
     }
 
     public boolean showScreen(final String screenName) {

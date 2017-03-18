@@ -24,8 +24,8 @@ public class MainFX extends Application {
         ScreenManager screenManager = new ScreenManager();
         screenManager.loadScreen(LOGIN_SCREEN, LOGIN_SCREEN_FILE);
         screenManager.loadScreen(DOWNLOAD_SCREEN, DOWNLOAD_SCREEN_FILE);
-
-        screenManager.displayScreen(LOGIN_SCREEN);
+        screenManager.showScreen(LOGIN_SCREEN);
+        screenManager.showScreen(DOWNLOAD_SCREEN);
 
         Group root = new Group();
         root.getChildren().addAll(screenManager);
