@@ -11,7 +11,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Downloader implements Observable {
+public class Downloader implements ObservableDownloadSource {
 
     private static String rootDirName;
     private static String rootDirectory;
@@ -44,7 +44,7 @@ public class Downloader implements Observable {
             Files.createDirectories(target);
             Page downloadPage = browser.getPage(doc.getDownloadLink());
             copyFileToDisc(downloadPage, target);
-            notifyObserversSuccess(doc);
+            notifyObserversStart(doc);
         } catch (IOException e) {
             notifyObserversSkipped(doc, true);
         }
@@ -90,7 +90,7 @@ public class Downloader implements Observable {
     }
 
     @Override
-    public void notifyObserversSuccess(DownloadableDocument downloadedDocument) {
+    public void notifyObserversStart(DownloadableDocument downloadedDocument) {
         observers.forEach(observer -> observer.startDownload(downloadedDocument));
     }
 
@@ -102,5 +102,10 @@ public class Downloader implements Observable {
     @Override
     public void notifyObserversEnd() {
         observers.forEach(observer -> observer.finishedDownloading());
+    }
+
+    @Override
+    public void notifyObserversProgress(DownloadableDocument downloadableDocument, double progress) {
+        observers.forEach(observer -> observer.onDownloadProgress(downloadableDocument, progress));
     }
 }
