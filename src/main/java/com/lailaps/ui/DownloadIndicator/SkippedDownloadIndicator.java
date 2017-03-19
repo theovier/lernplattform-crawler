@@ -3,10 +3,10 @@ package com.lailaps.ui.DownloadIndicator;
 
 import javafx.scene.control.Control;
 
-public class SkippedDownloadIndicator extends DownloadIndicatorBox {
+public class SkippedDownloadIndicator extends ProgressDownloadIndicator {
 
-    @Override
-    public void bindProgressBarWidthProperty(Control parent) {
-
+    public SkippedDownloadIndicator(String text) {
+        super(100, text);
+        //color yellow
     }
 }

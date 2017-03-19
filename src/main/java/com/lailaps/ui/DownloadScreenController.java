@@ -2,7 +2,6 @@ package com.lailaps.ui;
 
 import com.lailaps.download.DownloadObserver;
 import com.lailaps.download.DownloadableDocument;
-import com.lailaps.ui.DownloadIndicator.DownloadIndicatorBox;
 import com.lailaps.ui.DownloadIndicator.ProgressDownloadIndicator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,7 +20,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
 
     private static final Logger LOG = Logger.getLogger(DownloadScreenController.class);
     private ScreenContainer parent;
-    private ObservableList<DownloadIndicatorBox> boxes = FXCollections.observableArrayList();
+    private ObservableList<ProgressDownloadIndicator> boxes = FXCollections.observableArrayList();
 
     private double TEST = 0.0;
 
@@ -32,7 +31,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
     private MenuBar menubar;
 
     @FXML
-    private ListView<DownloadIndicatorBox> listView;
+    private ListView<ProgressDownloadIndicator> listView;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -63,7 +62,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
         listView.prefWidthProperty().bind(stage.widthProperty());
         pane.prefHeightProperty().bind(stage.heightProperty().subtract(50));
 
-        for (DownloadIndicatorBox box : boxes) {
+        for (ProgressDownloadIndicator box : boxes) {
             box.bindProgressBarWidthProperty(listView);
         }
     }
@@ -94,18 +93,18 @@ public class DownloadScreenController implements Initializable, Controllable, Au
 
     @Override
     public void onDownloadProgress(DownloadableDocument document, double currentProgress) {
-        ProgressDownloadIndicator box = (ProgressDownloadIndicator) boxes.get(0);
+        ProgressDownloadIndicator box = boxes.get(0);
         box.setProgress(TEST);
         TEST += 0.1;
     }
 
     @Override
     public void skippedDownload(DownloadableDocument skippedDocument, boolean isError) {
-        LOG.info("skipped Download");
+        //add a skippedDownloadIndicator or an errorDownloadIndicator
     }
 
     @Override
     public void finishedDownloading() {
-        LOG.info("finished.");
+        //todo remove?
     }
 }

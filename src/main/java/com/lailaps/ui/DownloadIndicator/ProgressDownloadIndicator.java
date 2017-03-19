@@ -5,8 +5,9 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.HBox;
 
-public class ProgressDownloadIndicator extends DownloadIndicatorBox {
+public class ProgressDownloadIndicator extends HBox{
 
     private static final double PARENT_WIDTH_RATIO = 0.3;
     private ProgressBar progressBar = new ProgressBar(0);
@@ -41,7 +42,6 @@ public class ProgressDownloadIndicator extends DownloadIndicatorBox {
         label.setText(text);
     }
 
-    @Override
     public void bindProgressBarWidthProperty(Control parent) {
         progressBar.prefWidthProperty().bind(parent.widthProperty().multiply(PARENT_WIDTH_RATIO));
     }
