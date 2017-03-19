@@ -1,5 +1,6 @@
 package com.lailaps.download;
 
+//todo rename
 public interface Observable {
     void addObserver(DownloadObserver observer);
     void notifyObserversSuccess(DownloadableDocument downloadedDocument);
