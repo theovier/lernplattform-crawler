@@ -21,7 +21,7 @@ public class LoginScreenController implements Initializable, Controllable {
 
     private DirectoryChooser dirChooser = new DirectoryChooser();
     private String currentDir = PreferencesManager.getInstance().getDirectory();
-    private ScreenManager parent;
+    private ScreenContainer parent;
 
     @FXML
     private TextField userField, directoryField;
@@ -51,12 +51,12 @@ public class LoginScreenController implements Initializable, Controllable {
     }
 
     @Override
-    public void setParentScreen(ScreenManager parent) {
+    public void setParentScreen(ScreenContainer parent) {
         this.parent = parent;
     }
 
     @Override
-    public ScreenManager getParentScreen() {
+    public ScreenContainer getParentScreen() {
         return parent;
     }
 

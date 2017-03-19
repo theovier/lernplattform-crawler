@@ -17,9 +17,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 
-public class ScreenManager extends StackPane {
+public class ScreenContainer extends StackPane {
 
-    private static final Logger LOG = Logger.getLogger(ScreenManager.class);
+    private static final Logger LOG = Logger.getLogger(ScreenContainer.class);
     private static final String LOGIN_SCREEN_FILE = "fxml/login.fxml";
     private static final String DOWNLOAD_SCREEN_FILE = "fxml/download.fxml";
 
@@ -27,7 +27,7 @@ public class ScreenManager extends StackPane {
     private final Duration FADEIN_DURATION = new Duration(800);
     private HashMap<ScreenType, Node> screens = new HashMap<>();
 
-    public ScreenManager() {
+    public ScreenContainer() {
         super();
     }
 

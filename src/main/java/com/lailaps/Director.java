@@ -6,10 +6,7 @@ import com.lailaps.download.DownloadableDocument;
 import com.lailaps.download.Downloader;
 import com.lailaps.login.LoginClient;
 import com.lailaps.login.LoginCredentials;
-import com.lailaps.ui.LoginScreenController;
-import com.lailaps.ui.LoginWindow;
-import com.lailaps.ui.ProgressWindow;
-import com.lailaps.ui.ScreenManager;
+import com.lailaps.ui.*;
 import javafx.application.Platform;
 import org.apache.log4j.Logger;
 
@@ -30,7 +27,7 @@ public class Director {
     private LinkedBlockingQueue<DownloadableDocument> downloadableDocuments;
 
     private LoginScreenController loginScreenController;
-    private ScreenManager screenManager;
+    private ScreenContainer screenContainer;
 
     public Director (LoginWindow loginWindow) {
         this.loginWindow = loginWindow;
@@ -38,27 +35,25 @@ public class Director {
 
     public Director (LoginScreenController loginScreenController) {
         this.loginScreenController = loginScreenController;
-        this.screenManager = loginScreenController.getParentScreen();
+        this.screenContainer = loginScreenController.getParentScreen();
     }
 
     public void start(LoginCredentials credentials) {
         new Thread(() -> {
             Thread.currentThread().setName("com.lailaps.Director");
-            boolean loginSuccess = login(credentials);
-            if (loginSuccess) {
+            //boolean loginSuccess = login(credentials);
+            if (true) { //loginSuccess
                 //saveUsername(credentials.getUser());
                 //startDownload();
-
-                screenManager.showScreen(ScreenType.DOWNLOAD);
+                screenContainer.showScreen(ScreenType.DOWNLOAD);
             }
         }).start();
     }
 
     private boolean login(LoginCredentials credentials) {
         try {
-            return true; //loginClient.login(credentials);
+            loginClient.login(credentials);
         } catch (Exception e) {
-            //loginWindow.showLoginError(e);
             Platform.runLater(() -> loginScreenController.showLoginError(e));
         }
         return false;
@@ -116,8 +111,6 @@ public class Director {
     }
 
     private void initProgressWindow() {
-       // loginWindow.hide();
-        screenManager.showScreen(ScreenType.DOWNLOAD);
         //progressWindow = new ProgressWindow();
         //progressWindow.show();
         //downloader.addObserver(progressWindow); //todo extract
