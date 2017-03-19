@@ -52,6 +52,7 @@ public class Downloader implements Observable {
 
     private static void copyFileToDisc(Page downloadPage, Path target) throws IOException {
         try (InputStream source = downloadPage.getWebResponse().getContentAsStream()) {
+            //todo replace with own method which notifies observer?
             Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
         }
     }
