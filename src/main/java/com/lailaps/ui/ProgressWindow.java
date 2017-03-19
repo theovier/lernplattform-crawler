@@ -91,7 +91,7 @@ public class ProgressWindow extends Window implements DownloadObserver {
     }
 
     @Override
-    public void onDownloadFinished() {
+    public void onFinishedDownloading() {
         frame.setTitle(TITLE_FINISHED);
         downloadCounterLabel.setText(COUNTER_FINISHED + downloadCounter);
         for (int i = 0; i < 60; i++) {

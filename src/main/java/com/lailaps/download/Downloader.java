@@ -111,6 +111,6 @@ public class Downloader implements ObservableDownloadSource {
 
     @Override
     public void notifyObserversEnd() {
-        observers.forEach(observer -> observer.onDownloadFinished());
+        observers.forEach(observer -> observer.onFinishedDownloading());
     }
 }
