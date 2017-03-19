@@ -74,7 +74,7 @@ public class ProgressWindow extends Window implements DownloadObserver {
     }
 
     @Override
-    public void startDownload(DownloadableDocument document) {
+    public void onDownloadStarted(DownloadableDocument document) {
         downloadCounter++;
         downloadCounterLabel.setText(COUNTER_HEADING + downloadCounter);
         textArea.append(SUCCESS);
@@ -84,21 +84,24 @@ public class ProgressWindow extends Window implements DownloadObserver {
     }
 
     @Override
-    public void skippedDownload(DownloadableDocument skippedDocument, boolean isError) {
+    public void onDownloadSkipped(DownloadableDocument skippedDocument) {
         textArea.append(SKIPPED);
         textArea.append(skippedDocument.toShortString(60));
         textArea.append(System.lineSeparator());
-        if (isError)
-            LOG.error("Error While Downloading " + skippedDocument);
     }
 
     @Override
-    public void finishedDownloading() {
+    public void onDownloadFinished() {
         frame.setTitle(TITLE_FINISHED);
         downloadCounterLabel.setText(COUNTER_FINISHED + downloadCounter);
         for (int i = 0; i < 60; i++) {
             textArea.append("=");
         }
+    }
+
+    @Override
+    public void onDownloadFailed(DownloadableDocument failedDocument, Exception cause) {
+
     }
 
     @Override

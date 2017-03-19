@@ -29,7 +29,7 @@ public class Downloader implements ObservableDownloadSource {
         if (!alreadyExists) {
             download(doc, target);
         } else {
-            notifyObserversSkipped(doc, false);
+            notifyObserversSkipped(doc);
         }
     }
 
@@ -46,7 +46,7 @@ public class Downloader implements ObservableDownloadSource {
             copyFileToDisc(downloadPage, target);
             notifyObserversStart(doc);
         } catch (IOException e) {
-            notifyObserversSkipped(doc, true);
+            notifyObserversFailed(doc, e);
         }
     }
 
@@ -91,17 +91,22 @@ public class Downloader implements ObservableDownloadSource {
 
     @Override
     public void notifyObserversStart(DownloadableDocument downloadedDocument) {
-        observers.forEach(observer -> observer.startDownload(downloadedDocument));
+        observers.forEach(observer -> observer.onDownloadStarted(downloadedDocument));
     }
 
     @Override
-    public void notifyObserversSkipped(DownloadableDocument skippedDocument, boolean isError) {
-        observers.forEach(observer -> observer.skippedDownload(skippedDocument, isError));
+    public void notifyObserversSkipped(DownloadableDocument skippedDocument) {
+        observers.forEach(observer -> observer.onDownloadSkipped(skippedDocument));
+    }
+
+    @Override
+    public void notifyObserversFailed(DownloadableDocument failedDocument, Exception cause) {
+        observers.forEach(observer -> observer.onDownloadFailed(failedDocument, cause));
     }
 
     @Override
     public void notifyObserversEnd() {
-        observers.forEach(observer -> observer.finishedDownloading());
+        observers.forEach(observer -> observer.onDownloadFinished());
     }
 
     @Override

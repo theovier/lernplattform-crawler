@@ -44,7 +44,7 @@ public class Director {
             //boolean loginSuccess = login(credentials);
             if (true) { //loginSuccess
                 //saveUsername(credentials.getUser());
-                //startDownload();
+                //onDownloadStarted();
                 screenContainer.showScreen(ScreenType.DOWNLOAD);
             }
         }).start();

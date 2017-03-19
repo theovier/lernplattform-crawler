@@ -2,7 +2,9 @@ package com.lailaps.ui;
 
 import com.lailaps.download.DownloadObserver;
 import com.lailaps.download.DownloadableDocument;
+import com.lailaps.ui.DownloadIndicator.FailedDownloadIndicator;
 import com.lailaps.ui.DownloadIndicator.ProgressDownloadIndicator;
+import com.lailaps.ui.DownloadIndicator.SkippedDownloadIndicator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,18 +13,15 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.apache.log4j.Logger;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class DownloadScreenController implements Initializable, Controllable, AutoResizable, DownloadObserver {
 
-    private static final Logger LOG = Logger.getLogger(DownloadScreenController.class);
     private ScreenContainer parent;
-    private ObservableList<ProgressDownloadIndicator> boxes = FXCollections.observableArrayList();
-
-    private double TEST = 0.0;
+    private ObservableList<ProgressDownloadIndicator> lines = FXCollections.observableArrayList();
 
     @FXML
     private BorderPane pane;
@@ -37,11 +36,11 @@ public class DownloadScreenController implements Initializable, Controllable, Au
     public void initialize(URL location, ResourceBundle resources) {
         determineTimeToBindSizes();
 
-        for (int i = 0; i <= 100; i++) {
-            ProgressDownloadIndicator box = new ProgressDownloadIndicator(0.01f * i);
-            boxes.add(box);
+        for (int i = 0; i <= 10; i++) {
+            ProgressDownloadIndicator box = new ProgressDownloadIndicator(0.1f * i, "test");
+            lines.add(box);
         }
-        listView.setItems(boxes);
+        listView.setItems(lines);
     }
 
     @Override
@@ -62,8 +61,8 @@ public class DownloadScreenController implements Initializable, Controllable, Au
         listView.prefWidthProperty().bind(stage.widthProperty());
         pane.prefHeightProperty().bind(stage.heightProperty().subtract(50));
 
-        for (ProgressDownloadIndicator box : boxes) {
-            box.bindProgressBarWidthProperty(listView);
+        for (ProgressDownloadIndicator line : lines) {
+            line.bindProgressBarWidthProperty(listView);
         }
     }
 
@@ -78,33 +77,40 @@ public class DownloadScreenController implements Initializable, Controllable, Au
     @FXML
     public void testAddDownload() {
         DownloadableDocument doc = new DownloadableDocument("test", "", "", ".pdf");
-        startDownload(doc);
+        onDownloadStarted(doc);
+        onDownloadSkipped(doc);
+        onDownloadFailed(doc, new IOException("IO Exception"));
         onDownloadProgress(doc, 0);
     }
 
     @Override
-    public void startDownload(DownloadableDocument document) {
-        LOG.info("start download.");
+    public void onDownloadStarted(DownloadableDocument document) {
+        //add it to some kind of hashMap/list
 
-        ProgressDownloadIndicator box = new ProgressDownloadIndicator(100, document.getName());
-        boxes.add(box);
-        box.bindProgressBarWidthProperty(listView);
+        ProgressDownloadIndicator line = new ProgressDownloadIndicator(100, document);
+        lines.add(line);
+        line.bindProgressBarWidthProperty(listView);
     }
 
     @Override
     public void onDownloadProgress(DownloadableDocument document, double currentProgress) {
-        ProgressDownloadIndicator box = boxes.get(0);
-        box.setProgress(TEST);
-        TEST += 0.1;
+        //there has to be a line to this document already. get it.
     }
 
     @Override
-    public void skippedDownload(DownloadableDocument skippedDocument, boolean isError) {
-        //add a skippedDownloadIndicator or an errorDownloadIndicator
+    public void onDownloadSkipped(DownloadableDocument skippedDocument) {
+        ProgressDownloadIndicator line = new SkippedDownloadIndicator("skipped");
+        line.bindProgressBarWidthProperty(listView);
+        lines.add(line);
     }
 
     @Override
-    public void finishedDownloading() {
-        //todo remove?
+    public void onDownloadFailed(DownloadableDocument failedDocument, Exception cause) {
+
+    }
+
+    @Override
+    public void onDownloadFinished() {
+        //display some text
     }
 }
