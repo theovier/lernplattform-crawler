@@ -1,6 +1,5 @@
 package com.lailaps.ui;
 
-import com.lailaps.ScreenType;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -21,6 +20,8 @@ import java.util.HashMap;
 public class ScreenManager extends StackPane {
 
     private static final Logger LOG = Logger.getLogger(ScreenManager.class);
+    private static final String LOGIN_SCREEN_FILE = "fxml/login.fxml";
+    private static final String DOWNLOAD_SCREEN_FILE = "fxml/download.fxml";
 
     private final Duration FADEOUT_DURATION = new Duration(1000);
     private final Duration FADEIN_DURATION = new Duration(800);
@@ -28,6 +29,11 @@ public class ScreenManager extends StackPane {
 
     public ScreenManager() {
         super();
+    }
+
+    public void loadAllScreens() {
+        loadScreen(ScreenType.LOGIN, LOGIN_SCREEN_FILE);
+        loadScreen(ScreenType.DOWNLOAD, DOWNLOAD_SCREEN_FILE);
     }
 
     public boolean loadScreen(ScreenType name, String resource) {

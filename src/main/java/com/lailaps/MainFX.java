@@ -1,6 +1,7 @@
 package com.lailaps;
 
 import com.lailaps.ui.ScreenManager;
+import com.lailaps.ui.ScreenType;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -13,9 +14,6 @@ public class MainFX extends Application {
 
     public static String title = "lailaps";
 
-    private static final String LOGIN_SCREEN_FILE = "fxml/login.fxml";
-    private static final String DOWNLOAD_SCREEN_FILE = "fxml/download.fxml";
-
     public static void main(String[] args) {
         Application.launch(MainFX.class, args);
     }
@@ -23,8 +21,7 @@ public class MainFX extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         ScreenManager screenManager = new ScreenManager();
-        screenManager.loadScreen(ScreenType.LOGIN, LOGIN_SCREEN_FILE);
-        screenManager.loadScreen(ScreenType.DOWNLOAD, DOWNLOAD_SCREEN_FILE);
+        screenManager.loadAllScreens();
         screenManager.showScreen(ScreenType.LOGIN);
 
         Group root = new Group();
