@@ -76,7 +76,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
 
     @FXML
     public void testAddDownload() {
-        DownloadableDocument doc = new DownloadableDocument("test", "", "", ".pdf");
+        DownloadableDocument doc = new DownloadableDocument("sheet01", "", "Mathe I", ".pdf");
         onDownloadStarted(doc);
         onDownloadSkipped(doc);
         onDownloadFailed(doc, new IOException("IO Exception"));
@@ -99,14 +99,16 @@ public class DownloadScreenController implements Initializable, Controllable, Au
 
     @Override
     public void onDownloadSkipped(DownloadableDocument skippedDocument) {
-        ProgressDownloadIndicator line = new SkippedDownloadIndicator("skipped");
-        line.bindProgressBarWidthProperty(listView);
-        lines.add(line);
+        SkippedDownloadIndicator skippingIndicator = new SkippedDownloadIndicator(skippedDocument);
+        skippingIndicator.bindProgressBarWidthProperty(listView);
+        lines.add(skippingIndicator);
     }
 
     @Override
     public void onDownloadFailed(DownloadableDocument failedDocument, Exception cause) {
-
+        FailedDownloadIndicator failingIndicator = new FailedDownloadIndicator(failedDocument, cause);
+        failingIndicator.bindProgressBarWidthProperty(listView);
+        lines.add(failingIndicator);
     }
 
     @Override

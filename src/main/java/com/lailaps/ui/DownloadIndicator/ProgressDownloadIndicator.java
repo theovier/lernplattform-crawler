@@ -1,6 +1,7 @@
 package com.lailaps.ui.DownloadIndicator;
 
 
+import com.lailaps.download.DownloadableDocument;
 import javafx.geometry.Insets;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
@@ -14,10 +15,10 @@ public class ProgressDownloadIndicator extends HBox{
     protected Label label = new Label();
     private Insets labelPadding = new Insets(0,0,0,30);
 
-    public ProgressDownloadIndicator(double progress) {
+    public ProgressDownloadIndicator(double progress, DownloadableDocument document) {
         super();
         setProgress(progress);
-        setText("random long file name is standing here");
+        setText(document.toString());
         initialize();
     }
 
