@@ -1,5 +1,6 @@
 package com.lailaps.ui;
 
+import com.lailaps.ScreenType;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -23,13 +24,13 @@ public class ScreenManager extends StackPane {
 
     private final Duration FADEOUT_DURATION = new Duration(1000);
     private final Duration FADEIN_DURATION = new Duration(800);
-    private HashMap<String, Node> screens = new HashMap<>();
+    private HashMap<ScreenType, Node> screens = new HashMap<>();
 
     public ScreenManager() {
         super();
     }
 
-    public boolean loadScreen(String name, String resource) {
+    public boolean loadScreen(ScreenType name, String resource) {
         try {
             URL screenLocation = getClass().getClassLoader().getResource(resource);
             FXMLLoader loader = new FXMLLoader(screenLocation);
@@ -44,15 +45,11 @@ public class ScreenManager extends StackPane {
         }
     }
 
-    public void addScreen(String name, Node screen) {
+    public void addScreen(ScreenType name, Node screen) {
         screens.put(name, screen);
     }
 
-    public void unloadScreen(String name) {
-        screens.remove(name);
-    }
-
-    public boolean showScreen(final String screenName) {
+    public boolean showScreen(final ScreenType screenName) {
         if (screenNotLoaded(screenName)) {
             LOG.warn(String.format("Can't display screen '%s' since it has not been initialized yet.", screenName));
             return false;
@@ -65,7 +62,7 @@ public class ScreenManager extends StackPane {
         return true;
     }
 
-    private boolean screenNotLoaded(final String screenName) {
+    private boolean screenNotLoaded(final ScreenType screenName) {
         return screens.get(screenName) == null;
     }
 
@@ -73,7 +70,7 @@ public class ScreenManager extends StackPane {
         return !getChildren().isEmpty();
     }
 
-    private void displayScreenDirectly(final String screenName) {
+    private void displayScreenDirectly(final ScreenType screenName) {
         getChildren().add(0, screens.get(screenName));
     }
 
@@ -81,7 +78,7 @@ public class ScreenManager extends StackPane {
         getChildren().remove(0);
     }
 
-    private void fadeToScreen(final String newScreenName) {
+    private void fadeToScreen(final ScreenType newScreenName) {
         fadeOut((ActionEvent) -> fadeIn(newScreenName));
     }
 
@@ -89,7 +86,7 @@ public class ScreenManager extends StackPane {
         playScreenFade(1, 0, FADEOUT_DURATION, onFinished);
     }
 
-    private void fadeIn(String newScreenName) {
+    private void fadeIn(ScreenType newScreenName) {
         removeCurrentScreen();
         displayScreenDirectly(newScreenName);
         playScreenFade(0, 1, FADEIN_DURATION, null);

@@ -46,15 +46,17 @@ public class Director {
             Thread.currentThread().setName("com.lailaps.Director");
             boolean loginSuccess = login(credentials);
             if (loginSuccess) {
-                saveUsername(credentials.getUser());
-                startDownload();
+                //saveUsername(credentials.getUser());
+                //startDownload();
+
+                screenManager.showScreen(ScreenType.DOWNLOAD);
             }
         }).start();
     }
 
     private boolean login(LoginCredentials credentials) {
         try {
-            return loginClient.login(credentials);
+            return true; //loginClient.login(credentials);
         } catch (Exception e) {
             //loginWindow.showLoginError(e);
             Platform.runLater(() -> loginScreenController.showLoginError(e));
@@ -115,7 +117,7 @@ public class Director {
 
     private void initProgressWindow() {
        // loginWindow.hide();
-        screenManager.showScreen(MainFX.DOWNLOAD_SCREEN);
+        screenManager.showScreen(ScreenType.DOWNLOAD);
         //progressWindow = new ProgressWindow();
         //progressWindow.show();
         //downloader.addObserver(progressWindow); //todo extract

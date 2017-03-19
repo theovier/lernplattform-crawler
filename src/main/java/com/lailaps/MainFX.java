@@ -13,10 +13,8 @@ public class MainFX extends Application {
 
     public static String title = "lailaps";
 
-    public static final String LOGIN_SCREEN = "login";
-    public static final String LOGIN_SCREEN_FILE = "fxml/login.fxml";
-    public static final String DOWNLOAD_SCREEN = "download";
-    public static final String DOWNLOAD_SCREEN_FILE = "fxml/download.fxml";
+    private static final String LOGIN_SCREEN_FILE = "fxml/login.fxml";
+    private static final String DOWNLOAD_SCREEN_FILE = "fxml/download.fxml";
 
     public static void main(String[] args) {
         Application.launch(MainFX.class, args);
@@ -25,10 +23,9 @@ public class MainFX extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         ScreenManager screenManager = new ScreenManager();
-        screenManager.loadScreen(LOGIN_SCREEN, LOGIN_SCREEN_FILE);
-        screenManager.loadScreen(DOWNLOAD_SCREEN, DOWNLOAD_SCREEN_FILE);
-        screenManager.showScreen(LOGIN_SCREEN);
-    //    screenManager.showScreen(DOWNLOAD_SCREEN);
+        screenManager.loadScreen(ScreenType.LOGIN, LOGIN_SCREEN_FILE);
+        screenManager.loadScreen(ScreenType.DOWNLOAD, DOWNLOAD_SCREEN_FILE);
+        screenManager.showScreen(ScreenType.LOGIN);
 
         Group root = new Group();
         root.getChildren().addAll(screenManager);
