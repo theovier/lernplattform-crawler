@@ -5,6 +5,6 @@ public class FailedDownloadIndicator extends ProgressDownloadIndicator {
 
     public FailedDownloadIndicator(String error) {
         super(100, error);
-        //color red
+        progressBar.setStyle("-fx-accent: red;");
     }
 }
