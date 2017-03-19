@@ -37,7 +37,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
         determineTimeToBindSizes();
         DownloadableDocument doc = new DownloadableDocument("test", "", "Template", ".dummy");
         for (int i = 0; i <= 10; i++) {
-            ProgressDownloadIndicator box = new ProgressDownloadIndicator(0.1f * i, doc);
+            ProgressDownloadIndicator box = new ProgressDownloadIndicator(doc, 0.1f * i);
             downloadIndicators.add(box);
         }
         listView.setItems(downloadIndicators);
@@ -87,7 +87,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
 
     @Override
     public void onDownloadStarted(DownloadableDocument document) {
-        ProgressDownloadIndicator newIndicator = new ProgressDownloadIndicator(100, document);
+        ProgressDownloadIndicator newIndicator = new ProgressDownloadIndicator(document);
         downloadIndicators.add(newIndicator);
         newIndicator.bindProgressBarWidthProperty(listView);
     }

@@ -6,7 +6,7 @@ import com.lailaps.download.DownloadableDocument;
 public class FailedDownloadIndicator extends ProgressDownloadIndicator {
 
     public FailedDownloadIndicator(DownloadableDocument failedDownload, Exception cause) {
-        super(100, failedDownload);
+        super(failedDownload, 100);
         progressBar.setStyle("-fx-accent: red;");
     }
 }

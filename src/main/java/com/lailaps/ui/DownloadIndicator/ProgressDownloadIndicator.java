@@ -16,7 +16,15 @@ public class ProgressDownloadIndicator extends HBox {
     private Insets labelPadding = new Insets(0,0,0,30);
     private DownloadableDocument correspondingDocument;
 
-    public ProgressDownloadIndicator(double progress, DownloadableDocument document) {
+    public ProgressDownloadIndicator(DownloadableDocument document) {
+        super();
+        correspondingDocument = document;
+        setText(correspondingDocument.toString());
+        initialize();
+    }
+
+    //make protected when not in testing anymore.
+    public ProgressDownloadIndicator(DownloadableDocument document, double progress) {
         super();
         setProgress(progress);
         setText(document.toString());
