@@ -10,8 +10,8 @@ import javafx.scene.layout.HBox;
 public class ProgressDownloadIndicator extends HBox{
 
     private static final double PARENT_WIDTH_RATIO = 0.3;
-    private ProgressBar progressBar = new ProgressBar(0);
-    private Label label = new Label();
+    protected ProgressBar progressBar = new ProgressBar(0);
+    protected Label label = new Label();
     private Insets labelPadding = new Insets(0,0,0,30);
 
     public ProgressDownloadIndicator(double progress) {
@@ -31,7 +31,6 @@ public class ProgressDownloadIndicator extends HBox{
     private void initialize() {
         getChildren().addAll(progressBar, label);
         label.setPadding(labelPadding);
-        progressBar.setPrefWidth(300);
     }
 
     public void setProgress(double progress) {
