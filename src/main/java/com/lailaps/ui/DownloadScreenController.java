@@ -2,6 +2,8 @@ package com.lailaps.ui;
 
 import com.lailaps.download.DownloadObserver;
 import com.lailaps.download.DownloadableDocument;
+import com.lailaps.ui.DownloadIndicator.DownloadIndicatorBox;
+import com.lailaps.ui.DownloadIndicator.ProgressDownloadIndicator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -19,7 +21,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
 
     private static final Logger LOG = Logger.getLogger(DownloadScreenController.class);
     private ScreenContainer parent;
-    private ObservableList<ProgressLabelBox> boxes = FXCollections.observableArrayList();
+    private ObservableList<DownloadIndicatorBox> boxes = FXCollections.observableArrayList();
 
     private double TEST = 0.0;
 
@@ -30,14 +32,14 @@ public class DownloadScreenController implements Initializable, Controllable, Au
     private MenuBar menubar;
 
     @FXML
-    private ListView<ProgressLabelBox> listView;
+    private ListView<DownloadIndicatorBox> listView;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         determineTimeToBindSizes();
 
         for (int i = 0; i <= 100; i++) {
-            ProgressLabelBox box = new ProgressLabelBox(0.01f * i);
+            ProgressDownloadIndicator box = new ProgressDownloadIndicator(0.01f * i);
             boxes.add(box);
         }
         listView.setItems(boxes);
@@ -61,7 +63,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
         listView.prefWidthProperty().bind(stage.widthProperty());
         pane.prefHeightProperty().bind(stage.heightProperty().subtract(50));
 
-        for (ProgressLabelBox box : boxes) {
+        for (DownloadIndicatorBox box : boxes) {
             box.bindProgressBarWidthProperty(listView);
         }
     }
@@ -85,14 +87,14 @@ public class DownloadScreenController implements Initializable, Controllable, Au
     public void startDownload(DownloadableDocument document) {
         LOG.info("start download.");
 
-        ProgressLabelBox box = new ProgressLabelBox(100, document.getName());
+        ProgressDownloadIndicator box = new ProgressDownloadIndicator(100, document.getName());
         boxes.add(box);
         box.bindProgressBarWidthProperty(listView);
     }
 
     @Override
     public void onDownloadProgress(DownloadableDocument document, double currentProgress) {
-        ProgressLabelBox box = boxes.get(0);
+        ProgressDownloadIndicator box = (ProgressDownloadIndicator) boxes.get(0);
         box.setProgress(TEST);
         TEST += 0.1;
     }
