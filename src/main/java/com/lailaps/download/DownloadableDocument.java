@@ -32,7 +32,6 @@ public class DownloadableDocument {
         return courseName + ": " + name + fileExtension;
     }
 
-    //todo only add "[...]" after whitespace?
     public String toShortString(int maxLength) {
         String displayName = courseName + ": " + name;
         if (displayName.length() > maxLength) {
