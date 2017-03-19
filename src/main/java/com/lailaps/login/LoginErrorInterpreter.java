@@ -19,7 +19,7 @@ public class LoginErrorInterpreter {
         } else if (e instanceof IOException) {
             return MSG_CONNECTION_PROBLEMS;
         } else {
-            return MSG_DEFAULT;
+            return MSG_DEFAULT + " " + e.getMessage();
         }
     }
 }
