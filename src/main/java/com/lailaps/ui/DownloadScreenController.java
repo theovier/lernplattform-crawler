@@ -28,33 +28,18 @@ public class DownloadScreenController implements Initializable, Controllable, Au
     private MenuBar menubar;
 
     @FXML
-    private ListView<HBox> listView;
+    private ListView<ProgressLabelBox> listView;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         determineTimeToBindSizes();
-        ObservableList<ProgressBar> bars = FXCollections.observableArrayList();
-
-        ObservableList<HBox> boxes = FXCollections.observableArrayList();
+        ObservableList<ProgressLabelBox> boxes = FXCollections.observableArrayList();
 
         for (int i = 0; i <= 100; i++) {
-            ProgressBar a = new ProgressBar(0.01f * i);
-            a.setPrefWidth(300);
-            bars.add(a);
-
-            Label label = new Label("test");
-            label.setPadding(new Insets(0,0,0,10));
-            HBox hbox = new HBox(a, label);
-            boxes.add(hbox);
+            ProgressLabelBox box = new ProgressLabelBox(0.01f * i);
+            boxes.add(box);
         }
         listView.setItems(boxes);
-        for (ProgressBar bar : bars) {
-           // bar.setProgress(1);
-        }
-
-
-
-
     }
 
     @Override
