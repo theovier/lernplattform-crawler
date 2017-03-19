@@ -95,6 +95,11 @@ public class Downloader implements ObservableDownloadSource {
     }
 
     @Override
+    public void notifyObserversProgress(DownloadableDocument downloadableDocument, double progress) {
+        observers.forEach(observer -> observer.onDownloadProgress(downloadableDocument, progress));
+    }
+
+    @Override
     public void notifyObserversSkipped(DownloadableDocument skippedDocument) {
         observers.forEach(observer -> observer.onDownloadSkipped(skippedDocument));
     }
@@ -107,10 +112,5 @@ public class Downloader implements ObservableDownloadSource {
     @Override
     public void notifyObserversEnd() {
         observers.forEach(observer -> observer.onDownloadFinished());
-    }
-
-    @Override
-    public void notifyObserversProgress(DownloadableDocument downloadableDocument, double progress) {
-        observers.forEach(observer -> observer.onDownloadProgress(downloadableDocument, progress));
     }
 }
