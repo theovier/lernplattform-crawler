@@ -20,6 +20,7 @@ import java.util.ResourceBundle;
 public class DownloadScreenController implements Initializable, Controllable, AutoResizable {
 
     private ScreenContainer parent;
+    private ObservableList<ProgressLabelBox> boxes = FXCollections.observableArrayList();
 
     @FXML
     private BorderPane pane;
@@ -33,13 +34,13 @@ public class DownloadScreenController implements Initializable, Controllable, Au
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         determineTimeToBindSizes();
-        ObservableList<ProgressLabelBox> boxes = FXCollections.observableArrayList();
 
         for (int i = 0; i <= 100; i++) {
             ProgressLabelBox box = new ProgressLabelBox(0.01f * i);
             boxes.add(box);
         }
         listView.setItems(boxes);
+
     }
 
     @Override
@@ -59,6 +60,12 @@ public class DownloadScreenController implements Initializable, Controllable, Au
         menubar.prefWidthProperty().bind(stage.widthProperty());
         listView.prefWidthProperty().bind(stage.widthProperty());
         pane.prefHeightProperty().bind(stage.heightProperty().subtract(50));
+
+        for (ProgressLabelBox box : boxes) {
+            box.bindProgressBarWidthProperty(listView.widthProperty().multiply(0.3));
+        }
+
+
     }
 
     public void determineTimeToBindSizes() {

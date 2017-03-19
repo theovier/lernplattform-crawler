@@ -1,6 +1,7 @@
 package com.lailaps.ui;
 
 
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -10,7 +11,7 @@ public class ProgressLabelBox extends HBox {
 
     private ProgressBar progressBar = new ProgressBar(0);
     private Label label = new Label();
-    private Insets labelPadding = new Insets(0,0,0,10);
+    private Insets labelPadding = new Insets(0,0,0,30);
 
     public ProgressLabelBox() {
         super();
@@ -21,7 +22,7 @@ public class ProgressLabelBox extends HBox {
     public ProgressLabelBox(double progress) {
         super();
         setProgress(progress);
-        setText("test");
+        setText("random long file name is standing here");
         initialize();
     }
 
@@ -45,4 +46,9 @@ public class ProgressLabelBox extends HBox {
     public void setText(String text) {
         label.setText(text);
     }
+
+    public void bindProgressBarWidthProperty(ObservableValue observable) {
+        progressBar.prefWidthProperty().bind(observable);
+    }
+
 }
