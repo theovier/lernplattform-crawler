@@ -8,24 +8,19 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.HBox;
 
-public class ProgressDownloadIndicator extends HBox{
+public class ProgressDownloadIndicator extends HBox {
 
     private static final double PARENT_WIDTH_RATIO = 0.3;
     protected ProgressBar progressBar = new ProgressBar(0);
     protected Label label = new Label();
     private Insets labelPadding = new Insets(0,0,0,30);
+    private DownloadableDocument correspondingDocument;
 
     public ProgressDownloadIndicator(double progress, DownloadableDocument document) {
         super();
         setProgress(progress);
         setText(document.toString());
-        initialize();
-    }
-
-    public ProgressDownloadIndicator(double progress, String text) {
-        super();
-        setProgress(progress);
-        setText(text);
+        correspondingDocument = document;
         initialize();
     }
 
@@ -44,5 +39,9 @@ public class ProgressDownloadIndicator extends HBox{
 
     public void bindProgressBarWidthProperty(Control parent) {
         progressBar.prefWidthProperty().bind(parent.widthProperty().multiply(PARENT_WIDTH_RATIO));
+    }
+
+    public boolean isReferringToSameDocument(DownloadableDocument document) {
+        return correspondingDocument.equals(document);
     }
 }

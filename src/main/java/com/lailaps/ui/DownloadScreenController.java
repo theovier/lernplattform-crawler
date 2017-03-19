@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 public class DownloadScreenController implements Initializable, Controllable, AutoResizable, DownloadObserver {
 
     private ScreenContainer parent;
-    private ObservableList<ProgressDownloadIndicator> lines = FXCollections.observableArrayList();
+    private ObservableList<ProgressDownloadIndicator> downloadIndicators = FXCollections.observableArrayList();
 
     @FXML
     private BorderPane pane;
@@ -35,12 +35,12 @@ public class DownloadScreenController implements Initializable, Controllable, Au
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         determineTimeToBindSizes();
-
+        DownloadableDocument doc = new DownloadableDocument("test", "", "Template", ".dummy");
         for (int i = 0; i <= 10; i++) {
-            ProgressDownloadIndicator box = new ProgressDownloadIndicator(0.1f * i, "test");
-            lines.add(box);
+            ProgressDownloadIndicator box = new ProgressDownloadIndicator(0.1f * i, doc);
+            downloadIndicators.add(box);
         }
-        listView.setItems(lines);
+        listView.setItems(downloadIndicators);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
         listView.prefWidthProperty().bind(stage.widthProperty());
         pane.prefHeightProperty().bind(stage.heightProperty().subtract(50));
 
-        for (ProgressDownloadIndicator line : lines) {
+        for (ProgressDownloadIndicator line : downloadIndicators) {
             line.bindProgressBarWidthProperty(listView);
         }
     }
@@ -76,39 +76,43 @@ public class DownloadScreenController implements Initializable, Controllable, Au
 
     @FXML
     public void testAddDownload() {
-        DownloadableDocument doc = new DownloadableDocument("sheet01", "", "Mathe I", ".pdf");
-        onDownloadStarted(doc);
-        onDownloadSkipped(doc);
-        onDownloadFailed(doc, new IOException("IO Exception"));
-        onDownloadProgress(doc, 0);
+        DownloadableDocument doc1 = new DownloadableDocument("sheet01", "", "ABC", ".pdf");
+        DownloadableDocument doc2 = new DownloadableDocument("sheet02", "", "XYZ", ".pdf");
+        DownloadableDocument doc3 = new DownloadableDocument("sheet03", "", "HJK", ".pdf");
+        onDownloadStarted(doc1);
+        onDownloadProgress(doc1, 0.3);
+        onDownloadSkipped(doc2);
+        onDownloadFailed(doc3, new IOException("IO Exception"));
     }
 
     @Override
     public void onDownloadStarted(DownloadableDocument document) {
-        //add it to some kind of hashMap/list
-
-        ProgressDownloadIndicator line = new ProgressDownloadIndicator(100, document);
-        lines.add(line);
-        line.bindProgressBarWidthProperty(listView);
+        ProgressDownloadIndicator newIndicator = new ProgressDownloadIndicator(100, document);
+        downloadIndicators.add(newIndicator);
+        newIndicator.bindProgressBarWidthProperty(listView);
     }
 
     @Override
     public void onDownloadProgress(DownloadableDocument document, double currentProgress) {
-        //there has to be a line to this document already. get it.
+        for (ProgressDownloadIndicator indicator : downloadIndicators) {
+            if (indicator.isReferringToSameDocument(document)) {
+                indicator.setProgress(currentProgress);
+            }
+        }
     }
 
     @Override
     public void onDownloadSkipped(DownloadableDocument skippedDocument) {
         SkippedDownloadIndicator skippingIndicator = new SkippedDownloadIndicator(skippedDocument);
         skippingIndicator.bindProgressBarWidthProperty(listView);
-        lines.add(skippingIndicator);
+        downloadIndicators.add(skippingIndicator);
     }
 
     @Override
     public void onDownloadFailed(DownloadableDocument failedDocument, Exception cause) {
         FailedDownloadIndicator failingIndicator = new FailedDownloadIndicator(failedDocument, cause);
         failingIndicator.bindProgressBarWidthProperty(listView);
-        lines.add(failingIndicator);
+        downloadIndicators.add(failingIndicator);
     }
 
     @Override
