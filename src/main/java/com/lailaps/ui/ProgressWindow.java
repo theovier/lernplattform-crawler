@@ -74,7 +74,7 @@ public class ProgressWindow extends Window implements DownloadObserver {
     }
 
     @Override
-    public void addDownload(DownloadableDocument document) {
+    public void startDownload(DownloadableDocument document) {
         downloadCounter++;
         downloadCounterLabel.setText(COUNTER_HEADING + downloadCounter);
         textArea.append(SUCCESS);
@@ -99,5 +99,10 @@ public class ProgressWindow extends Window implements DownloadObserver {
         for (int i = 0; i < 60; i++) {
             textArea.append("=");
         }
+    }
+
+    @Override
+    public void onDownloadProgress(DownloadableDocument document, double currentProgress) {
+
     }
 }
