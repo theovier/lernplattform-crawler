@@ -91,7 +91,7 @@ public class Downloader implements Observable {
 
     @Override
     public void notifyObserversSuccess(DownloadableDocument downloadedDocument) {
-        observers.forEach(observer -> observer.addDownload(downloadedDocument));
+        observers.forEach(observer -> observer.startDownload(downloadedDocument));
     }
 
     @Override
