@@ -3,6 +3,7 @@ package com.lailaps;
 import com.lailaps.ui.ScreenContainer;
 import com.lailaps.ui.ScreenType;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -31,5 +32,12 @@ public class Main extends Application {
         Image icon = new Image(getClass().getClassLoader().getResourceAsStream("images/lailaps2_32x32.png"));
         stage.getIcons().add(icon);
         stage.setTitle(title);
+
+        stage.setOnCloseRequest(e -> Platform.exit());
+    }
+
+    @Override
+    public void stop() throws Exception {
+        System.exit(0);
     }
 }
