@@ -16,8 +16,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Director {
 
     private static final Logger LOG = Logger.getLogger(Director.class);
-    private LoginWindow loginWindow;
-    private ProgressWindow progressWindow;
     private LoginClient loginClient = new LoginClient();
     private Browser crawlBrowser, downloadBrowser;
     private Downloader downloader;
@@ -25,13 +23,8 @@ public class Director {
     private DownloadScheduler consumer;
     private Thread producerThread, consumerThread;
     private LinkedBlockingQueue<DownloadableDocument> downloadableDocuments;
-
     private LoginScreenController loginScreenController;
     private ScreenContainer screenContainer;
-
-    public Director (LoginWindow loginWindow) {
-        this.loginWindow = loginWindow;
-    }
 
     public Director (LoginScreenController loginScreenController) {
         this.loginScreenController = loginScreenController;
@@ -112,9 +105,5 @@ public class Director {
     private void initProgressWindow() {
         screenContainer.showScreen(ScreenType.DOWNLOAD);
         downloader.addObserver(screenContainer.getCurrentScreenController());
-        //downloader.addObserver();
-        //progressWindow = new ProgressWindow();
-        //progressWindow.show();
-        //downloader.addObserver(progressWindow); //todo extract
     }
 }
