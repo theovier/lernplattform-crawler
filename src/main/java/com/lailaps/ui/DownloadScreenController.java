@@ -13,13 +13,14 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.apache.log4j.Logger;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class DownloadScreenController implements Initializable, Controllable, AutoResizable, DownloadObserver {
 
+    private static final Logger LOG = Logger.getLogger(DownloadScreenController.class);
     private ScreenContainer parent;
     private ObservableList<ProgressDownloadIndicator> downloadIndicators = FXCollections.observableArrayList();
 
@@ -35,11 +36,6 @@ public class DownloadScreenController implements Initializable, Controllable, Au
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         determineTimeToBindSizes();
-        DownloadableDocument doc = new DownloadableDocument("test", "", "Template", ".dummy");
-        for (int i = 0; i <= 10; i++) {
-            ProgressDownloadIndicator box = new ProgressDownloadIndicator(doc, 0.1f * i);
-            downloadIndicators.add(box);
-        }
         listView.setItems(downloadIndicators);
     }
 
@@ -76,6 +72,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
 
     @FXML
     public void testAddDownload() {
+        /*
         DownloadableDocument doc1 = new DownloadableDocument("sheet01", "", "ABC", ".pdf");
         DownloadableDocument doc2 = new DownloadableDocument("sheet02", "", "XYZ", ".pdf");
         DownloadableDocument doc3 = new DownloadableDocument("sheet03", "", "HJK", ".pdf");
@@ -83,6 +80,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
         onDownloadProgress(doc1, 0.3);
         onDownloadSkipped(doc2);
         onDownloadFailed(doc3, new IOException("IO Exception"));
+        */
     }
 
     @Override

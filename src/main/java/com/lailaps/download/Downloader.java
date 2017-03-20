@@ -2,6 +2,7 @@ package com.lailaps.download;
 
 import com.gargoylesoftware.htmlunit.Page;
 import com.lailaps.*;
+import javafx.application.Platform;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -52,7 +53,7 @@ public class Downloader implements ObservableDownloadSource {
 
     private static void copyFileToDisc(Page downloadPage, Path target) throws IOException {
         try (InputStream source = downloadPage.getWebResponse().getContentAsStream()) {
-            //todo replace with own method which notifies observer?
+            //todo replace with own method which notifies observer? -> COUNTING INPUT STREAM?
             Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
         }
     }
@@ -91,26 +92,36 @@ public class Downloader implements ObservableDownloadSource {
 
     @Override
     public void notifyObserversStart(DownloadableDocument downloadedDocument) {
-        observers.forEach(observer -> observer.onDownloadStarted(downloadedDocument));
+        Platform.runLater(() ->
+            observers.forEach(observer -> observer.onDownloadStarted(downloadedDocument))
+        );
     }
 
     @Override
     public void notifyObserversProgress(DownloadableDocument downloadableDocument, double progress) {
-        observers.forEach(observer -> observer.onDownloadProgress(downloadableDocument, progress));
+        Platform.runLater(() ->
+            observers.forEach(observer -> observer.onDownloadProgress(downloadableDocument, progress))
+        );
     }
 
     @Override
     public void notifyObserversSkipped(DownloadableDocument skippedDocument) {
-        observers.forEach(observer -> observer.onDownloadSkipped(skippedDocument));
+        Platform.runLater(() ->
+                observers.forEach(observer -> observer.onDownloadSkipped(skippedDocument))
+        );
     }
 
     @Override
     public void notifyObserversFailed(DownloadableDocument failedDocument, Exception cause) {
-        observers.forEach(observer -> observer.onDownloadFailed(failedDocument, cause));
+        Platform.runLater(() ->
+            observers.forEach(observer -> observer.onDownloadFailed(failedDocument, cause))
+        );
     }
 
     @Override
     public void notifyObserversEnd() {
-        observers.forEach(observer -> observer.onFinishedDownloading());
+        Platform.runLater(() ->
+            observers.forEach(observer -> observer.onFinishedDownloading())
+        );
     }
 }
