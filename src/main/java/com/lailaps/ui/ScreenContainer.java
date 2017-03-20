@@ -1,5 +1,6 @@
 package com.lailaps.ui;
 
+import com.lailaps.download.DownloadObserver;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -27,6 +28,9 @@ public class ScreenContainer extends StackPane {
     private final Duration FADEIN_DURATION = new Duration(800);
     private HashMap<ScreenType, Node> screens = new HashMap<>();
 
+    //todo CHANGE THIS ASAP!
+    private FXMLLoader DownloadLoader;
+
     public ScreenContainer() {
         super();
     }
@@ -44,6 +48,11 @@ public class ScreenContainer extends StackPane {
             Controllable controller = loader.getController();
             controller.setParentScreen(this);
             addScreen(name, root);
+
+            if (resource == DOWNLOAD_SCREEN_FILE) {
+                DownloadLoader = loader;
+            }
+
             return true;
         } catch (IOException e) {
             LOG.error(e);
@@ -106,5 +115,10 @@ public class ScreenContainer extends StackPane {
         KeyFrame lastKeyFrame = new KeyFrame(fadeDuration, onFinished, endValue);
         Timeline fade = new Timeline(firstKeyFrame, lastKeyFrame);
         fade.play();
+    }
+
+    //todo rework
+    public DownloadObserver getCurrentScreenController() {
+        return (DownloadObserver) DownloadLoader.getController();
     }
 }
