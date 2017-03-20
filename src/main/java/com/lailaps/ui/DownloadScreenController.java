@@ -70,19 +70,6 @@ public class DownloadScreenController implements Initializable, Controllable, Au
         });
     }
 
-    @FXML
-    public void testAddDownload() {
-        /*
-        DownloadableDocument doc1 = new DownloadableDocument("sheet01", "", "ABC", ".pdf");
-        DownloadableDocument doc2 = new DownloadableDocument("sheet02", "", "XYZ", ".pdf");
-        DownloadableDocument doc3 = new DownloadableDocument("sheet03", "", "HJK", ".pdf");
-        onDownloadStarted(doc1);
-        onDownloadProgress(doc1, 0.3);
-        onDownloadSkipped(doc2);
-        onDownloadFailed(doc3, new IOException("IO Exception"));
-        */
-    }
-
     @Override
     public void onDownloadStarted(DownloadableDocument document) {
         ProgressDownloadIndicator newIndicator = new ProgressDownloadIndicator(document);
