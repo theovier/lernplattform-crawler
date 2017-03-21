@@ -3,6 +3,7 @@ package com.lailaps.download;
 public class DownloadableDocument {
 
     private String name, downloadLink, courseName, fileExtension;
+    private long size = 0L;
 
     public DownloadableDocument(String name, String downloadLink, String courseName, String fileExtension) {
         this.name = name;
@@ -25,6 +26,14 @@ public class DownloadableDocument {
 
     public String getFileExtension() {
         return fileExtension;
+    }
+
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long downloadSize) {
+        this.size = downloadSize;
     }
 
     @Override

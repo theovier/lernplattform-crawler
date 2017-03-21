@@ -1,19 +1,21 @@
 package com.lailaps.download;
 
 import com.gargoylesoftware.htmlunit.Page;
+import com.gargoylesoftware.htmlunit.WebResponse;
 import com.lailaps.*;
 import javafx.application.Platform;
+import org.apache.commons.io.input.CountingInputStream;
+import org.apache.log4j.Logger;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Downloader implements ObservableDownloadSource {
 
+    private static final Logger LOG = Logger.getLogger(Downloader.class);
+    private static final int BUFFER_SIZE = 8192;
     private static String rootDirName;
     private static String rootDirectory;
     private Browser browser;
@@ -42,19 +44,42 @@ public class Downloader implements ObservableDownloadSource {
 
     private void download(DownloadableDocument doc, Path target) {
         try {
-            Files.createDirectories(target);
-            Page downloadPage = browser.getPage(doc.getDownloadLink());
-            copyFileToDisc(downloadPage, target);
-            notifyObserversStart(doc);
+            makeDirectories(target);
+            saveDocument(doc, target);
         } catch (IOException e) {
+            LOG.error(e);
             notifyObserversFailed(doc, e);
         }
     }
 
-    private static void copyFileToDisc(Page downloadPage, Path target) throws IOException {
-        try (InputStream source = downloadPage.getWebResponse().getContentAsStream()) {
-            //todo replace with own method which notifies observer? -> COUNTING INPUT STREAM?
-            Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+    private static void makeDirectories(Path target) throws IOException {
+        File containingDirectory = target.getParent().toFile();
+        containingDirectory.mkdirs();
+    }
+
+    private void saveDocument(DownloadableDocument document, Path target) throws IOException {
+        Page downloadPage = browser.getPage(document.getDownloadLink());
+        WebResponse response = downloadPage.getWebResponse();
+        document.setSize(response.getContentLength());
+        try (CountingInputStream in = new CountingInputStream(response.getContentAsStream())) {
+            copy(in, target, document);
+        }
+    }
+
+    private void copy(CountingInputStream in, Path target, DownloadableDocument document) throws IOException {
+        try (OutputStream sink = Files.newOutputStream(target)) {
+            notifyObserversStart(document);
+            copyWithNotifyProgress(in, sink, document);
+        }
+    }
+
+    private void copyWithNotifyProgress(CountingInputStream source, OutputStream sink, DownloadableDocument document) throws IOException {
+        int n;
+        byte[] buffer = new byte[BUFFER_SIZE];
+        while((n = source.read(buffer)) > 0) {
+            sink.write(buffer, 0, n);
+            double progress = (double) source.getByteCount() / document.getSize();
+            notifyObserversProgress(document, progress);
         }
     }
 
