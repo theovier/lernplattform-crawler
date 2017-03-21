@@ -8,7 +8,6 @@ import java.util.List;
 
 public class TermCrawler extends Crawler{
 
-    private static final Logger LOG = Logger.getLogger(TermCrawler.class);
     private static final String LABEL_XPATH = "//label[@title]";
     private static final String SUMMER_TERM = "Sommersemester";
     private static final String WINTER_TERM = "Wintersemester";

@@ -37,6 +37,7 @@ public class DocumentCrawler extends Crawler {
         }
     }
 
+    //TODO what if we don't have a gateway page / gateway page is directly the download link?
     public DownloadableDocument getDocument(HtmlPage gatewayPage, String courseName) {
         String pageContent = gatewayPage.asXml();
         String name = fetchFileName(gatewayPage);
