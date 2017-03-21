@@ -61,16 +61,18 @@ public class DocumentProducer implements Runnable{
 
     //todo rename
     private void crawlWebsite() throws IOException {
-        crawlTerm();
-        List<String> courseLinks = courseCrawler.fetchCourseLinks(overviewPage);
+        String currentTerm = crawlTerm();
+        List<String> courseLinks = courseCrawler.fetchCourseLinks(overviewPage, currentTerm);
         for (String link : courseLinks) {
             crawlCourse(link);
         }
     }
 
-    private void crawlTerm() {
+    private String crawlTerm() {
         String term = termCrawler.fetchCurrentTerm(overviewPage);
-        Downloader.changeRootDir(term);
+        String termDisplayName = termCrawler.clearTerm(term);
+        Downloader.changeRootDir(termDisplayName);
+        return term;
     }
 
     //todo rename, more than 1 effect.

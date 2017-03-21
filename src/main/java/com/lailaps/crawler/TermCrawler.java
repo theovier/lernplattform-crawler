@@ -2,11 +2,13 @@ package com.lailaps.crawler;
 
 import com.gargoylesoftware.htmlunit.html.HtmlLabel;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
 public class TermCrawler extends Crawler{
 
+    private static final Logger LOG = Logger.getLogger(TermCrawler.class);
     private static final String LABEL_XPATH = "//label[@title]";
     private static final String SUMMER_TERM = "Sommersemester";
     private static final String WINTER_TERM = "Wintersemester";
@@ -31,5 +33,9 @@ public class TermCrawler extends Crawler{
     private boolean isTermLabel(HtmlLabel label) {
         String text = label.toString();
         return text.contains(WINTER_TERM) ; //|| text.contains(SUMMER_TERM); //TODO CHANGE BACK
+    }
+
+    public String clearTerm(String term) {
+        return term.replace("/", "-");
     }
 }
