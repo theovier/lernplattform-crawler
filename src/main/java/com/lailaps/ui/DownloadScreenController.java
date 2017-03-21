@@ -95,6 +95,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
 
     @Override
     public void onDownloadFailed(DownloadableDocument failedDocument, Exception cause) {
+        //todo check if it was an download which was already known!
         FailedDownloadIndicator failingIndicator = new FailedDownloadIndicator(failedDocument, cause);
         failingIndicator.bindProgressBarWidthProperty(listView);
         downloadIndicators.add(failingIndicator);
