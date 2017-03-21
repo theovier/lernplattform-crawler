@@ -87,8 +87,16 @@ public class DocumentProducer implements Runnable{
 
     private DownloadableDocument fetchDocument(HtmlPage coursePage, String downloadPageURL) throws IOException {
         String courseName = gatewayCrawler.fetchCourseName(coursePage);
-        HtmlPage downloadPage = browser.getPage(downloadPageURL);
-        return documentCrawler.getDocument(downloadPage, courseName);
+
+
+        try {
+            HtmlPage downloadPage = browser.getPage(downloadPageURL); //TODO throws ClassCastEx
+            return documentCrawler.getDocument(downloadPage, courseName);
+        } catch (ClassCastException e) {
+            //TODO read header and then produce document.
+            return new DownloadableDocument("dummy", downloadPageURL, "dummy", ".dummy");
+        }
+
     }
 
     private void enqueue(DownloadableDocument doc) {
