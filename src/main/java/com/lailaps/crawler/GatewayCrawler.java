@@ -44,7 +44,6 @@ public class GatewayCrawler extends Crawler {
         return clearCourseName(filename.asText());
     }
 
-    //todo regex
     private String clearCourseName(String name) {
         String clearedName =  name.replace('/', '&');
         clearedName = clearedName.replace(':', ';');
