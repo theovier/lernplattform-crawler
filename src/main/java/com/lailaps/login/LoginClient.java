@@ -10,24 +10,14 @@ import java.io.IOException;
 public class LoginClient {
 
     private static final Logger LOG = Logger.getLogger(LoginClient.class);
-    private Browser browser;
+    private Browser browser = new Browser();
     private HtmlPage currentPage;
     private HtmlSubmitInput loginButton;
     private HtmlTextInput loginUser;
     private HtmlPasswordInput loginPassword;
 
     public LoginClient() {
-        initBrowser();
         disableHttpLogging();
-    }
-
-    private void initBrowser() {
-        browser = new Browser();
-        browser.getOptions().setJavaScriptEnabled(true);
-        browser.getOptions().setRedirectEnabled(true);
-        browser.getOptions().setThrowExceptionOnScriptError(false);
-        browser.getCookieManager().setCookiesEnabled(true);
-        browser.getCache().setMaxSize(0);
     }
 
     private void disableHttpLogging() {
