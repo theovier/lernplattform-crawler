@@ -46,12 +46,4 @@ public class TermCrawler extends Crawler{
     private String clearTerm(String term) {
         return term.replace("/", "-");
     }
-
-
-
-
-
-
-
-    //todo get clearedTerm, private var term, wenn nicht gefüllt nochmal neu durchrechnen.
 }

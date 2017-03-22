@@ -43,11 +43,5 @@ public class Main extends Application {
 
 
     //TODO check admin rights for preferences -> speichertort wird durch preferences bestimmt?!
-    //TODO wenn ordner leer, meldung geben und schließen
-    //TODO Exception in thread "Thread-6" java.lang.ClassCastException: com.gargoylesoftware.htmlunit.UnexpectedPage cannot be cast to com.gargoylesoftware.htmlunit.html.HtmlPage
     //TODO ORDNER in LERNPLATTFORM!
-
-    //Request URL:https://campusapp01.hshl.de/pluginfile.php/143371/mod_resource/content/1/Vorlesung%201%20-%20Haeufigkeiten.ipynb?forcedownload=1
-    //Content-Disposition:attachment; filename="Vorlesung 1 - Haeufigkeiten.ipynb"
-    //Content-Range:bytes 3274-3274/89120     //89120 Bytes!
 }
