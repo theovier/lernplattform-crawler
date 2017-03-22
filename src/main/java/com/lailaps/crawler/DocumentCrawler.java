@@ -1,23 +1,54 @@
 package com.lailaps.crawler;
 
+import com.gargoylesoftware.htmlunit.Page;
+import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlHeading2;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.lailaps.download.DownloadableDocument;
 
 public class DocumentCrawler extends Crawler {
 
-    public static final String DOWNLOAD_START = "window.open('";
-    public static final String DOWNLOAD_END = "\',";
-    public static final String FILENAME_XPATH = "//div[@role='main']//h2";
-
+    private static final String DOWNLOAD_START = "window.open('";
+    private static final String DOWNLOAD_END = "\',";
+    private static final String FILENAME_XPATH = "//div[@role='main']//h2";
+    private static final String DOUBLE_QUOTE = "\"";
     private static final String DEFAULT_EXTENSION = ".pdf";
+
+    public DownloadableDocument fetchDocument(Page possibleGatewayPage, String courseName) {
+        if (possibleGatewayPage.isHtmlPage()) {
+            HtmlPage gatewayPage = (HtmlPage) possibleGatewayPage;
+            return getDocumentFromGateway(gatewayPage, courseName);
+        } else {
+            return getDocumentWithoutGateway(possibleGatewayPage, courseName);
+        }
+    }
+
+    public DownloadableDocument getDocumentFromGateway(HtmlPage gatewayPage, String courseName) {
+        String pageContent = gatewayPage.asXml();
+        String name = fetchFileName(gatewayPage);
+        String downloadLink = fetchDownloadLink(pageContent);
+        String extension = fetchFileExtension(downloadLink);
+        return new DownloadableDocument(name, downloadLink, courseName, extension);
+    }
+
+    //some files can't be opened in a new tab ('gateway'). the download starts directly by calling the URL.
+    private DownloadableDocument getDocumentWithoutGateway(Page directDownloadPage, String courseName) {
+        String downloadPageURL = directDownloadPage.getUrl().toString();
+        WebResponse response = directDownloadPage.getWebResponse();
+        String contentDispositionHeader = response.getResponseHeaderValue("Content-Disposition");
+        String filename = fetchFileNameFromContentDisposition(contentDispositionHeader);
+        String extension = fetchFileExtension(filename);
+        String name = filename.substring(0, filename.indexOf(extension));
+        long size = fetchFileSizeFromResponse(response);
+        return new DownloadableDocument(name, downloadPageURL, courseName, extension, size);
+    }
 
     private String fetchFileName(HtmlPage currentPage) {
         HtmlHeading2 filename = currentPage.getFirstByXPath(FILENAME_XPATH);
-        return clearName(filename.asText());
+        return cleanFileName(filename.asText());
     }
 
-    private String clearName(String filename) {
+    private String cleanFileName(String filename) {
         String clearedName =  filename.replace('/', '&');
         return clearedName.replace(':', ';');
     }
@@ -37,12 +68,14 @@ public class DocumentCrawler extends Crawler {
         }
     }
 
-    //TODO what if we don't have a gateway page / gateway page is directly the download link?
-    public DownloadableDocument getDocument(HtmlPage gatewayPage, String courseName) {
-        String pageContent = gatewayPage.asXml();
-        String name = fetchFileName(gatewayPage);
-        String downloadLink = fetchDownloadLink(pageContent);
-        String extension = fetchFileExtension(downloadLink);
-        return new DownloadableDocument(name, downloadLink, courseName, extension);
+    private String fetchFileNameFromContentDisposition(String contentDisposition) {
+        //Content-Disposition = attachment; filename="Vorlesung 1 - Haeufigkeiten.ipynb"
+        int firstDoubleQuoteIndex = contentDisposition.indexOf(DOUBLE_QUOTE);
+        int lastDoubleQuoteIndex = contentDisposition.lastIndexOf(DOUBLE_QUOTE);
+        return contentDisposition.substring(firstDoubleQuoteIndex + 1, lastDoubleQuoteIndex);
+    }
+
+    private long fetchFileSizeFromResponse(WebResponse response) {
+        return response.getContentLength();
     }
 }

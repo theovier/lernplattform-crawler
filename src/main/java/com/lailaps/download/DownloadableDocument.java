@@ -12,6 +12,14 @@ public class DownloadableDocument {
         this.fileExtension = fileExtension;
     }
 
+    public DownloadableDocument(String name, String downloadLink, String courseName, String fileExtension, long size) {
+        this.name = name;
+        this.downloadLink = downloadLink;
+        this.courseName = courseName;
+        this.fileExtension = fileExtension;
+        this.size = size;
+    }
+
     public String getDownloadLink() {
         return downloadLink;
     }

@@ -1,5 +1,6 @@
 package com.lailaps.download;
 
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.lailaps.Browser;
 import com.lailaps.crawler.CourseCrawler;
@@ -9,10 +10,8 @@ import com.lailaps.crawler.TermCrawler;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.stream.Collectors;
 
 public class DocumentProducer implements Runnable {
 
@@ -64,11 +63,11 @@ public class DocumentProducer implements Runnable {
     private void fetchDocumentsForTerm(String currentTerm)  {
         List<String> courseURLs = courseCrawler.fetchCourseLinks(overviewPage, currentTerm);
         for (String courseURL : courseURLs) {
-            fetchDocumentsInCourse(courseURL);
+            fetchDocumentsForCourse(courseURL);
         }
     }
 
-    private void fetchDocumentsInCourse(String courseURL) {
+    private void fetchDocumentsForCourse(String courseURL) {
         try {
             HtmlPage coursePage = browser.getPage(courseURL);
             List<String> downloadGatewayURLs = gatewayCrawler.fetchDownloadLinks(coursePage);
@@ -77,17 +76,15 @@ public class DocumentProducer implements Runnable {
                 if (doc != null) enqueue(doc);
             }
         } catch (IOException e) {
-            LOG.error(e); //something wrong with the course
+            LOG.error(e); //something wrong with the course page
         }
     }
 
     private DownloadableDocument createDocument(String downloadPageURL, HtmlPage coursePage) {
         String courseName = gatewayCrawler.fetchCourseName(coursePage);
         try {
-            HtmlPage downloadPage = browser.getPage(downloadPageURL);
-            return documentCrawler.getDocument(downloadPage, courseName);
-        } catch (ClassCastException e) {
-            return new DownloadableDocument("dummy", downloadPageURL, courseName, ".dummy"); //TODO read header and then produce document.
+            Page downloadPage = browser.getPage(downloadPageURL);
+            return documentCrawler.fetchDocument(downloadPage, courseName);
         } catch (IOException e) {
             LOG.error(e);
             return null;
