@@ -12,9 +12,11 @@ public class TermCrawler extends Crawler{
     private static final String SUMMER_TERM = "Sommersemester";
     private static final String WINTER_TERM = "Wintersemester";
 
+    private String currentTerm;
+
     public String fetchCurrentTerm(HtmlPage overviewPage) {
         List<HtmlLabel> labels = fetchLabelsWithAnyTitle(overviewPage);
-        String currentTerm = getFirstTermLabel(labels);
+        currentTerm = getFirstTermLabel(labels);
         return currentTerm;
     }
 
@@ -34,7 +36,22 @@ public class TermCrawler extends Crawler{
         return text.contains(WINTER_TERM) ; //|| text.contains(SUMMER_TERM); //TODO CHANGE BACK
     }
 
-    public String clearTerm(String term) {
+    public String getDirectoryFriendlyTerm(HtmlPage overviewPage) {
+        if (currentTerm.isEmpty()) {
+            fetchCurrentTerm(overviewPage);
+        }
+        return clearTerm(currentTerm);
+    }
+
+    private String clearTerm(String term) {
         return term.replace("/", "-");
     }
+
+
+
+
+
+
+
+    //todo get clearedTerm, private var term, wenn nicht gefüllt nochmal neu durchrechnen.
 }

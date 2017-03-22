@@ -9,19 +9,21 @@ import com.lailaps.crawler.TermCrawler;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.stream.Collectors;
 
-public class DocumentProducer implements Runnable{
+public class DocumentProducer implements Runnable {
 
     private static final Logger LOG = Logger.getLogger(DocumentProducer.class);
     private LinkedBlockingQueue<DownloadableDocument> queue;
     private Browser browser;
     private HtmlPage overviewPage;
-    private CourseCrawler courseCrawler;
-    private GatewayCrawler gatewayCrawler;
-    private DocumentCrawler documentCrawler;
-    private TermCrawler termCrawler;
+    private TermCrawler termCrawler = new TermCrawler();
+    private CourseCrawler courseCrawler = new CourseCrawler();
+    private GatewayCrawler gatewayCrawler = new GatewayCrawler();
+    private DocumentCrawler documentCrawler = new DocumentCrawler();
     private int produced = 0;
     private boolean running;
 
@@ -30,14 +32,6 @@ public class DocumentProducer implements Runnable{
         this.browser = browser;
         this.running = true;
         this.overviewPage = browser.getCurrentPage();
-        initCrawlers();
-    }
-
-    private void initCrawlers() {
-        termCrawler = new TermCrawler();
-        courseCrawler = new CourseCrawler();
-        gatewayCrawler = new GatewayCrawler();
-        documentCrawler = new DocumentCrawler();
     }
 
     public boolean isRunning() {
@@ -47,56 +41,53 @@ public class DocumentProducer implements Runnable{
     @Override
     public void run() {
         produceDocuments();
+        //TODO when procuded == 0 -> Message?!
         LOG.info("Producer Completed: " + produced);
         running = false;
     }
 
     private void produceDocuments() {
+        String currentTerm = termCrawler.fetchCurrentTerm(overviewPage);
+        notifyDownloaderAboutTerm();
+        fetchDocumentsForTerm(currentTerm);
+    }
+
+    private void notifyDownloaderAboutTerm() {
+        String directoryFriendlyTerm = termCrawler.getDirectoryFriendlyTerm(overviewPage);
+        Downloader.changeRootDir(directoryFriendlyTerm);
+    }
+
+    private void fetchDocumentsForTerm(String currentTerm)  {
+        List<String> courseURLs = courseCrawler.fetchCourseLinks(overviewPage, currentTerm);
+        for (String courseURL : courseURLs) {
+            fetchDocumentsInCourse(courseURL);
+        }
+    }
+
+    private void fetchDocumentsInCourse(String courseURL) {
         try {
-            crawlWebsite();
+            HtmlPage coursePage = browser.getPage(courseURL);
+            List<String> downloadGatewayURLs = gatewayCrawler.fetchDownloadLinks(coursePage);
+            for (String downloadGatewayURL : downloadGatewayURLs) {
+                DownloadableDocument doc = createDocument(downloadGatewayURL, coursePage);
+                if (doc != null) enqueue(doc);
+            }
         } catch (IOException e) {
-            LOG.error("Error beim Parsen der Webseiten!");
+            LOG.error(e); //something wrong with the course
         }
     }
 
-    //todo rename
-    private void crawlWebsite() throws IOException {
-        String currentTerm = crawlTerm();
-        List<String> courseLinks = courseCrawler.fetchCourseLinks(overviewPage, currentTerm);
-        for (String link : courseLinks) {
-            crawlCourse(link);
-        }
-    }
-
-    private String crawlTerm() {
-        String term = termCrawler.fetchCurrentTerm(overviewPage);
-        String termDisplayName = termCrawler.clearTerm(term);
-        Downloader.changeRootDir(termDisplayName);
-        return term;
-    }
-
-    //todo rename, more than 1 effect.
-    private void crawlCourse(String courseLink) throws IOException {
-        HtmlPage coursePage = browser.getPage(courseLink);
-        List<String> downloadLinks = gatewayCrawler.fetchDownloadLinks(coursePage);
-        for (String link : downloadLinks) {
-            DownloadableDocument doc = fetchDocument(coursePage, link);
-            enqueue(doc);
-        }
-    }
-
-    private DownloadableDocument fetchDocument(HtmlPage coursePage, String downloadPageURL) throws IOException {
+    private DownloadableDocument createDocument(String downloadPageURL, HtmlPage coursePage) {
         String courseName = gatewayCrawler.fetchCourseName(coursePage);
-
-
         try {
-            HtmlPage downloadPage = browser.getPage(downloadPageURL); //TODO throws ClassCastEx
+            HtmlPage downloadPage = browser.getPage(downloadPageURL);
             return documentCrawler.getDocument(downloadPage, courseName);
         } catch (ClassCastException e) {
-            //TODO read header and then produce document.
-            return new DownloadableDocument("dummy", downloadPageURL, "dummy", ".dummy");
+            return new DownloadableDocument("dummy", downloadPageURL, courseName, ".dummy"); //TODO read header and then produce document.
+        } catch (IOException e) {
+            LOG.error(e);
+            return null;
         }
-
     }
 
     private void enqueue(DownloadableDocument doc) {
@@ -104,12 +95,8 @@ public class DocumentProducer implements Runnable{
             queue.put(doc);
             produced++;
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.error(e);
         }
-    }
-
-    public int getProducedDocumentsAmount() {
-        return produced;
     }
 }
 
