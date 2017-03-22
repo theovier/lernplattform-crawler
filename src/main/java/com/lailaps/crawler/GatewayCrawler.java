@@ -7,6 +7,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import java.util.ArrayList;
 import java.util.List;
 
+//todo: rename LandingPageCrawler?
 public class GatewayCrawler extends Crawler {
 
     private static final String RESOURCEPATH = "https://campusapp01.hshl.de/mod/resource/view.php?id=";
