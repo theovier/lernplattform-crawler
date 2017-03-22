@@ -72,7 +72,7 @@ public class DocumentProducer implements Runnable {
             HtmlPage coursePage = browser.getPage(courseURL);
             List<String> downloadGatewayURLs = gatewayCrawler.fetchDownloadLinks(coursePage);
             for (String downloadGatewayURL : downloadGatewayURLs) {
-                DownloadableDocument doc = createDocument(downloadGatewayURL, coursePage);
+                DownloadableDocument doc = fetchDocument(downloadGatewayURL, coursePage);
                 if (doc != null) enqueue(doc);
             }
         } catch (IOException e) {
@@ -80,7 +80,7 @@ public class DocumentProducer implements Runnable {
         }
     }
 
-    private DownloadableDocument createDocument(String downloadPageURL, HtmlPage coursePage) {
+    private DownloadableDocument fetchDocument(String downloadPageURL, HtmlPage coursePage) {
         String courseName = gatewayCrawler.fetchCourseName(coursePage);
         try {
             Page downloadPage = browser.getPage(downloadPageURL);
