@@ -9,12 +9,4 @@ public class Browser extends WebClient {
         return (HtmlPage) getCurrentWindow().getEnclosedPage();
     }
 
-    public Browser() {
-        super();
-        getOptions().setJavaScriptEnabled(true);
-        getOptions().setRedirectEnabled(true);
-        getOptions().setThrowExceptionOnScriptError(false);
-        getCookieManager().setCookiesEnabled(true);
-        getCache().setMaxSize(0);
-    }
 }

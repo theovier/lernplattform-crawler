@@ -18,6 +18,15 @@ public class LoginClient {
 
     public LoginClient() {
         disableHttpLogging();
+        initBrowser();
+    }
+
+    private void initBrowser() {
+        browser.getOptions().setJavaScriptEnabled(true);
+        browser.getOptions().setRedirectEnabled(true);
+        browser.getOptions().setThrowExceptionOnScriptError(false);
+        browser.getCookieManager().setCookiesEnabled(true);
+        browser.getCache().setMaxSize(0);
     }
 
     private void disableHttpLogging() {
