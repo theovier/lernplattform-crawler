@@ -92,7 +92,7 @@ public class Downloader implements ObservableDownloadSource {
         }
     }
 
-    public static void changeRootDir(String rootDirectoryName) {
+    public void changeRootDir(String rootDirectoryName) {
         rootDirName = rootDirectoryName;
         rootDirectory = fetchRootDir();
     }
@@ -101,8 +101,8 @@ public class Downloader implements ObservableDownloadSource {
         return PreferencesManager.getInstance().getDirectory() + "/" + rootDirName + "/";
     }
 
-    public static String getRootDirName() {
-        return rootDirName;
+    public void onNoFilesToDownload() {
+        //todo notify observers, that there was not one single file to download
     }
 
     public void finishDownloading() {

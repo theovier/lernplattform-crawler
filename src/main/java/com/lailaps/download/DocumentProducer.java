@@ -18,6 +18,7 @@ public class DocumentProducer implements Runnable {
 
     private static final Logger LOG = Logger.getLogger(DocumentProducer.class);
     private LinkedBlockingQueue<DownloadableDocument> queue;
+    private Downloader downloader;
     private Browser browser;
     private HtmlPage overviewPage;
     private TermCrawler termCrawler = new TermCrawler();
@@ -27,8 +28,9 @@ public class DocumentProducer implements Runnable {
     private int produced = 0;
     private boolean running;
 
-    public DocumentProducer(LinkedBlockingQueue queue, Browser browser) {
+    public DocumentProducer(LinkedBlockingQueue queue, Downloader downloader, Browser browser) {
         this.queue = queue;
+        this.downloader = downloader;
         this.browser = browser;
         this.running = true;
         this.overviewPage = browser.getCurrentPage();
@@ -41,8 +43,10 @@ public class DocumentProducer implements Runnable {
     @Override
     public void run() {
         produceDocuments();
-        //TODO when procuded == 0 -> Message?!
         LOG.info("Producer Completed: " + produced);
+        if (produced == 0) {
+            downloader.onNoFilesToDownload();
+        }
         running = false;
     }
 
@@ -54,7 +58,7 @@ public class DocumentProducer implements Runnable {
 
     private void notifyDownloaderAboutTerm() {
         String directoryFriendlyTerm = termCrawler.getDirectoryFriendlyTerm(overviewPage);
-        Downloader.changeRootDir(directoryFriendlyTerm);
+        downloader.changeRootDir(directoryFriendlyTerm);
     }
 
     private void fetchDocumentsForTerm(String currentTerm)  {
