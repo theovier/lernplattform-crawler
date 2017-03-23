@@ -31,7 +31,7 @@ public class LoginScreenController implements Initializable, Controllable, AutoR
 
     @FXML
     private ChoiceBox <String> emailList;
-
+    
     @FXML
     private ProgressIndicator throbber;
 
@@ -76,8 +76,10 @@ public class LoginScreenController implements Initializable, Controllable, AutoR
     private void handleDirChooseButtonAction(final ActionEvent e) {
         dirChooser.setInitialDirectory(new java.io.File(currentDir));
         File file = dirChooser.showDialog(new Stage());
-        currentDir = file.toString();
-        directoryField.setText(currentDir);
+        if (file != null) {
+            currentDir = file.toString();
+            directoryField.setText(currentDir);
+        }
     }
 
     @FXML
