@@ -79,6 +79,7 @@ public class LoginScreenController implements Initializable, Controllable, AutoR
         if (file != null) {
             currentDir = file.toString();
             directoryField.setText(currentDir);
+            PreferencesManager.getInstance().setDirectory(currentDir);
         }
     }
 
