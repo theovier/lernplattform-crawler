@@ -9,7 +9,6 @@ import java.io.IOException;
 
 public class LoginClient {
 
-    private static final Logger LOG = Logger.getLogger(LoginClient.class);
     private Browser browser = new Browser();
     private HtmlPage currentPage;
     private HtmlSubmitInput loginButton;
@@ -36,7 +35,6 @@ public class LoginClient {
         Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF);
     }
 
-    //todo can throw nullpointer?
     public boolean login(LoginCredentials credentials) throws IOException {
         loginToCampusPortal(credentials);
         loginToLernplattform();
@@ -44,24 +42,24 @@ public class LoginClient {
     }
 
     private void loginToCampusPortal(LoginCredentials credentials) throws IOException {
-        currentPage = browser.getPage("https://campusportal.hshl.de"); //todo how to wait for side to end loading?
+        currentPage = browser.getPage("https://campusportal.hshl.de");
         getLoginWidgets();
         setLoginValues(credentials);
         currentPage = loginButton.click();
         checkForLoginError();
     }
 
-    //todo extract login widget names as static final strings
     private void getLoginWidgets() {
-        if (currentPage == null)
-            LOG.error("CampusPortalSeite konnte nicht geladen werden. Null.");
         loginButton = (HtmlSubmitInput) currentPage.getElementById("submit_button");
         loginUser = (HtmlTextInput) currentPage.getElementById("user_name");
         loginPassword = (HtmlPasswordInput) currentPage.getElementById("password");
     }
 
-    //todo: schmeißt bei caro nullpointer. CurrentPage wird null sein
+    //todo test bei caro?
     private void setLoginValues(LoginCredentials credentials) {
+        if (loginUser == null || loginPassword == null) {
+            throw new IllegalStateException("site is not loaded correctly.");
+        }
         loginUser.setValueAttribute(credentials.getUser());
         loginPassword.setValueAttribute(credentials.getPassword());
     }
