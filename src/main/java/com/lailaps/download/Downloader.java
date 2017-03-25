@@ -20,6 +20,7 @@ public class Downloader implements ObservableDownloadSource {
     private static String rootDirectory;
     private Browser browser;
     private List<DownloadObserver> observers;
+    private int downloadCount;
 
     public Downloader (Browser browser) {
         this.browser = browser;
@@ -46,6 +47,7 @@ public class Downloader implements ObservableDownloadSource {
         try {
             makeDirectories(target);
             saveDocument(doc, target);
+            downloadCount++;
         } catch (IOException e) {
             LOG.error(e);
             notifyObserversFailed(doc, e);
@@ -85,6 +87,7 @@ public class Downloader implements ObservableDownloadSource {
 
     public void showRootFolder() {
         //todo on mac not explorer.exe
+        //todo change the path to contain only backslashes. + need to go one level deeper (name a directory in this dir?)
         try {
             Runtime.getRuntime().exec("explorer.exe /select," + Paths.get(rootDirectory));
         } catch (IOException e) {
@@ -101,11 +104,8 @@ public class Downloader implements ObservableDownloadSource {
         return PreferencesManager.getInstance().getDirectory() + "/" + rootDirName + "/";
     }
 
-    public void onNoFilesToDownload() {
-        //todo notify observers, that there was not one single file to download
-    }
-
     public void finishDownloading() {
+        LOG.info("downloaded Documents: " + downloadCount);
         showRootFolder();
         notifyObserversEnd();
     }
@@ -132,7 +132,7 @@ public class Downloader implements ObservableDownloadSource {
     @Override
     public void notifyObserversSkipped(DownloadableDocument skippedDocument) {
         Platform.runLater(() ->
-                observers.forEach(observer -> observer.onDownloadSkipped(skippedDocument))
+            observers.forEach(observer -> observer.onDownloadSkipped(skippedDocument))
         );
     }
 

@@ -11,12 +11,13 @@ import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class DocumentProducer implements Runnable {
 
     private static final Logger LOG = Logger.getLogger(DocumentProducer.class);
-    private LinkedBlockingQueue<DownloadableDocument> queue;
+    private BlockingQueue<DownloadableDocument> queue;
     private Downloader downloader;
     private Browser browser;
     private HtmlPage overviewPage;
@@ -25,28 +26,20 @@ public class DocumentProducer implements Runnable {
     private GatewayCrawler gatewayCrawler = new GatewayCrawler();
     private DocumentCrawler documentCrawler = new DocumentCrawler();
     private int produced = 0;
-    private boolean running;
 
-    public DocumentProducer(LinkedBlockingQueue queue, Downloader downloader, Browser browser) {
+    public DocumentProducer(BlockingQueue queue, Downloader downloader, Browser browser) {
         this.queue = queue;
         this.downloader = downloader;
         this.browser = browser;
-        this.running = true;
         this.overviewPage = browser.getCurrentPage();
-    }
-
-    public boolean isRunning() {
-        return running;
     }
 
     @Override
     public void run() {
         produceDocuments();
         LOG.info("Producer Completed: " + produced);
-        if (produced == 0) {
-            downloader.onNoFilesToDownload();
-        }
-        running = false;
+        PoisonToken endSignal = new PoisonToken();
+        enqueue(endSignal);
     }
 
     private void produceDocuments() {

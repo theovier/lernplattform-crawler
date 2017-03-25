@@ -1,33 +1,39 @@
 package com.lailaps.download;
 
-import java.util.concurrent.LinkedBlockingQueue;
+import org.apache.log4j.Logger;
+
+import java.util.concurrent.BlockingQueue;
 
 public class DownloadScheduler implements Runnable {
 
-    private LinkedBlockingQueue<DownloadableDocument> queue;
-    private DocumentProducer documentProducer;
+    private static final Logger LOG = Logger.getLogger(DownloadScheduler.class);
+    private BlockingQueue<DownloadableDocument> queue;
     private Downloader downloader;
+    private boolean shouldScheduleDownloads = true;
 
-    public DownloadScheduler(LinkedBlockingQueue queue, Downloader downloader, DocumentProducer documentProducer) {
+    public DownloadScheduler(BlockingQueue queue, Downloader downloader) {
         this.queue = queue;
-        this.documentProducer = documentProducer;
         this.downloader = downloader;
     }
 
     @Override
     public void run() {
-        while (documentProducer.isRunning() || !queue.isEmpty()) {
+        while (shouldScheduleDownloads) {
             downloadFromDocumentQueue();
         }
-        downloader.finishDownloading();
     }
 
     public void downloadFromDocumentQueue() {
         try {
             DownloadableDocument document = queue.take();
-            downloader.startDownload(document);
+            if (document instanceof PoisonToken) {
+                downloader.finishDownloading();
+                shouldScheduleDownloads = false;
+            } else {
+                downloader.startDownload(document);
+            }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.error(e);
         }
     }
 }

@@ -94,7 +94,7 @@ public class Director {
     private void initQueue() {
         downloadableDocuments = new LinkedBlockingQueue<>(100);
         producer = new DocumentProducer(downloadableDocuments, downloader, crawlBrowser);
-        consumer = new DownloadScheduler(downloadableDocuments, downloader, producer);
+        consumer = new DownloadScheduler(downloadableDocuments, downloader);
     }
 
     private void initThreads() {
