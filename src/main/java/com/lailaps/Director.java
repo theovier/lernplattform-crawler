@@ -1,13 +1,11 @@
 package com.lailaps;
 
-import com.lailaps.download.DocumentProducer;
-import com.lailaps.download.DownloadScheduler;
-import com.lailaps.download.DownloadableDocument;
-import com.lailaps.download.Downloader;
+import com.lailaps.download.*;
 import com.lailaps.login.LoginClient;
 import com.lailaps.login.LoginCredentials;
 import com.lailaps.ui.*;
 import javafx.application.Platform;
+import javafx.stage.Screen;
 import org.apache.log4j.Logger;
 
 import java.util.concurrent.BlockingQueue;
@@ -33,6 +31,7 @@ public class Director {
     }
 
     public void start(LoginCredentials credentials) {
+        //start new thread, otherwise the UI is frozen.
         new Thread(() -> {
             Thread.currentThread().setName("com.lailaps.Director");
             boolean loginSuccess = login(credentials);
@@ -71,7 +70,7 @@ public class Director {
         initDownloader();
         initQueue();
         initThreads();
-        initProgressWindow();
+        initDownloadScreen();
     }
 
     private void initBrowsers() {
@@ -103,8 +102,12 @@ public class Director {
         consumerThread = new Thread(consumer);
     }
 
-    private void initProgressWindow() {
+    private void initDownloadScreen() {
         screenContainer.showScreen(ScreenType.DOWNLOAD);
-        downloader.addObserver(screenContainer.getCurrentScreenController());
+        Controllable controller = screenContainer.getScreenController(ScreenType.DOWNLOAD);
+        if (controller instanceof DownloadObserver) {
+            DownloadObserver observer = (DownloadObserver) controller;
+            downloader.addObserver(observer);
+        }
     }
 }

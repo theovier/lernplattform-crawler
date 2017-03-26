@@ -27,6 +27,7 @@ public class ScreenContainer extends StackPane {
     private final Duration FADEOUT_DURATION = new Duration(1000);
     private final Duration FADEIN_DURATION = new Duration(800);
     private HashMap<ScreenType, Node> screens = new HashMap<>();
+    private HashMap<ScreenType, Controllable> screenControllers = new HashMap<>();
 
     //todo CHANGE THIS ASAP!
     private FXMLLoader DownloadLoader;
@@ -48,11 +49,7 @@ public class ScreenContainer extends StackPane {
             Controllable controller = loader.getController();
             controller.setParentScreen(this);
             addScreen(name, root);
-
-            if (resource == DOWNLOAD_SCREEN_FILE) {
-                DownloadLoader = loader;
-            }
-
+            screenControllers.put(name, controller);
             return true;
         } catch (IOException e) {
             LOG.error(e);
@@ -60,7 +57,7 @@ public class ScreenContainer extends StackPane {
         }
     }
 
-    public void addScreen(ScreenType name, Node screen) {
+    private void addScreen(ScreenType name, Node screen) {
         screens.put(name, screen);
     }
 
@@ -117,8 +114,7 @@ public class ScreenContainer extends StackPane {
         fade.play();
     }
 
-    //todo rework
-    public DownloadObserver getCurrentScreenController() {
-        return (DownloadObserver) DownloadLoader.getController();
+    public Controllable getScreenController(ScreenType name) {
+        return screenControllers.get(name);
     }
 }
