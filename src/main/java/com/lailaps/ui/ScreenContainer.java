@@ -44,8 +44,8 @@ public class ScreenContainer extends StackPane {
             Parent root = loader.load();
             Controllable controller = loader.getController();
             controller.setParentScreen(this);
-            addScreen(name, root);
             screenControllers.put(name, controller);
+            addScreen(name, root);
             return true;
         } catch (IOException e) {
             LOG.error(e);
