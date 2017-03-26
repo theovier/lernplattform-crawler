@@ -21,7 +21,7 @@ public class Director {
     private DocumentProducer producer;
     private DownloadScheduler consumer;
     private Thread producerThread, consumerThread;
-    private BlockingQueue<DownloadableDocument> documentQueue;
+    private BlockingQueue<DownloadableDocument> documentQueue = new LinkedBlockingQueue<>(100);
     private LoginScreenController loginScreenController;
     private ScreenContainer screenContainer;
 
@@ -68,7 +68,6 @@ public class Director {
     private void prepareDownload() {
         initBrowsers();
         initDownloader();
-        initQueue();
         initThreads();
         initDownloadScreen();
     }
@@ -91,13 +90,9 @@ public class Director {
         downloader = new Downloader(downloadBrowser);
     }
 
-    private void initQueue() {
-        documentQueue = new LinkedBlockingQueue<>(100);
+    private void initThreads() {
         producer = new DocumentProducer(documentQueue, downloader, crawlBrowser);
         consumer = new DownloadScheduler(documentQueue, downloader);
-    }
-
-    private void initThreads() {
         producerThread = new Thread(producer);
         consumerThread = new Thread(consumer);
     }
