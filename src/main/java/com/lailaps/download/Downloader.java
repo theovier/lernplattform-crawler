@@ -107,7 +107,7 @@ public class Downloader implements ObservableDownloadSource {
     public void finishDownloading() {
         LOG.info("downloaded Documents: " + downloadCount);
         showRootFolder();
-        notifyObserversEnd();
+        notifyObserversEnd(downloadCount);
     }
 
     @Override
@@ -144,9 +144,9 @@ public class Downloader implements ObservableDownloadSource {
     }
 
     @Override
-    public void notifyObserversEnd() {
+    public void notifyObserversEnd(int downloaded) {
         Platform.runLater(() ->
-            observers.forEach(observer -> observer.onFinishedDownloading())
+            observers.forEach(observer -> observer.onFinishedDownloading(downloaded))
         );
     }
 }

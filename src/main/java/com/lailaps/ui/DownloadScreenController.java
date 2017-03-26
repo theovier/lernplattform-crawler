@@ -102,7 +102,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
     }
 
     @Override
-    public void onFinishedDownloading() {
+    public void onFinishedDownloading(int downloaded) {
         //todo display some text
     }
 }
