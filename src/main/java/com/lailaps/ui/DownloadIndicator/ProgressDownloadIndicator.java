@@ -23,8 +23,7 @@ public class ProgressDownloadIndicator extends HBox {
         initialize();
     }
 
-    //make protected when not in testing anymore.
-    public ProgressDownloadIndicator(DownloadableDocument document, double progress) {
+    protected ProgressDownloadIndicator(DownloadableDocument document, double progress) {
         super();
         setProgress(progress);
         setText(document.toString());
