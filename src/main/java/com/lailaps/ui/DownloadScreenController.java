@@ -20,7 +20,6 @@ import java.util.ResourceBundle;
 
 public class DownloadScreenController implements Initializable, Controllable, AutoResizable, DownloadObserver {
 
-    private static final Logger LOG = Logger.getLogger(DownloadScreenController.class);
     private ScreenContainer parent;
     private ObservableList<ProgressDownloadIndicator> downloadIndicators = FXCollections.observableArrayList();
 
@@ -70,6 +69,26 @@ public class DownloadScreenController implements Initializable, Controllable, Au
         });
     }
 
+    private boolean updateDownloadIndicatorForDocument(DownloadableDocument document, double currentProgress) {
+        for (ProgressDownloadIndicator indicator : downloadIndicators) {
+            if (indicator.isReferringToSameDocument(document)) {
+                indicator.setProgress(currentProgress);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean removeDownloadIndicatorForDocument(DownloadableDocument document) {
+        for (ProgressDownloadIndicator indicator : downloadIndicators) {
+            if (indicator.isReferringToSameDocument(document)) {
+                downloadIndicators.remove(indicator);
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void onDownloadStarted(DownloadableDocument document) {
         ProgressDownloadIndicator newIndicator = new ProgressDownloadIndicator(document);
@@ -79,11 +98,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
 
     @Override
     public void onDownloadProgress(DownloadableDocument document, double currentProgress) {
-        for (ProgressDownloadIndicator indicator : downloadIndicators) {
-            if (indicator.isReferringToSameDocument(document)) {
-                indicator.setProgress(currentProgress);
-            }
-        }
+        updateDownloadIndicatorForDocument(document, currentProgress);
     }
 
     @Override
@@ -95,7 +110,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
 
     @Override
     public void onDownloadFailed(DownloadableDocument failedDocument, Exception cause) {
-        //todo check if it was an download which was already known!
+        removeDownloadIndicatorForDocument(failedDocument);
         FailedDownloadIndicator failingIndicator = new FailedDownloadIndicator(failedDocument, cause);
         failingIndicator.bindProgressBarWidthProperty(listView);
         downloadIndicators.add(failingIndicator);
