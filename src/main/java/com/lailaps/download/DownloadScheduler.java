@@ -9,7 +9,7 @@ public class DownloadScheduler implements Runnable {
     private static final Logger LOG = Logger.getLogger(DownloadScheduler.class);
     private BlockingQueue<DownloadableDocument> queue;
     private Downloader downloader;
-    private boolean shouldScheduleDownloads = true;
+    private boolean shouldSchedule = true;
 
     public DownloadScheduler(BlockingQueue queue, Downloader downloader) {
         this.queue = queue;
@@ -18,22 +18,26 @@ public class DownloadScheduler implements Runnable {
 
     @Override
     public void run() {
-        while (shouldScheduleDownloads) {
+        while (shouldSchedule) {
             downloadFromDocumentQueue();
         }
     }
 
-    public void downloadFromDocumentQueue() {
+    private void downloadFromDocumentQueue() {
         try {
             DownloadableDocument document = queue.take();
-            if (document instanceof PoisonToken) {
-                downloader.finishDownloading();
-                shouldScheduleDownloads = false;
-            } else {
-                downloader.startDownload(document);
-            }
+            handDocumentToDownloader(document);
         } catch (InterruptedException e) {
             LOG.error(e);
+        }
+    }
+
+    private void handDocumentToDownloader(DownloadableDocument document) {
+        if (document instanceof PoisonToken) {
+            shouldSchedule = false;
+            downloader.finishDownloading();
+        } else {
+            downloader.startDownload(document);
         }
     }
 }
