@@ -10,6 +10,7 @@ import com.lailaps.ui.*;
 import javafx.application.Platform;
 import org.apache.log4j.Logger;
 
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 //todo find a better name
@@ -22,7 +23,7 @@ public class Director {
     private DocumentProducer producer;
     private DownloadScheduler consumer;
     private Thread producerThread, consumerThread;
-    private LinkedBlockingQueue<DownloadableDocument> downloadableDocuments;
+    private BlockingQueue<DownloadableDocument> documentQueue;
     private LoginScreenController loginScreenController;
     private ScreenContainer screenContainer;
 
@@ -92,9 +93,9 @@ public class Director {
     }
 
     private void initQueue() {
-        downloadableDocuments = new LinkedBlockingQueue<>(100);
-        producer = new DocumentProducer(downloadableDocuments, downloader, crawlBrowser);
-        consumer = new DownloadScheduler(downloadableDocuments, downloader);
+        documentQueue = new LinkedBlockingQueue<>(100);
+        producer = new DocumentProducer(documentQueue, downloader, crawlBrowser);
+        consumer = new DownloadScheduler(documentQueue, downloader);
     }
 
     private void initThreads() {
