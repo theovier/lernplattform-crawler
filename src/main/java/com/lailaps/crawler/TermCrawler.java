@@ -33,7 +33,7 @@ public class TermCrawler extends Crawler{
 
     private boolean isTermLabel(HtmlLabel label) {
         String text = label.toString();
-        return text.contains(WINTER_TERM) ; //|| text.contains(SUMMER_TERM); //TODO CHANGE BACK
+        return text.contains(WINTER_TERM) || text.contains(SUMMER_TERM);
     }
 
     public String getDirectoryFriendlyTerm(HtmlPage overviewPage) {
