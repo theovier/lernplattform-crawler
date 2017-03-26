@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class DocumentProducer implements Runnable {
 
@@ -37,9 +36,7 @@ public class DocumentProducer implements Runnable {
     @Override
     public void run() {
         produceDocuments();
-        LOG.info("Producer Completed: " + produced);
-        PoisonToken endSignal = new PoisonToken();
-        enqueue(endSignal);
+        signalProducerStop();
     }
 
     private void produceDocuments() {
@@ -91,6 +88,12 @@ public class DocumentProducer implements Runnable {
         } catch (InterruptedException e) {
             LOG.error(e);
         }
+    }
+
+    private void signalProducerStop() {
+        LOG.info("Producer Completed: " + produced);
+        PoisonToken endSignal = new PoisonToken();
+        enqueue(endSignal);
     }
 }
 
