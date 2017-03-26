@@ -1,6 +1,5 @@
 package com.lailaps.ui;
 
-import com.lailaps.download.DownloadObserver;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -28,9 +27,6 @@ public class ScreenContainer extends StackPane {
     private final Duration FADEIN_DURATION = new Duration(800);
     private HashMap<ScreenType, Node> screens = new HashMap<>();
     private HashMap<ScreenType, Controllable> screenControllers = new HashMap<>();
-
-    //todo CHANGE THIS ASAP!
-    private FXMLLoader DownloadLoader;
 
     public ScreenContainer() {
         super();
