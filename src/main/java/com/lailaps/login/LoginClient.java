@@ -55,7 +55,6 @@ public class LoginClient {
         loginPassword = (HtmlPasswordInput) currentPage.getElementById("password");
     }
 
-    //todo test bei caro?
     private void setLoginValues(LoginCredentials credentials) {
         if (loginUser == null || loginPassword == null) {
             throw new IllegalStateException("site is not loaded correctly.");
