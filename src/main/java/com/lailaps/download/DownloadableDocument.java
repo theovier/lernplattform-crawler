@@ -45,27 +45,13 @@ public class DownloadableDocument {
     }
 
     @Override
-    public String toString() {
-        return courseName + ": " + name + fileExtension;
-    }
-
-    public String toShortString(int maxLength) {
-        String displayName = courseName + ": " + name;
-        if (displayName.length() > maxLength) {
-            displayName = displayName.substring(0, maxLength);
-            displayName += "[...]";
-        }
-        displayName += fileExtension;
-        return displayName;
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         DownloadableDocument that = (DownloadableDocument) o;
 
+        if (size != that.size) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (downloadLink != null ? !downloadLink.equals(that.downloadLink) : that.downloadLink != null) return false;
         if (courseName != null ? !courseName.equals(that.courseName) : that.courseName != null) return false;
@@ -78,6 +64,13 @@ public class DownloadableDocument {
         result = 31 * result + (downloadLink != null ? downloadLink.hashCode() : 0);
         result = 31 * result + (courseName != null ? courseName.hashCode() : 0);
         result = 31 * result + (fileExtension != null ? fileExtension.hashCode() : 0);
+        result = 31 * result + (int) (size ^ (size >>> 32));
         return result;
     }
+
+    @Override
+    public String toString() {
+        return courseName + ": " + name + fileExtension;
+    }
+
 }
