@@ -16,15 +16,13 @@ public class Downloader implements ObservableDownloadSource {
 
     private static final Logger LOG = Logger.getLogger(Downloader.class);
     private static final int BUFFER_SIZE = 8192;
-    private static String rootDirName;
-    private static String rootDirectory;
+    private String rootDirectory;
     private Browser browser;
-    private List<DownloadObserver> observers;
     private DownloadStatistics statistics = new DownloadStatistics();
+    private List<DownloadObserver> observers = new ArrayList<>();
 
     public Downloader (Browser browser) {
         this.browser = browser;
-        observers = new ArrayList<>();
     }
 
     public void startDownload(DownloadableDocument doc) {
@@ -91,6 +89,7 @@ public class Downloader implements ObservableDownloadSource {
     public void showRootFolder() {
         //todo on mac not explorer.exe
         //todo change the path to contain only backslashes. + need to go one level deeper (name a directory in this dir?)
+        //todo extract this here to method in own alert dialog with hyperlink
         try {
             Runtime.getRuntime().exec("explorer.exe /select," + Paths.get(rootDirectory));
         } catch (IOException e) {
@@ -99,12 +98,7 @@ public class Downloader implements ObservableDownloadSource {
     }
 
     public void changeRootDir(String rootDirectoryName) {
-        rootDirName = rootDirectoryName;
-        rootDirectory = fetchRootDir();
-    }
-
-    private static String fetchRootDir() {
-        return PreferencesManager.getInstance().getDirectory() + "/" + rootDirName + "/";
+        rootDirectory = PreferencesManager.getInstance().getDirectory() + "/" + rootDirectoryName + "/";
     }
 
     public void finishDownloading() {
