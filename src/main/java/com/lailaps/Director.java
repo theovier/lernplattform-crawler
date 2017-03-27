@@ -11,10 +11,8 @@ import org.apache.log4j.Logger;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-//todo find a better name
 public class Director {
 
-    private static final Logger LOG = Logger.getLogger(Director.class);
     private LoginClient loginClient = new LoginClient();
     private Browser crawlBrowser, downloadBrowser;
     private Downloader downloader;
