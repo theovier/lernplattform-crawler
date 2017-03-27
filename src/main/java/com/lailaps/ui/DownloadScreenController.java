@@ -1,6 +1,7 @@
 package com.lailaps.ui;
 
 import com.lailaps.download.DownloadObserver;
+import com.lailaps.download.DownloadStatistics;
 import com.lailaps.download.DownloadableDocument;
 import com.lailaps.ui.DownloadIndicator.FailedDownloadIndicator;
 import com.lailaps.ui.DownloadIndicator.ProgressDownloadIndicator;
@@ -9,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.BorderPane;
@@ -17,6 +19,8 @@ import org.apache.log4j.Logger;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import static com.lailaps.Main.title;
 
 public class DownloadScreenController implements Initializable, Controllable, AutoResizable, DownloadObserver {
 
@@ -117,7 +121,11 @@ public class DownloadScreenController implements Initializable, Controllable, Au
     }
 
     @Override
-    public void onFinishedDownloading(int downloaded) {
-        //todo display some text
+    public void onFinishedDownloading(DownloadStatistics statistics) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("finished downloading");
+        alert.setHeaderText(null);
+        alert.setContentText("downloaded: " + statistics.getDownloadCount() + " documents");
+        alert.showAndWait();
     }
 }

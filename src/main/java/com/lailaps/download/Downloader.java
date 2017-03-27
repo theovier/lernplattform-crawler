@@ -20,7 +20,7 @@ public class Downloader implements ObservableDownloadSource {
     private static String rootDirectory;
     private Browser browser;
     private List<DownloadObserver> observers;
-    private int downloadCount;
+    private DownloadStatistics statistics = new DownloadStatistics();
 
     public Downloader (Browser browser) {
         this.browser = browser;
@@ -33,11 +33,13 @@ public class Downloader implements ObservableDownloadSource {
         if (!alreadyExists) {
             download(doc, target);
         } else {
+            statistics.incrementSkippedCount();
             notifyObserversSkipped(doc);
         }
     }
 
     private Path getFilePath(DownloadableDocument doc) {
+        //todo write method in downloadable document for this.
         String courseDirectory = rootDirectory + doc.getFolderName() + "/";
         String documentDirectory = courseDirectory + doc.getName() + doc.getFileExtension();
         return Paths.get(documentDirectory);
@@ -47,9 +49,10 @@ public class Downloader implements ObservableDownloadSource {
         try {
             makeDirectories(target);
             saveDocument(doc, target);
-            downloadCount++;
+            statistics.incrementDownloadCount();
         } catch (IOException e) {
             LOG.error(e);
+            statistics.incrementFailedCount();
             notifyObserversFailed(doc, e);
         }
     }
@@ -105,9 +108,9 @@ public class Downloader implements ObservableDownloadSource {
     }
 
     public void finishDownloading() {
-        LOG.info("downloaded Documents: " + downloadCount);
+        LOG.info("downloaded Documents: " + statistics.getDownloadCount());
         showRootFolder();
-        notifyObserversEnd(downloadCount);
+        notifyObserversEnd(statistics);
     }
 
     @Override
@@ -144,9 +147,9 @@ public class Downloader implements ObservableDownloadSource {
     }
 
     @Override
-    public void notifyObserversEnd(int downloaded) {
+    public void notifyObserversEnd(DownloadStatistics statistics) {
         Platform.runLater(() ->
-            observers.forEach(observer -> observer.onFinishedDownloading(downloaded))
+            observers.forEach(observer -> observer.onFinishedDownloading(statistics))
         );
     }
 }
