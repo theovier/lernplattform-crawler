@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Window;
 import javafx.util.Duration;
 import org.apache.log4j.Logger;
 
@@ -22,11 +23,11 @@ public class ScreenContainer extends StackPane {
     private static final Logger LOG = Logger.getLogger(ScreenContainer.class);
     private static final String LOGIN_SCREEN_FILE = "fxml/login.fxml";
     private static final String DOWNLOAD_SCREEN_FILE = "fxml/download.fxml";
-
     private final Duration FADEOUT_DURATION = new Duration(1000);
     private final Duration FADEIN_DURATION = new Duration(800);
     private HashMap<ScreenType, Node> screens = new HashMap<>();
     private HashMap<ScreenType, Controllable> screenControllers = new HashMap<>();
+    private ScreenType currentScreenType;
 
     public ScreenContainer() {
         super();
@@ -57,6 +58,18 @@ public class ScreenContainer extends StackPane {
         screens.put(name, screen);
     }
 
+    public Node getScreen(ScreenType name) {
+        return screens.get(name);
+    }
+
+    public Node getCurrentScreen() {
+        return getScreen(currentScreenType);
+    }
+
+    public Window getCurrentWindow() {
+        return getCurrentScreen().getScene().getWindow();
+    }
+
     public boolean showScreen(final ScreenType screenName) {
         if (screenNotLoaded(screenName)) {
             LOG.warn(String.format("Can't display screen '%s' since it has not been initialized yet.", screenName));
@@ -67,6 +80,7 @@ public class ScreenContainer extends StackPane {
         } else {
             displayScreenDirectly(screenName);
         }
+        currentScreenType = screenName;
         return true;
     }
 
