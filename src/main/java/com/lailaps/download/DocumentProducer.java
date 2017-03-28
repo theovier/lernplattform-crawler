@@ -47,7 +47,7 @@ public class DocumentProducer implements Runnable {
 
     private void notifyDownloaderAboutTerm() {
         String directoryFriendlyTerm = termCrawler.getDirectoryFriendlyTerm(overviewPage);
-        downloader.changeRootDir(directoryFriendlyTerm);
+        downloader.onTermDiscovered(directoryFriendlyTerm);
     }
 
     private void fetchDocumentsForTerm(String currentTerm)  {

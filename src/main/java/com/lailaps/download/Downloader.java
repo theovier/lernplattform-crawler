@@ -84,7 +84,7 @@ public class Downloader implements ObservableDownloadSource {
         }
     }
 
-    public void changeRootDir(String term) {
+    public void onTermDiscovered(String term) {
         downloadDirectory = PreferencesManager.getDirectory() + File.separator + term + File.separator;
         statistics.setDownloadFolderLocation(downloadDirectory);
     }
