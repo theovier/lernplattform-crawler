@@ -50,7 +50,7 @@ public class Director {
     }
 
     private void saveUsername(String username) {
-        PreferencesManager.getInstance().setUsername(username);
+        PreferencesManager.setUsername(username);
     }
 
     private void startDownload() {

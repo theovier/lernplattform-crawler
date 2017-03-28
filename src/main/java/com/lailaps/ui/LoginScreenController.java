@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 public class LoginScreenController implements Initializable, Controllable, AutoResizable {
 
     private DirectoryChooser dirChooser = new DirectoryChooser();
-    private String currentDir = PreferencesManager.getInstance().getDirectory();
+    private String currentDir = PreferencesManager.getDirectory();
     private ScreenContainer parent;
 
     @FXML
@@ -79,7 +79,7 @@ public class LoginScreenController implements Initializable, Controllable, AutoR
         if (file != null) {
             currentDir = file.toString();
             directoryField.setText(currentDir);
-            PreferencesManager.getInstance().setDirectory(currentDir);
+            PreferencesManager.setDirectory(currentDir);
         }
     }
 
