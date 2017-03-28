@@ -5,8 +5,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import org.apache.log4j.Logger;
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Optional;
 
 public class FinishedDownloadAlert extends Alert {
@@ -50,11 +51,8 @@ public class FinishedDownloadAlert extends Alert {
 
     private void openFolder() {
         try {
-            String folderLocation = statistics.getDownloadFolderLocation();
-            LOG.info(folderLocation);
-
-            //todo on mac not explorer.exe
-            Runtime.getRuntime().exec("explorer.exe /select," + Paths.get(folderLocation));
+            File folder = new File(statistics.getDownloadFolderLocation());
+            Desktop.getDesktop().open(folder);
         } catch (IOException e) {
             LOG.info(e);
         }
