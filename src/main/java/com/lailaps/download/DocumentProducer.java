@@ -24,7 +24,6 @@ public class DocumentProducer implements Runnable {
     private CourseCrawler courseCrawler = new CourseCrawler();
     private GatewayCrawler gatewayCrawler = new GatewayCrawler();
     private DocumentCrawler documentCrawler = new DocumentCrawler();
-    private int produced = 0;
 
     public DocumentProducer(BlockingQueue queue, Downloader downloader, Browser browser) {
         this.queue = queue;
@@ -84,14 +83,12 @@ public class DocumentProducer implements Runnable {
     private void enqueue(DownloadableDocument doc) {
         try {
             queue.put(doc);
-            produced++;
         } catch (InterruptedException e) {
             LOG.error(e);
         }
     }
 
     private void signalProducerStop() {
-        LOG.info("Producer Completed: " + produced);
         PoisonToken endSignal = new PoisonToken();
         enqueue(endSignal);
     }
