@@ -10,7 +10,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.BorderPane;
@@ -120,12 +119,10 @@ public class DownloadScreenController implements Initializable, Controllable, Au
 
     @Override
     public void onFinishedDownloading(DownloadStatistics statistics) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("finished downloading");
-        alert.setHeaderText(null);
-        alert.setContentText("downloaded: " + statistics.getDownloadCount() + " documents");
+        FinishedDownloadAlert alert = new FinishedDownloadAlert(statistics);
+        alert.initContent();
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.initOwner(parent.getCurrentWindow());
-        alert.showAndWait();
+        alert.displayAndWait();
     }
 }
