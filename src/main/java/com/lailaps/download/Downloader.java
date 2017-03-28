@@ -16,7 +16,7 @@ public class Downloader implements ObservableDownloadSource {
 
     private static final Logger LOG = Logger.getLogger(Downloader.class);
     private static final int BUFFER_SIZE = 8192;
-    private String rootDirectory;
+    private String downloadDirectory;
     private Browser browser;
     private DownloadStatistics statistics = new DownloadStatistics();
     private List<DownloadObserver> observers = new ArrayList<>();
@@ -38,7 +38,7 @@ public class Downloader implements ObservableDownloadSource {
 
     private Path getFilePath(DownloadableDocument doc) {
         //todo write method in downloadable document for this.
-        String courseDirectory = rootDirectory + doc.getFolderName() + "/";
+        String courseDirectory = downloadDirectory + doc.getFolderName() + "/";
         String documentDirectory = courseDirectory + doc.getName() + doc.getFileExtension();
         return Paths.get(documentDirectory);
     }
@@ -86,24 +86,12 @@ public class Downloader implements ObservableDownloadSource {
         }
     }
 
-    public void showRootFolder() {
-        //todo on mac not explorer.exe
-        //todo change the path to contain only backslashes. + need to go one level deeper (name a directory in this dir?)
-        //todo extract this here to method in own alert dialog with hyperlink
-        try {
-            Runtime.getRuntime().exec("explorer.exe /select," + Paths.get(rootDirectory));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void changeRootDir(String rootDirectoryName) {
-        rootDirectory = PreferencesManager.getInstance().getDirectory() + "/" + rootDirectoryName + "/";
+    public void changeRootDir(String term) {
+        downloadDirectory = PreferencesManager.getDirectory() + File.separator + term + File.separator;
+        statistics.setDownloadFolderLocation(downloadDirectory);
     }
 
     public void finishDownloading() {
-        LOG.info("downloaded Documents: " + statistics.getDownloadCount());
-        showRootFolder();
         notifyObserversEnd(statistics);
     }
 

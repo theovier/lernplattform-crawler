@@ -3,6 +3,7 @@ package com.lailaps.download;
 
 public class DownloadStatistics {
     private int downloadCount, skippedCount, failedCount;
+    private String downloadFolderLocation;
 
     public void incrementDownloadCount() {
         downloadCount++;
@@ -26,5 +27,13 @@ public class DownloadStatistics {
 
     public int getFailedCount() {
         return failedCount;
+    }
+
+    public void setDownloadFolderLocation(String location) {
+        downloadFolderLocation = location;
+    }
+
+    public String getDownloadFolderLocation() {
+        return downloadFolderLocation;
     }
 }
