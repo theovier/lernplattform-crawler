@@ -1,5 +1,7 @@
 package com.lailaps.download;
 
+import java.io.File;
+
 public class DownloadableDocument {
 
     private String name, downloadLink, courseName, fileExtension;
@@ -73,4 +75,7 @@ public class DownloadableDocument {
         return courseName + ": " + name + fileExtension;
     }
 
+    public String getSaveLocation() {
+        return getFolderName() + File.separator + getName() + getFileExtension();
+    }
 }

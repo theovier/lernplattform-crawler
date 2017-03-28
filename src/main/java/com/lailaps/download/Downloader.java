@@ -37,10 +37,8 @@ public class Downloader implements ObservableDownloadSource {
     }
 
     private Path getFilePath(DownloadableDocument doc) {
-        //todo write method in downloadable document for this.
-        String courseDirectory = downloadDirectory + doc.getFolderName() + "/";
-        String documentDirectory = courseDirectory + doc.getName() + doc.getFileExtension();
-        return Paths.get(documentDirectory);
+        String location = downloadDirectory + doc.getSaveLocation();
+        return Paths.get(location);
     }
 
     private void download(DownloadableDocument doc, Path target) {
