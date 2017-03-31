@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
+//todo rename
 public class ProducerThread implements Runnable {
 
     private static final Logger LOG = Logger.getLogger(ProducerThread.class);
