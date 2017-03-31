@@ -1,17 +1,14 @@
 package com.lailaps.download;
 
-import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.lailaps.Browser;
 import com.lailaps.crawler.CourseCrawler;
-import com.lailaps.crawler.DocumentCrawler;
-import com.lailaps.crawler.GatewayCrawler;
 import com.lailaps.crawler.TermCrawler;
 import org.apache.log4j.Logger;
-
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CompletableFuture;
 
 public class DocumentProducer implements Runnable {
 
@@ -22,8 +19,6 @@ public class DocumentProducer implements Runnable {
     private HtmlPage overviewPage;
     private TermCrawler termCrawler = new TermCrawler();
     private CourseCrawler courseCrawler = new CourseCrawler();
-    private GatewayCrawler gatewayCrawler = new GatewayCrawler();
-    private DocumentCrawler documentCrawler = new DocumentCrawler();
 
     public DocumentProducer(BlockingQueue queue, Downloader downloader, Browser browser) {
         this.queue = queue;
@@ -35,7 +30,6 @@ public class DocumentProducer implements Runnable {
     @Override
     public void run() {
         produceDocuments();
-        signalProducerStop();
     }
 
     private void produceDocuments() {
@@ -50,47 +44,26 @@ public class DocumentProducer implements Runnable {
     }
 
     private void fetchDocumentsForTerm(String currentTerm)  {
+        List<CompletableFuture<Void>> producers = new ArrayList<>();
         List<String> courseURLs = courseCrawler.fetchCourseLinks(overviewPage, currentTerm);
         for (String courseURL : courseURLs) {
-            fetchDocumentsForCourse(courseURL);
+            ProducerThread demo = new ProducerThread(courseURL, queue, browser.getCookieManager());
+            CompletableFuture<Void> producer = CompletableFuture.runAsync(demo);
+            producers.add(producer);
         }
-    }
-
-    private void fetchDocumentsForCourse(String courseURL) {
-        try {
-            HtmlPage coursePage = browser.getPage(courseURL);
-            List<String> downloadGatewayURLs = gatewayCrawler.fetchDownloadLinks(coursePage);
-            for (String downloadGatewayURL : downloadGatewayURLs) {
-                DownloadableDocument doc = fetchDocument(downloadGatewayURL, coursePage);
-                if (doc != null) enqueue(doc);
-            }
-        } catch (IOException e) {
-            LOG.error(e); //something wrong with the course page
-        }
-    }
-
-    private DownloadableDocument fetchDocument(String downloadPageURL, HtmlPage coursePage) {
-        String courseName = gatewayCrawler.fetchCourseName(coursePage);
-        try {
-            Page downloadPage = browser.getPage(downloadPageURL);
-            return documentCrawler.fetchDocument(downloadPage, courseName);
-        } catch (IOException e) {
-            LOG.error(e);
-            return null;
-        }
-    }
-
-    private void enqueue(DownloadableDocument doc) {
-        try {
-            queue.put(doc);
-        } catch (InterruptedException e) {
-            LOG.error(e);
-        }
+        browser.close();
+        CompletableFuture<Void>[] producerArray =  producers.toArray(new CompletableFuture[producers.size()]);
+        CompletableFuture<Void> allProducersFinished = CompletableFuture.allOf(producerArray);
+        allProducersFinished.thenRun(() -> signalProducerStop());
     }
 
     private void signalProducerStop() {
         PoisonToken endSignal = new PoisonToken();
-        enqueue(endSignal);
+        try {
+            queue.put(endSignal);
+        } catch (InterruptedException e) {
+            LOG.error(e);
+        }
     }
 }
 
