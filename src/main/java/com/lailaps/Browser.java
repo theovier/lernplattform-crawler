@@ -9,4 +9,8 @@ public class Browser extends WebClient {
         return (HtmlPage) getCurrentWindow().getEnclosedPage();
     }
 
+    public Browser() {
+        super();
+        getOptions().setJavaScriptEnabled(false);
+    }
 }
