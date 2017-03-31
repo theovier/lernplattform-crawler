@@ -1,5 +1,6 @@
 package com.lailaps.download;
 
+import com.gargoylesoftware.htmlunit.CookieManager;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.lailaps.Browser;
 import com.lailaps.crawler.CourseCrawler;
@@ -15,16 +16,16 @@ public class DocumentProducer implements Runnable {
     private static final Logger LOG = Logger.getLogger(DocumentProducer.class);
     private BlockingQueue<DownloadableDocument> queue;
     private Downloader downloader;
-    private Browser browser;
     private HtmlPage overviewPage;
+    private Browser browser = new Browser();
     private TermCrawler termCrawler = new TermCrawler();
     private CourseCrawler courseCrawler = new CourseCrawler();
 
-    public DocumentProducer(BlockingQueue queue, Downloader downloader, Browser browser) {
+    public DocumentProducer(BlockingQueue queue, Downloader downloader, CookieManager cookieManager, HtmlPage overviewPage) {
         this.queue = queue;
         this.downloader = downloader;
-        this.browser = browser;
-        this.overviewPage = browser.getCurrentPage();
+        this.browser.setCookieManager(cookieManager);
+        this.overviewPage = overviewPage;
     }
 
     @Override

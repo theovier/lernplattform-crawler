@@ -1,5 +1,6 @@
 package com.lailaps.login;
 
+import com.gargoylesoftware.htmlunit.CookieManager;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.lailaps.Browser;
 import org.apache.log4j.Level;
@@ -92,7 +93,11 @@ public class LoginClient {
         return cookieURL;
     }
 
-    public Browser getBrowser() {
-        return browser;
+    public CookieManager getBrowserCookieManager() {
+        return browser.getCookieManager();
+    }
+
+    public HtmlPage getOverviewPage() {
+        return browser.getCurrentPage();
     }
 }

@@ -1,20 +1,20 @@
 package com.lailaps;
 
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.lailaps.crawler.TermCrawler;
 import com.lailaps.download.*;
 import com.lailaps.login.LoginClient;
 import com.lailaps.login.LoginCredentials;
 import com.lailaps.ui.*;
 import javafx.application.Platform;
-import javafx.stage.Screen;
-import org.apache.log4j.Logger;
-
+import com.gargoylesoftware.htmlunit.CookieManager;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Director {
 
     private LoginClient loginClient = new LoginClient();
-    private Browser crawlBrowser, downloadBrowser;
+    private CookieManager loginCookieManager;
     private Downloader downloader;
     private DocumentProducer producer;
     private DownloadScheduler consumer;
@@ -55,7 +55,7 @@ public class Director {
 
     private void startDownload() {
         prepareDownload();
-        startThreads();
+        startThreads(); //todo threadPoolExecutioner
     }
 
     private void startThreads() {
@@ -64,32 +64,23 @@ public class Director {
     }
 
     private void prepareDownload() {
-        initBrowsers();
+        prepareCookieManager();
         initDownloader();
         initThreads();
         initDownloadScreen();
     }
 
-    private void initBrowsers() {
-        initCrawlBrowser();
-        initDownloadBrowser();
-    }
-
-    private void initCrawlBrowser() {
-        crawlBrowser = loginClient.getBrowser();
-    }
-
-    private void initDownloadBrowser() {
-        downloadBrowser = new Browser();
-        downloadBrowser.setCookieManager(crawlBrowser.getCookieManager());
+    private void prepareCookieManager() {
+        loginCookieManager = loginClient.getBrowserCookieManager();
     }
 
     private void initDownloader() {
-        downloader = new Downloader(downloadBrowser);
+        downloader = new Downloader(loginCookieManager);
     }
 
     private void initThreads() {
-        producer = new DocumentProducer(documentQueue, downloader, crawlBrowser);
+        HtmlPage overview = loginClient.getOverviewPage();
+        producer = new DocumentProducer(documentQueue, downloader, loginCookieManager, overview);
         consumer = new DownloadScheduler(documentQueue, downloader);
         producerThread = new Thread(producer);
         consumerThread = new Thread(consumer);

@@ -1,5 +1,6 @@
 package com.lailaps.download;
 
+import com.gargoylesoftware.htmlunit.CookieManager;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.lailaps.*;
@@ -17,12 +18,12 @@ public class Downloader implements ObservableDownloadSource {
     private static final Logger LOG = Logger.getLogger(Downloader.class);
     private static final int BUFFER_SIZE = 8192;
     private String downloadDirectory;
-    private Browser browser;
+    private Browser browser = new Browser();
     private DownloadStatistics statistics = new DownloadStatistics();
     private List<DownloadObserver> observers = new ArrayList<>();
 
-    public Downloader (Browser browser) {
-        this.browser = browser;
+    public Downloader (CookieManager cookieManager) {
+        this.browser.setCookieManager(cookieManager);
     }
 
     public void startDownload(DownloadableDocument doc) {
