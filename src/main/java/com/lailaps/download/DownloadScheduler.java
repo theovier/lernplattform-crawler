@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import java.util.concurrent.BlockingQueue;
 
+//todo also multithreading?
 public class DownloadScheduler implements Runnable {
 
     private static final Logger LOG = Logger.getLogger(DownloadScheduler.class);
