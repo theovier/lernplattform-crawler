@@ -29,7 +29,7 @@ public class Downloader implements ObservableDownloadSource {
         this.browser.setCookieManager(cookieManager);
     }
 
-    public void start() {
+    void start() {
         stopWatch.start();
     }
 
@@ -92,12 +92,12 @@ public class Downloader implements ObservableDownloadSource {
         }
     }
 
-    public void onTermDiscovered(String term) {
+    void onTermDiscovered(String term) {
         downloadDirectory = PreferencesManager.getDirectory() + File.separator + term + File.separator;
         statistics.setDownloadFolderLocation(downloadDirectory);
     }
 
-    public void finishDownloading() {
+    void finishDownloading() {
         stopWatch.stop();
         long downloadTime = stopWatch.getTime();
         statistics.setElapsedTime(downloadTime);
