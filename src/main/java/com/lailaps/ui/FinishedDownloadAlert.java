@@ -32,10 +32,11 @@ public class FinishedDownloadAlert extends Alert {
 
     private String createContentText() {
         return String.format(
-                "new documents downloaded: %1$d" + System.lineSeparator() +
-                "documents already existed (skipped): %2$d" + System.lineSeparator() +
-                "failed to download documents: %3$d",
-                statistics.getDownloadCount(), statistics.getSkippedCount(), statistics.getFailedCount());
+                "download time: %s" + System.lineSeparator() +
+                "new documents downloaded: %2$d" + System.lineSeparator() +
+                "documents already existed (skipped): %3$d" + System.lineSeparator() +
+                "failed to download documents: %4$d",
+                statistics.getFormattedElapsedTime(), statistics.getDownloadCount(), statistics.getSkippedCount(), statistics.getFailedCount());
     }
 
     private void setButtons() {
@@ -43,10 +44,10 @@ public class FinishedDownloadAlert extends Alert {
     }
 
     public void displayAndWait() {
-        Optional<ButtonType> result = showAndWait();
-        if (result.get() == buttonTypeShowFolder) {
-            openFolder();
-        }
+        showAndWait()
+                .filter(response -> response == buttonTypeShowFolder)
+                .ifPresent(response -> openFolder());
+
     }
 
     private void openFolder() {
