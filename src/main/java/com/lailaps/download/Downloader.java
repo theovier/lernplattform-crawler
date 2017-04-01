@@ -6,12 +6,14 @@ import com.gargoylesoftware.htmlunit.WebResponse;
 import com.lailaps.*;
 import javafx.application.Platform;
 import org.apache.commons.io.input.CountingInputStream;
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Downloader implements ObservableDownloadSource {
 
@@ -21,12 +23,17 @@ public class Downloader implements ObservableDownloadSource {
     private Browser browser = new Browser();
     private DownloadStatistics statistics = new DownloadStatistics();
     private List<DownloadObserver> observers = new ArrayList<>();
+    private StopWatch stopWatch = new StopWatch();
 
     public Downloader (CookieManager cookieManager) {
         this.browser.setCookieManager(cookieManager);
     }
 
-    public void startDownload(DownloadableDocument doc) {
+    public void start() {
+        stopWatch.start();
+    }
+
+    public void download(DownloadableDocument doc) {
         Path target = getFilePath(doc);
         boolean alreadyExists = Files.exists(target);
         if (!alreadyExists) {
@@ -91,6 +98,9 @@ public class Downloader implements ObservableDownloadSource {
     }
 
     public void finishDownloading() {
+        stopWatch.stop();
+        long downloadTime = stopWatch.getTime();
+        statistics.setElapsedTime(downloadTime);
         notifyObserversEnd(statistics);
     }
 

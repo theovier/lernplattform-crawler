@@ -19,6 +19,7 @@ public class DownloadScheduler implements Runnable {
 
     @Override
     public void run() {
+        downloader.start();
         while (shouldSchedule) {
             downloadFromDocumentQueue();
         }
@@ -38,7 +39,7 @@ public class DownloadScheduler implements Runnable {
             shouldSchedule = false;
             downloader.finishDownloading();
         } else {
-            downloader.startDownload(document);
+            downloader.download(document);
         }
     }
 }
