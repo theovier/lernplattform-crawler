@@ -42,6 +42,7 @@ public class Main extends Application {
     }
 
 
+    //TODO own class for screen stuff
     //TODO check admin rights for preferences -> speichertort wird durch preferences bestimmt?!
     //TODO ORDNER in LERNPLATTFORM!
 }
