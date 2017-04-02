@@ -29,7 +29,7 @@ public class Main extends Application {
         stage.setScene(new Scene(root));
         stage.show();
 
-        Image icon = new Image(getClass().getClassLoader().getResourceAsStream("images/lailaps2_32x32.png"));
+        Image icon = new Image(getClass().getClassLoader().getResourceAsStream("images/lailaps_32x32.png"));
         stage.getIcons().add(icon);
         stage.setTitle(title);
 
