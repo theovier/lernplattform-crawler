@@ -8,12 +8,10 @@ import javafx.application.Platform;
 import org.apache.commons.io.input.CountingInputStream;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
-
 import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class Downloader implements ObservableDownloadSource {
 
