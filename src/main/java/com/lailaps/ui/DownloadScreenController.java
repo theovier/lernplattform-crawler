@@ -22,6 +22,8 @@ import java.util.ResourceBundle;
 public class DownloadScreenController implements Initializable, Controllable, AutoResizable, DownloadObserver {
 
     private ScreenContainer parent;
+
+    //todo move this to a presenter
     private ObservableList<ProgressDownloadIndicator> downloadIndicators = FXCollections.observableArrayList();
 
     @FXML
