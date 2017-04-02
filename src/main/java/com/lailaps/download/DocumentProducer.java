@@ -53,7 +53,7 @@ public class DocumentProducer implements Runnable {
         }
         CompletableFuture<Void>[] producerArray =  producers.toArray(new CompletableFuture[producers.size()]);
         CompletableFuture<Void> allProducersFinished = CompletableFuture.allOf(producerArray);
-        allProducersFinished.thenRun(() -> signalProducerStop());
+        allProducersFinished.thenRun(this::signalProducerStop);
     }
 
     private void signalProducerStop() {
