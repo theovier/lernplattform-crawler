@@ -1,10 +1,19 @@
 package com.lailaps.download;
 
 
+import javafx.util.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class DownloadStatistics {
     private static final String TIME_FORMAT = "%02d:%02d min";
+    private static final String DESCRIPTION_TIME = "download time:";
+    private static final String DESCRIPTION_DOWNLOAD_COUNT = "new documents downloaded:";
+    private static final String DESCRIPTION_SKIPPED_COUNT = "documents already existed:";
+    private static final String DESCRIPTION_FAILED_COUNT = "failed to download documents:";
+
     private int downloadCount, skippedCount, failedCount;
     private String downloadFolderLocation, formattedElapsedTime;
     private long elapsedTime;
@@ -59,5 +68,18 @@ public class DownloadStatistics {
 
     public String getFormattedElapsedTime() {
         return formattedElapsedTime;
+    }
+
+    public List<Pair> getDisplayableStats() {
+        List<Pair> stats = new ArrayList<>();
+        Pair<String, String> stat_time = new Pair<>(DESCRIPTION_TIME, getFormattedElapsedTime());
+        Pair<String, Integer> stat_download = new Pair<>(DESCRIPTION_DOWNLOAD_COUNT, getDownloadCount());
+        Pair<String, Integer> stat_skipped = new Pair<>(DESCRIPTION_SKIPPED_COUNT, getSkippedCount());
+        Pair<String, Integer> stat_failed = new Pair<>(DESCRIPTION_FAILED_COUNT, getFailedCount());
+        stats.add(stat_time);
+        stats.add(stat_download);
+        stats.add(stat_skipped);
+        stats.add(stat_failed);
+        return stats;
     }
 }
