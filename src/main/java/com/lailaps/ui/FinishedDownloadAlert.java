@@ -1,21 +1,30 @@
 package com.lailaps.ui;
 
 import com.lailaps.download.DownloadStatistics;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
+import javafx.util.Pair;
+import javafx.geometry.Insets;
 import org.apache.log4j.Logger;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
+import java.util.List;
 
 public class FinishedDownloadAlert extends Alert {
 
     private static final Logger LOG = Logger.getLogger(FinishedDownloadAlert.class);
     private static final String HEADER = "lailaps finished downloading";
+    private final Insets GRID_PADDING = new Insets(20, 150, 10, 10);
+    private final int GRID_HGAP = 50;
+    private final int GRID_VGAP = 10;
+
     private ButtonType buttonTypeShowFolder = new ButtonType("Show Folder");
-    private ButtonType buttonTypeOK = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+    private ButtonType buttonTypeOK = new ButtonType("OK", ButtonBar.ButtonData.CANCEL_CLOSE);
     private DownloadStatistics statistics;
 
     public FinishedDownloadAlert(DownloadStatistics statistics) {
@@ -26,17 +35,29 @@ public class FinishedDownloadAlert extends Alert {
     public void initContent() {
         setTitle(HEADER);
         setHeaderText(null);
-        setContentText(createContentText());
+        getDialogPane().setContent(createContent());
         setButtons();
     }
 
-    private String createContentText() {
-        return String.format(
-                "download time: %s" + System.lineSeparator() +
-                "new documents downloaded: %2$d" + System.lineSeparator() +
-                "documents already existed (skipped): %3$d" + System.lineSeparator() +
-                "failed to download documents: %4$d",
-                statistics.getFormattedElapsedTime(), statistics.getDownloadCount(), statistics.getSkippedCount(), statistics.getFailedCount());
+    private Node createContent() {
+        GridPane grid = initGrid();
+        List<Pair> relevantStatistics = statistics.getDisplayableStats();
+        for (int i = 0; i < relevantStatistics.size(); i++) {
+            Pair stat = relevantStatistics.get(i);
+            Label description = new Label("" + stat.getKey());
+            Label amount = new Label("" + stat.getValue());
+            grid.add(description, 0, i);
+            grid.add(amount, 1, i);
+        }
+        return grid;
+    }
+
+    private GridPane initGrid() {
+        GridPane grid = new GridPane();
+        grid.setHgap(GRID_HGAP);
+        grid.setVgap(GRID_VGAP);
+        grid.setPadding(GRID_PADDING);
+        return grid;
     }
 
     private void setButtons() {
