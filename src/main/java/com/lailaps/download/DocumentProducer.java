@@ -2,7 +2,6 @@ package com.lailaps.download;
 
 import com.gargoylesoftware.htmlunit.CookieManager;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.lailaps.Browser;
 import com.lailaps.crawler.CourseCrawler;
 import com.lailaps.crawler.TermCrawler;
 import org.apache.log4j.Logger;
@@ -17,14 +16,14 @@ public class DocumentProducer implements Runnable {
     private BlockingQueue<DownloadableDocument> queue;
     private Downloader downloader;
     private HtmlPage overviewPage;
-    private Browser browser = new Browser();
+    private CookieManager cookieManager;
     private TermCrawler termCrawler = new TermCrawler();
     private CourseCrawler courseCrawler = new CourseCrawler();
 
     public DocumentProducer(BlockingQueue queue, Downloader downloader, CookieManager cookieManager, HtmlPage overviewPage) {
         this.queue = queue;
         this.downloader = downloader;
-        this.browser.setCookieManager(cookieManager);
+        this.cookieManager = cookieManager;
         this.overviewPage = overviewPage;
     }
 
@@ -48,11 +47,10 @@ public class DocumentProducer implements Runnable {
         List<CompletableFuture<Void>> producers = new ArrayList<>();
         List<String> courseURLs = courseCrawler.fetchCourseLinks(overviewPage, currentTerm);
         for (String courseURL : courseURLs) {
-            ProducerThread demo = new ProducerThread(courseURL, queue, browser.getCookieManager());
+            ProducerThread demo = new ProducerThread(courseURL, queue, cookieManager);
             CompletableFuture<Void> producer = CompletableFuture.runAsync(demo);
             producers.add(producer);
         }
-        browser.close();
         CompletableFuture<Void>[] producerArray =  producers.toArray(new CompletableFuture[producers.size()]);
         CompletableFuture<Void> allProducersFinished = CompletableFuture.allOf(producerArray);
         allProducersFinished.thenRun(() -> signalProducerStop());
