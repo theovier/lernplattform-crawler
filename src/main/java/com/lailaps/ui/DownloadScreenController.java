@@ -23,7 +23,6 @@ public class DownloadScreenController implements Initializable, Controllable, Au
 
     private ScreenContainer parent;
 
-    //todo move this to a presenter
     private ObservableList<ProgressDownloadIndicator> downloadIndicators = FXCollections.observableArrayList();
 
     @FXML
