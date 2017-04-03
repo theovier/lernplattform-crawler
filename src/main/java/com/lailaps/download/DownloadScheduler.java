@@ -36,7 +36,6 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
         this.queue = queue;
         this.cookieManager = cookieManager;
         this.term = directoryFriendlyTerm;
-        this.statistics.setDownloadFolderLocation(downloadDirectoryLocation);
     }
 
     @Override
@@ -57,6 +56,7 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
                 .build();
         executor = Executors.newFixedThreadPool(SLAVE_POOL_SIZE, factory);
         downloadDirectoryLocation = PreferencesManager.getDirectory() + File.separator + term + File.separator;
+        statistics.setDownloadFolderLocation(downloadDirectoryLocation);
         stopWatch.start();
     }
 
