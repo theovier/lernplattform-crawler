@@ -6,5 +6,6 @@ public interface ObservableDownloadSource {
     void notifyObserversProgress(DownloadableDocument downloadableDocument, double progress);
     void notifyObserversSkipped(DownloadableDocument skippedDocument);
     void notifyObserversFailed(DownloadableDocument failedDocument, Exception cause);
+    void notifyObserversSuccess(DownloadableDocument downloadedDocument);
     void notifyObserversEnd(DownloadStatistics statistics);
 }

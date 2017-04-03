@@ -26,7 +26,7 @@ public class DownloadSlave implements Runnable, ObservableDownloadSource {
     private boolean isRunning = true;
     private BlockingQueue<DownloadableDocument> queue;
     private Browser browser = new Browser();
-    private DownloadObserver observer;
+    private DownloadObserver master;
     private String downloadDirectory;
 
     public DownloadSlave(BlockingQueue<DownloadableDocument> queue, CookieManager cookieManager, String targetDirectory) {
@@ -83,7 +83,7 @@ public class DownloadSlave implements Runnable, ObservableDownloadSource {
         try {
             makeDirectories(target);
             saveDocument(doc, target);
-            notifyObserversEnd(null);
+            notifyObserversSuccess(doc);
         } catch (IOException | FailingHttpStatusCodeException e) {
             LOG.error(e);
             notifyObserversFailed(doc, e);
@@ -122,32 +122,37 @@ public class DownloadSlave implements Runnable, ObservableDownloadSource {
     }
 
     @Override
-    public void addObserver(DownloadObserver observer) {
-        this.observer = observer;
+    public void addObserver(DownloadObserver master) {
+        this.master = master;
     }
 
     @Override
-    public void notifyObserversStart(DownloadableDocument downloadedDocument) {
-        observer.onDownloadStarted(downloadedDocument);
+    public void notifyObserversStart(DownloadableDocument documentToDownload) {
+        master.onDownloadStarted(documentToDownload);
     }
 
     @Override
     public void notifyObserversProgress(DownloadableDocument downloadableDocument, double progress) {
-        observer.onDownloadProgress(downloadableDocument, progress);
+        master.onDownloadProgress(downloadableDocument, progress);
     }
 
     @Override
     public void notifyObserversSkipped(DownloadableDocument skippedDocument) {
-        observer.onDownloadSkipped(skippedDocument);
+        master.onDownloadSkipped(skippedDocument);
     }
 
     @Override
     public void notifyObserversFailed(DownloadableDocument failedDocument, Exception cause) {
-        observer.onDownloadFailed(failedDocument, cause);
+        master.onDownloadFailed(failedDocument, cause);
+    }
+
+    @Override
+    public void notifyObserversSuccess(DownloadableDocument downloadedDocument) {
+        master.onDownloadSuccess(downloadedDocument);
     }
 
     @Override
     public void notifyObserversEnd(DownloadStatistics nullDummy) {
-        observer.onFinishedDownloading(null);
+        //empty
     }
 }

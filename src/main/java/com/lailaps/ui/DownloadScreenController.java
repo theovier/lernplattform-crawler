@@ -120,6 +120,11 @@ public class DownloadScreenController implements Initializable, Controllable, Au
     }
 
     @Override
+    public void onDownloadSuccess(DownloadableDocument downloadedDocument) {
+        //empty
+    }
+
+    @Override
     public void onFinishedDownloading(DownloadStatistics statistics) {
         FinishedDownloadAlert alert = new FinishedDownloadAlert(statistics);
         alert.initContent();

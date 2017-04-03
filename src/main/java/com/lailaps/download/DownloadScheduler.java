@@ -113,9 +113,14 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
     }
 
     @Override
-    public void onFinishedDownloading(DownloadStatistics nullDummy) {
-        //here used for finishing one download, not the whole process.
+    public void onDownloadSuccess(DownloadableDocument downloadedDocument) {
         statistics.incrementDownloadCount();
+        notifyObserversSuccess(downloadedDocument);
+    }
+
+    @Override
+    public void onFinishedDownloading(DownloadStatistics statistics)  {
+        throw new IllegalStateException("do not call from slaves. slaves cant finish the whole download process.");
     }
 
     @Override
@@ -148,6 +153,13 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
     public void notifyObserversFailed(DownloadableDocument failedDocument, Exception cause) {
         Platform.runLater(() ->
                 observers.forEach(observer -> observer.onDownloadFailed(failedDocument, cause))
+        );
+    }
+
+    @Override
+    public void notifyObserversSuccess(DownloadableDocument downloadedDocument) {
+        Platform.runLater(() ->
+                observers.forEach(observer -> observer.onDownloadSuccess(downloadedDocument))
         );
     }
 

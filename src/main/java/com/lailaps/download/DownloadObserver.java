@@ -5,5 +5,6 @@ public interface DownloadObserver {
     void onDownloadProgress(DownloadableDocument document, double currentProgress);
     void onDownloadSkipped(DownloadableDocument skippedDocument);
     void onDownloadFailed(DownloadableDocument failedDocument, Exception cause);
+    void onDownloadSuccess(DownloadableDocument downloadedDocument);
     void onFinishedDownloading(DownloadStatistics statistics);
 }
