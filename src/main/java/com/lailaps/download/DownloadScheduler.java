@@ -3,6 +3,7 @@ package com.lailaps.download;
 import com.gargoylesoftware.htmlunit.CookieManager;
 import com.lailaps.PreferencesManager;
 import javafx.application.Platform;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 
@@ -21,7 +22,7 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
     private final static int SLAVE_TIMEOUT = 10;
     private static final Logger LOG = Logger.getLogger(DownloadScheduler.class);
 
-    private ExecutorService executor = Executors.newFixedThreadPool(SLAVE_POOL_SIZE);
+    private ExecutorService executor;
     private List<DownloadSlave> slaves = new ArrayList<>(SLAVE_POOL_SIZE);
     private List<DownloadObserver> observers = new ArrayList<>();
     private BlockingQueue<DownloadableDocument> queue;
@@ -51,8 +52,12 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
     }
 
     private void initialize() {
-        stopWatch.start();
+        BasicThreadFactory factory = new BasicThreadFactory.Builder()
+                .namingPattern("download-slave-%d")
+                .build();
+        executor = Executors.newFixedThreadPool(SLAVE_POOL_SIZE, factory);
         downloadDirectoryLocation = PreferencesManager.getDirectory() + File.separator + term + File.separator;
+        stopWatch.start();
     }
 
     private void startDownloadSlaves() {
