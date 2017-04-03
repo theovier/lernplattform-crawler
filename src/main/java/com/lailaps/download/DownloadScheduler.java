@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class DownloadScheduler implements Runnable, DownloadObserver, ObservableDownloadSource {
 
     private final static int SLAVE_POOL_SIZE = 5;
-    private final static int SLAVE_TIMEOUT = 10;
+    private final static int SLAVE_TERMINATION_TIMEOUT = 10;
     private static final Logger LOG = Logger.getLogger(DownloadScheduler.class);
 
     private ExecutorService executor;
@@ -84,7 +84,7 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
         }
         try {
             executor.shutdown();
-            executor.awaitTermination(SLAVE_TIMEOUT, TimeUnit.SECONDS);
+            executor.awaitTermination(SLAVE_TERMINATION_TIMEOUT, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             LOG.error(e);
         }
