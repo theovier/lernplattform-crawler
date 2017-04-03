@@ -124,9 +124,9 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
     }
 
     @Override
-    public void notifyObserversStart(DownloadableDocument downloadedDocument) {
+    public void notifyObserversStart(DownloadableDocument documentToDownload) {
         Platform.runLater(() ->
-                observers.forEach(observer -> observer.onDownloadStarted(downloadedDocument))
+                observers.forEach(observer -> observer.onDownloadStarted(documentToDownload))
         );
     }
 
