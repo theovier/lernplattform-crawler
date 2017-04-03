@@ -1,5 +1,6 @@
 package com.lailaps;
 
+import com.lailaps.crawler.TermCrawler;
 import com.lailaps.download.*;
 import com.lailaps.login.LoginClient;
 import com.lailaps.login.LoginCredentials;
@@ -14,13 +15,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Director {
 
     private LoginClient loginClient = new LoginClient();
-    private CookieManager loginCookieManager;
-    private Downloader downloader;
     private DocumentProducer producer;
     private DownloadScheduler consumer;
     private BlockingQueue<DownloadableDocument> documentQueue = new LinkedBlockingQueue<>(100);
+    private CookieManager loginCookieManager;
     private LoginScreenController loginScreenController;
     private ScreenContainer screenContainer;
+    private TermCrawler termCrawler = new TermCrawler();
 
     public Director (LoginScreenController loginScreenController) {
         this.loginScreenController = loginScreenController;
@@ -34,7 +35,7 @@ public class Director {
             boolean loginSuccess = login(credentials);
             if (loginSuccess) {
                 saveUsername(credentials.getUser());
-                prepareDownload();
+                prepareDownloading();
                 startDownloading();
                 showDownloadScreen();
             }
@@ -54,23 +55,24 @@ public class Director {
         PreferencesManager.setUsername(username);
     }
 
-    private void prepareDownload() {
+    private void prepareDownloading() {
         getAndSetCookieManager();
-        initDownloader();
-        initThreads();
+        prepareProducer();
+        prepareConsumer();
     }
 
     private void getAndSetCookieManager() {
         loginCookieManager = loginClient.getBrowserCookieManager();
     }
 
-    private void initDownloader() {
-        downloader = new Downloader(loginCookieManager);
+    private void prepareProducer() {
+        String term = termCrawler.fetchCurrentTerm(loginClient.getOverviewPage());
+        producer = new DocumentProducer(documentQueue, loginCookieManager, loginClient.getOverviewPage(), term);
     }
 
-    private void initThreads() {
-        producer = new DocumentProducer(documentQueue, downloader, loginCookieManager, loginClient.getOverviewPage());
-        consumer = new DownloadScheduler(documentQueue, downloader);
+    private void prepareConsumer() {
+        String directoryFriendlyTerm = termCrawler.getDirectoryFriendlyTerm(loginClient.getOverviewPage());
+        consumer = new DownloadScheduler(documentQueue, loginCookieManager, directoryFriendlyTerm);
     }
 
     private void startDownloading() {
@@ -84,7 +86,7 @@ public class Director {
         Controllable controller = screenContainer.getScreenController(ScreenType.DOWNLOAD);
         if (controller instanceof DownloadObserver) {
             DownloadObserver observer = (DownloadObserver) controller;
-            downloader.addObserver(observer);
+            consumer.addObserver(observer);
         }
     }
 }

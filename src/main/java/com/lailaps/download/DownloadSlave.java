@@ -1,43 +1,75 @@
 package com.lailaps.download;
 
 import com.gargoylesoftware.htmlunit.CookieManager;
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebResponse;
-import com.lailaps.*;
-import javafx.application.Platform;
+import com.lailaps.Browser;
 import org.apache.commons.io.input.CountingInputStream;
-import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
-import java.io.*;
-import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
-public class Downloader implements ObservableDownloadSource {
 
-    private static final Logger LOG = Logger.getLogger(Downloader.class);
+public class DownloadSlave implements Runnable, ObservableDownloadSource {
+
+    private static final int TIMEOUT = 2;
     private static final int BUFFER_SIZE = 8192;
-    private String downloadDirectory;
+    private static final Logger LOG = Logger.getLogger(DownloadSlave.class);
+
+    private boolean isRunning = true;
+    private BlockingQueue<DownloadableDocument> queue;
     private Browser browser = new Browser();
-    private DownloadStatistics statistics = new DownloadStatistics();
-    private List<DownloadObserver> observers = new ArrayList<>();
-    private StopWatch stopWatch = new StopWatch();
+    private DownloadObserver observer;
+    private String downloadDirectory;
 
-    public Downloader (CookieManager cookieManager) {
+    public DownloadSlave(BlockingQueue<DownloadableDocument> queue, CookieManager cookieManager, String targetDirectory) {
+        this.queue = queue;
         this.browser.setCookieManager(cookieManager);
+        this.downloadDirectory = targetDirectory;
     }
 
-    void start() {
-        stopWatch.start();
+    public void stop() {
+        isRunning = false;
     }
 
-    public void download(DownloadableDocument doc) {
+    @Override
+    public void run() {
+        while (isRunning) {
+            downloadFromDocumentQueue();
+        }
+    }
+
+    private void downloadFromDocumentQueue() {
+        try {
+            DownloadableDocument document = queue.poll(TIMEOUT, TimeUnit.SECONDS);
+            handleDocument(document);
+        } catch (InterruptedException e) {
+            LOG.error(e);
+        }
+    }
+
+    private void handleDocument(DownloadableDocument document) {
+        if (document == null) return;
+        if (document instanceof PoisonToken) {
+            isRunning = false;
+        } else {
+            download(document);
+        }
+    }
+
+    private void download(DownloadableDocument doc) {
         Path target = getFilePath(doc);
         boolean alreadyExists = Files.exists(target);
         if (!alreadyExists) {
             download(doc, target);
         } else {
-            statistics.incrementSkippedCount();
             notifyObserversSkipped(doc);
         }
     }
@@ -51,15 +83,14 @@ public class Downloader implements ObservableDownloadSource {
         try {
             makeDirectories(target);
             saveDocument(doc, target);
-            statistics.incrementDownloadCount();
-        } catch (IOException e) {
+            notifyObserversEnd(null);
+        } catch (IOException | FailingHttpStatusCodeException e) {
             LOG.error(e);
-            statistics.incrementFailedCount();
             notifyObserversFailed(doc, e);
         }
     }
 
-    private static void makeDirectories(Path target) throws IOException {
+    private void makeDirectories(Path target) throws IOException {
         File containingDirectory = target.getParent().toFile();
         containingDirectory.mkdirs();
     }
@@ -90,55 +121,33 @@ public class Downloader implements ObservableDownloadSource {
         }
     }
 
-    void onTermDiscovered(String term) {
-        downloadDirectory = PreferencesManager.getDirectory() + File.separator + term + File.separator;
-        statistics.setDownloadFolderLocation(downloadDirectory);
-    }
-
-    void finishDownloading() {
-        stopWatch.stop();
-        long downloadTime = stopWatch.getTime();
-        statistics.setElapsedTime(downloadTime);
-        notifyObserversEnd(statistics);
-    }
-
     @Override
     public void addObserver(DownloadObserver observer) {
-        observers.add(observer);
+        this.observer = observer;
     }
 
     @Override
     public void notifyObserversStart(DownloadableDocument downloadedDocument) {
-        Platform.runLater(() ->
-            observers.forEach(observer -> observer.onDownloadStarted(downloadedDocument))
-        );
+        observer.onDownloadStarted(downloadedDocument);
     }
 
     @Override
     public void notifyObserversProgress(DownloadableDocument downloadableDocument, double progress) {
-        Platform.runLater(() ->
-            observers.forEach(observer -> observer.onDownloadProgress(downloadableDocument, progress))
-        );
+        observer.onDownloadProgress(downloadableDocument, progress);
     }
 
     @Override
     public void notifyObserversSkipped(DownloadableDocument skippedDocument) {
-        Platform.runLater(() ->
-            observers.forEach(observer -> observer.onDownloadSkipped(skippedDocument))
-        );
+        observer.onDownloadSkipped(skippedDocument);
     }
 
     @Override
     public void notifyObserversFailed(DownloadableDocument failedDocument, Exception cause) {
-        Platform.runLater(() ->
-            observers.forEach(observer -> observer.onDownloadFailed(failedDocument, cause))
-        );
+        observer.onDownloadFailed(failedDocument, cause);
     }
 
     @Override
-    public void notifyObserversEnd(DownloadStatistics statistics) {
-        Platform.runLater(() ->
-            observers.forEach(observer -> observer.onFinishedDownloading(statistics))
-        );
+    public void notifyObserversEnd(DownloadStatistics nullDummy) {
+        observer.onFinishedDownloading(null);
     }
 }

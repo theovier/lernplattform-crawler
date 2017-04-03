@@ -14,17 +14,16 @@ public class DocumentProducer implements Runnable {
 
     private static final Logger LOG = Logger.getLogger(DocumentProducer.class);
     private BlockingQueue<DownloadableDocument> queue;
-    private Downloader downloader;
     private HtmlPage overviewPage;
     private CookieManager cookieManager;
-    private TermCrawler termCrawler = new TermCrawler();
     private CourseCrawler courseCrawler = new CourseCrawler();
+    private String term;
 
-    public DocumentProducer(BlockingQueue queue, Downloader downloader, CookieManager cookieManager, HtmlPage overviewPage) {
+    public DocumentProducer(BlockingQueue queue, CookieManager cookieManager, HtmlPage overviewPage, String term) {
         this.queue = queue;
-        this.downloader = downloader;
         this.cookieManager = cookieManager;
         this.overviewPage = overviewPage;
+        this.term = term;
     }
 
     @Override
@@ -33,19 +32,8 @@ public class DocumentProducer implements Runnable {
     }
 
     private void produceDocuments() {
-        String currentTerm = termCrawler.fetchCurrentTerm(overviewPage);
-        notifyDownloaderAboutTerm();
-        fetchDocumentsForTerm(currentTerm);
-    }
-
-    private void notifyDownloaderAboutTerm() {
-        String directoryFriendlyTerm = termCrawler.getDirectoryFriendlyTerm(overviewPage);
-        downloader.onTermDiscovered(directoryFriendlyTerm);
-    }
-
-    private void fetchDocumentsForTerm(String currentTerm)  {
         List<CompletableFuture<Void>> producers = new ArrayList<>();
-        List<String> courseURLs = courseCrawler.fetchCourseLinks(overviewPage, currentTerm);
+        List<String> courseURLs = courseCrawler.fetchCourseLinks(overviewPage, term);
         for (String courseURL : courseURLs) {
             ProducerThread demo = new ProducerThread(courseURL, queue, cookieManager);
             CompletableFuture<Void> producer = CompletableFuture.runAsync(demo);
