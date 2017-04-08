@@ -12,7 +12,7 @@ public class TermCrawler extends Crawler{
     private static final String SUMMER_TERM = "Sommersemester";
     private static final String WINTER_TERM = "Wintersemester";
 
-    private String currentTerm;
+    private String currentTerm = "";
 
     public String fetchCurrentTerm(HtmlPage overviewPage) {
         List<HtmlLabel> labels = fetchLabelsWithAnyTitle(overviewPage);
@@ -37,7 +37,7 @@ public class TermCrawler extends Crawler{
     }
 
     public String getDirectoryFriendlyTerm(HtmlPage overviewPage) {
-        if (currentTerm.isEmpty()) {
+        if (currentTerm.isEmpty()) { //todo can throw NPE because currentLabel in fetchCurrentTerm is set.
             fetchCurrentTerm(overviewPage);
         }
         return clearTerm(currentTerm);
