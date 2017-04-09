@@ -70,7 +70,7 @@ public class AboutAlert extends Alert {
     }
 
     private Node getVersionNumberLine() {
-        String version = "v1.4.1";
+        String version = "v"+ getClass().getPackage().getImplementationVersion();
         return new Label(version);
     }
 
@@ -80,12 +80,17 @@ public class AboutAlert extends Alert {
 
     private Node getHyperlinkLine() {
         FlowPane hyperlinkContainer = new FlowPane();
-        Hyperlink hyperlink = new Hyperlink(HYPERLINK_TEXT);
-        hyperlink.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
-        hyperlink.setOnAction(e -> hostServices.showDocument(HYPERLINK_LINK));
+        Hyperlink hyperlink = getHyperlink();
         Label description = new Label("get the sourcecode at");
         hyperlinkContainer.getChildren().addAll(description, hyperlink);
         hyperlinkContainer.setAlignment(Pos.CENTER);
         return hyperlinkContainer;
+    }
+
+    private Hyperlink getHyperlink() {
+        Hyperlink hyperlink = new Hyperlink(HYPERLINK_TEXT);
+        hyperlink.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
+        hyperlink.setOnAction(e -> hostServices.showDocument(HYPERLINK_LINK));
+        return hyperlink;
     }
 }
