@@ -1,12 +1,14 @@
 package com.lailaps.crawler;
 
 
+import com.gargoylesoftware.htmlunit.html.HtmlLabel;
+
 public class Term {
 
     private String name, directoryFriendlyName;
 
-    public Term(String name) {
-        this.name = name;
+    public Term (HtmlLabel termLabel) {
+        this.name = termLabel.getAttribute("title").toString();
         this.directoryFriendlyName = clearName(name);
     }
 
