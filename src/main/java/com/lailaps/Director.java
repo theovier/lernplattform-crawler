@@ -19,10 +19,8 @@ public class Director {
     private DocumentProducer producer;
     private DownloadScheduler consumer;
     private BlockingQueue<DownloadableDocument> documentQueue = new LinkedBlockingQueue<>(100);
-    private CookieManager loginCookieManager;
     private LoginScreenController loginScreenController;
     private ScreenContainer screenContainer;
-    private Term currentTerm;
 
     public Director (LoginScreenController loginScreenController) {
         this.loginScreenController = loginScreenController;
@@ -57,27 +55,27 @@ public class Director {
     }
 
     private void prepareDownloading() {
-        getAndSetCookieManager();
-        getAndSetCurrentTerm();
-        prepareProducer();
-        prepareConsumer();
+        CookieManager loginCookieManager = getLoginCookieManager();
+        Term currentTerm = getCurrentTerm();
+        prepareProducer(loginCookieManager, currentTerm);
+        prepareConsumer(loginCookieManager, currentTerm);
     }
 
-    private void getAndSetCookieManager() {
-        loginCookieManager = loginClient.getBrowserCookieManager();
+    private CookieManager getLoginCookieManager() {
+        return loginClient.getBrowserCookieManager();
     }
 
-    private void getAndSetCurrentTerm() {
+    private Term getCurrentTerm() {
         TermCrawler crawler = new TermCrawler();
-        currentTerm = crawler.fetchCurrentTerm(loginClient.getOverviewPage());
+        return crawler.fetchCurrentTerm(loginClient.getOverviewPage());
     }
 
-    private void prepareProducer() {
-        producer = new DocumentProducer(documentQueue, loginCookieManager, loginClient.getOverviewPage(), currentTerm);
+    private void prepareProducer(CookieManager cookieManager, Term currentTerm) {
+        producer = new DocumentProducer(documentQueue, cookieManager, loginClient.getOverviewPage(), currentTerm);
     }
 
-    private void prepareConsumer() {
-        consumer = new DownloadScheduler(documentQueue, loginCookieManager, currentTerm);
+    private void prepareConsumer(CookieManager cookieManager, Term currentTerm) {
+        consumer = new DownloadScheduler(documentQueue, cookieManager, currentTerm);
     }
 
     private void startDownloading() {
