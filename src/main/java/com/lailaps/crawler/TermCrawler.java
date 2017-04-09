@@ -2,22 +2,21 @@ package com.lailaps.crawler;
 
 import com.gargoylesoftware.htmlunit.html.HtmlLabel;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import org.apache.log4j.Logger;
 
 import java.util.List;
 
-public class TermCrawler extends Crawler{
+public class TermCrawler extends Crawler {
 
     private static final String LABEL_XPATH = "//label[@title]";
     private static final String SUMMER_TERM = "Sommersemester";
     private static final String WINTER_TERM = "Wintersemester";
 
-    private String currentTerm = "";
+    private String currentTermName = "";
 
-    public String fetchCurrentTerm(HtmlPage overviewPage) {
+    public Term fetchCurrentTerm(HtmlPage overviewPage) {
         List<HtmlLabel> labels = fetchLabelsWithAnyTitle(overviewPage);
-        currentTerm = getFirstTermLabel(labels);
-        return currentTerm;
+        currentTermName = getFirstTermLabel(labels);
+        return new Term(currentTermName);
     }
 
     private List<HtmlLabel> fetchLabelsWithAnyTitle(HtmlPage page) {
@@ -34,16 +33,5 @@ public class TermCrawler extends Crawler{
     private boolean isTermLabel(HtmlLabel label) {
         String text = label.toString();
         return text.contains(WINTER_TERM) || text.contains(SUMMER_TERM);
-    }
-
-    public String getDirectoryFriendlyTerm(HtmlPage overviewPage) {
-        if (currentTerm.isEmpty()) { //todo can throw NPE because currentLabel in fetchCurrentTerm is set.
-            fetchCurrentTerm(overviewPage);
-        }
-        return clearTerm(currentTerm);
-    }
-
-    private String clearTerm(String term) {
-        return term.replace("/", "-");
     }
 }

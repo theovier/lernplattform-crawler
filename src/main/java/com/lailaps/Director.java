@@ -1,5 +1,6 @@
 package com.lailaps;
 
+import com.lailaps.crawler.Term;
 import com.lailaps.crawler.TermCrawler;
 import com.lailaps.download.*;
 import com.lailaps.login.LoginClient;
@@ -21,7 +22,7 @@ public class Director {
     private CookieManager loginCookieManager;
     private LoginScreenController loginScreenController;
     private ScreenContainer screenContainer;
-    private TermCrawler termCrawler = new TermCrawler();
+    private Term currentTerm;
 
     public Director (LoginScreenController loginScreenController) {
         this.loginScreenController = loginScreenController;
@@ -57,6 +58,7 @@ public class Director {
 
     private void prepareDownloading() {
         getAndSetCookieManager();
+        getCurrentTerm();
         prepareProducer();
         prepareConsumer();
     }
@@ -65,14 +67,17 @@ public class Director {
         loginCookieManager = loginClient.getBrowserCookieManager();
     }
 
+    private void getCurrentTerm() {
+        TermCrawler crawler = new TermCrawler();
+        currentTerm = crawler.fetchCurrentTerm(loginClient.getOverviewPage());
+    }
+
     private void prepareProducer() {
-        String term = termCrawler.fetchCurrentTerm(loginClient.getOverviewPage());
-        producer = new DocumentProducer(documentQueue, loginCookieManager, loginClient.getOverviewPage(), term);
+        producer = new DocumentProducer(documentQueue, loginCookieManager, loginClient.getOverviewPage(), currentTerm);
     }
 
     private void prepareConsumer() {
-        String directoryFriendlyTerm = termCrawler.getDirectoryFriendlyTerm(loginClient.getOverviewPage());
-        consumer = new DownloadScheduler(documentQueue, loginCookieManager, directoryFriendlyTerm);
+        consumer = new DownloadScheduler(documentQueue, loginCookieManager, currentTerm);
     }
 
     private void startDownloading() {

@@ -2,6 +2,7 @@ package com.lailaps.download;
 
 import com.gargoylesoftware.htmlunit.CookieManager;
 import com.lailaps.PreferencesManager;
+import com.lailaps.crawler.Term;
 import javafx.application.Platform;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.apache.commons.lang3.time.StopWatch;
@@ -28,14 +29,15 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
     private BlockingQueue<DownloadableDocument> queue;
     private CookieManager cookieManager;
     private boolean isRunning = true;
-    private String term, downloadDirectoryLocation;
+    private Term currentTerm;
+    private String downloadDirectoryLocation;
     private StopWatch stopWatch = new StopWatch();
     private DownloadStatistics statistics = new DownloadStatistics();
 
-    public DownloadScheduler(BlockingQueue queue, CookieManager cookieManager, String directoryFriendlyTerm) {
+    public DownloadScheduler(BlockingQueue queue, CookieManager cookieManager, Term currentTerm) {
         this.queue = queue;
         this.cookieManager = cookieManager;
-        this.term = directoryFriendlyTerm;
+        this.currentTerm = currentTerm;
     }
 
     @Override
@@ -55,7 +57,7 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
                 .namingPattern("download-slave-%d")
                 .build();
         executor = Executors.newFixedThreadPool(SLAVE_POOL_SIZE, factory);
-        downloadDirectoryLocation = PreferencesManager.getDirectory() + File.separator + term + File.separator;
+        downloadDirectoryLocation = PreferencesManager.getDirectory() + File.separator + currentTerm.getDirectoryFriendlyName() + File.separator;
         statistics.setDownloadFolderLocation(downloadDirectoryLocation);
         stopWatch.start();
     }

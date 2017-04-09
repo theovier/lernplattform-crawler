@@ -3,7 +3,7 @@ package com.lailaps.download;
 import com.gargoylesoftware.htmlunit.CookieManager;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.lailaps.crawler.CourseCrawler;
-import com.lailaps.crawler.TermCrawler;
+import com.lailaps.crawler.Term;
 import org.apache.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +17,9 @@ public class DocumentProducer implements Runnable {
     private HtmlPage overviewPage;
     private CookieManager cookieManager;
     private CourseCrawler courseCrawler = new CourseCrawler();
-    private String term;
+    private Term term;
 
-    public DocumentProducer(BlockingQueue queue, CookieManager cookieManager, HtmlPage overviewPage, String term) {
+    public DocumentProducer(BlockingQueue queue, CookieManager cookieManager, HtmlPage overviewPage, Term term) {
         this.queue = queue;
         this.cookieManager = cookieManager;
         this.overviewPage = overviewPage;
