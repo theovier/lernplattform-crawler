@@ -4,6 +4,7 @@ import com.lailaps.ui.AboutAlert;
 import com.lailaps.ui.ScreenContainer;
 import com.lailaps.ui.ScreenType;
 import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -25,6 +26,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        final HostServices hostServices = getHostServices();
+
+
         ScreenContainer screenContainer = new ScreenContainer();
         screenContainer.loadAllScreens();
         screenContainer.showScreen(ScreenType.LOGIN);
@@ -35,7 +39,7 @@ public class Main extends Application {
         helpMenu.setMnemonicParsing(true);
         MenuItem aboutItem = new MenuItem("About");
         aboutItem.setOnAction( (e) -> {
-            AboutAlert aboutWindow = new AboutAlert();
+            AboutAlert aboutWindow = new AboutAlert(hostServices);
             aboutWindow.initOwner(stage);
             aboutWindow.show();
         });
@@ -53,6 +57,9 @@ public class Main extends Application {
         Image icon = new Image(getClass().getClassLoader().getResourceAsStream("images/lailaps_32x32.png"));
         stage.getIcons().add(icon);
         stage.setTitle(title);
+
+
+
 
         stage.setOnCloseRequest(e -> Platform.exit());
     }
