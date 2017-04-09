@@ -41,6 +41,8 @@
                     <archive>
                         <manifest>
                             <mainClass>com.lailaps.Main</mainClass>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                     </archive>
                 </configuration>
@@ -52,6 +54,8 @@
                     <archive>
                         <manifest>
                             <mainClass>com.lailaps.Main</mainClass>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                     </archive>
                     <descriptorRefs>
