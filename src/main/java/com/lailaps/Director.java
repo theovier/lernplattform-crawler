@@ -58,7 +58,7 @@ public class Director {
 
     private void prepareDownloading() {
         getAndSetCookieManager();
-        getCurrentTerm();
+        getAndSetCurrentTerm();
         prepareProducer();
         prepareConsumer();
     }
@@ -67,7 +67,7 @@ public class Director {
         loginCookieManager = loginClient.getBrowserCookieManager();
     }
 
-    private void getCurrentTerm() {
+    private void getAndSetCurrentTerm() {
         TermCrawler crawler = new TermCrawler();
         currentTerm = crawler.fetchCurrentTerm(loginClient.getOverviewPage());
     }
