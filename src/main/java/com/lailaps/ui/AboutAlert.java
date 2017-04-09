@@ -83,7 +83,7 @@ public class AboutAlert extends Alert {
         Hyperlink hyperlink = new Hyperlink(HYPERLINK_TEXT);
         hyperlink.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
         hyperlink.setOnAction(e -> hostServices.showDocument(HYPERLINK_LINK));
-        Label description = new Label("get the sourcecode at ");
+        Label description = new Label("get the sourcecode at");
         hyperlinkContainer.getChildren().addAll(description, hyperlink);
         hyperlinkContainer.setAlignment(Pos.CENTER);
         return hyperlinkContainer;
