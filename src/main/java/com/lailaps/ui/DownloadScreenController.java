@@ -29,9 +29,6 @@ public class DownloadScreenController implements Initializable, Controllable, Au
     private BorderPane pane;
 
     @FXML
-    private MenuBar menubar;
-
-    @FXML
     private ListView<ProgressDownloadIndicator> listView;
 
     @Override
@@ -54,7 +51,6 @@ public class DownloadScreenController implements Initializable, Controllable, Au
     public void bindComponentsToStageSize() {
         Stage stage = (Stage) pane.getScene().getWindow();
         pane.prefWidthProperty().bind(stage.widthProperty());
-        menubar.prefWidthProperty().bind(stage.widthProperty());
         listView.prefWidthProperty().bind(stage.widthProperty());
         pane.prefHeightProperty().bind(stage.heightProperty().subtract(50));
 
