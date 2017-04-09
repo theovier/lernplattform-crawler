@@ -2,12 +2,8 @@
 
 <?import java.lang.String?>
 <?import javafx.collections.FXCollections?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TextField?>
@@ -16,18 +12,6 @@
 
 <VBox fx:id="vbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="315.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lailaps.ui.LoginScreenController">
     <children>
-        <MenuBar fx:id="menubar" VBox.vgrow="NEVER">
-            <menus>
-                <Menu text="_Help">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
-                    </items>
-                </Menu>
-            </menus>
-         <VBox.margin>
-            <Insets left="-8.0" />
-         </VBox.margin>
-        </MenuBar>
         <Pane prefHeight="379.0" prefWidth="600.0">
             <children>
                 <TextField fx:id="userField" layoutX="125.0" layoutY="68.0" onAction="#onEnterPressed" prefWidth="170" promptText="Vorname.Nachname" />

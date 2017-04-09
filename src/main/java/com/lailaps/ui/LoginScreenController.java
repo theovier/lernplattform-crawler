@@ -17,7 +17,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class LoginScreenController implements Initializable, Controllable, AutoResizable {
+public class LoginScreenController implements Initializable, Controllable {
 
     private DirectoryChooser dirChooser = new DirectoryChooser();
     private String currentDir = PreferencesManager.getDirectory();
@@ -35,16 +35,10 @@ public class LoginScreenController implements Initializable, Controllable, AutoR
     @FXML
     private ProgressIndicator throbber;
 
-    @FXML
-    private MenuBar menubar;
-
-    @FXML
-    private VBox vbox;
 
     @Override
     public void initialize(final URL url, final ResourceBundle rb) {
         Platform.runLater(()->setInitialFocus());
-        Platform.runLater(()->bindComponentsToStageSize());
         userField.setText(PreferencesManager.getUsername());
         directoryField.setText(currentDir);
         emailList.getSelectionModel().selectFirst();
@@ -58,13 +52,6 @@ public class LoginScreenController implements Initializable, Controllable, AutoR
     @Override
     public ScreenContainer getParentScreen() {
         return parent;
-    }
-
-    @Override
-    public void bindComponentsToStageSize() {
-        Stage stage = (Stage) menubar.getScene().getWindow();
-        vbox.prefWidthProperty().bind(stage.widthProperty());
-        menubar.prefWidthProperty().bind(stage.widthProperty());
     }
 
     @FXML
