@@ -1,46 +1,30 @@
 package com.lailaps.crawler;
 
 import com.gargoylesoftware.htmlunit.html.HtmlHeading1;
-import com.gargoylesoftware.htmlunit.html.HtmlListItem;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GatewayCrawler {
+public class GatewayCrawler extends ResourceIDCrawler {
 
-    private static final String RESOURCEPATH = "https://campusapp01.hshl.de/mod/resource/view.php?id=";
+    private static final String COURSE_NAME_XPATH = "//div[@class='page-header-headings']//h1";
+    private static final String RESOURCE_PATH = "https://campusapp01.hshl.de/mod/resource/view.php?id=";
+    private static final String RESOURCE_CSS_CLASS = "activity resource modtype_resource";
+    private static final String LIST_ITEMS_XPATH = String.format(
+            "//li[contains(@class, '%s')]",
+            RESOURCE_CSS_CLASS
+    );
 
     public static List<String> fetchDownloadLinks(HtmlPage coursePage) {
         List<String> downloadLinks = new ArrayList<String>();
-        List<String> resourceIDs = fetchResourceIDs(coursePage);
-        resourceIDs.forEach(id -> downloadLinks.add(RESOURCEPATH + id));
+        List<String> resourceIDs = ResourceIDCrawler.fetchResourceIDs(coursePage, LIST_ITEMS_XPATH);
+        resourceIDs.forEach(id -> downloadLinks.add(RESOURCE_PATH + id));
         return downloadLinks;
     }
 
-    private static List<String> fetchResourceIDs(HtmlPage coursePage) {
-        List<String> courseIDs = new ArrayList<>();
-        List<?> courseListItems = coursePage.getByXPath("//li[contains(@class, 'activity resource modtype_resource')]");
-        getIDs(courseListItems).forEach(id -> courseIDs.add(id));
-        return courseIDs;
-    }
-
-    private static List<String> getIDs(List<?> uncastedListItems) {
-        List <String> ids = new ArrayList<>();
-        uncastedListItems.forEach(item -> {
-            HtmlListItem listItem = (HtmlListItem) item;
-            String numericID = getNumericID(listItem.getId());
-            ids.add(numericID);
-        });
-        return ids;
-    }
-
-    private static String getNumericID(String ID) {
-        return ID.split("-")[1];
-    }
-
     public static String fetchCourseName(HtmlPage coursePage) {
-        HtmlHeading1 filename = coursePage.getFirstByXPath("//div[@class='page-header-headings']//h1");
+        HtmlHeading1 filename = coursePage.getFirstByXPath(COURSE_NAME_XPATH);
         return clearCourseName(filename.asText());
     }
 
