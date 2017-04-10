@@ -12,15 +12,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-public class ProducerThread implements Runnable {
+public class ProducerSlave implements Runnable {
 
-    private static final Logger LOG = Logger.getLogger(ProducerThread.class);
+    private static final Logger LOG = Logger.getLogger(ProducerSlave.class);
 
     private Browser browser = new Browser();
     private BlockingQueue<DownloadableDocument> queue;
     private String courseURL;
 
-    public ProducerThread(String courseURL, BlockingQueue<DownloadableDocument> queue, CookieManager cookieManager) {
+    public ProducerSlave(String courseURL, BlockingQueue<DownloadableDocument> queue, CookieManager cookieManager) {
         this.courseURL = courseURL;
         this.browser.setCookieManager(cookieManager);
         this.queue = queue;
