@@ -20,6 +20,7 @@ public class ProducerSlave implements Runnable {
     private BlockingQueue<DownloadableDocument> queue;
     private String courseURL;
 
+
     public ProducerSlave(String courseURL, BlockingQueue<DownloadableDocument> queue, CookieManager cookieManager) {
         this.courseURL = courseURL;
         this.browser.setCookieManager(cookieManager);
@@ -39,10 +40,10 @@ public class ProducerSlave implements Runnable {
     }
 
     private void fetchDocumentsForCourse(HtmlPage coursePage) {
-        List<String> downloadGatewayURLs = GatewayCrawler.fetchDownloadLinks(coursePage);
-        //todo insert here List<String> xyz = folderCrawler.fetch
+        List<String> downloadGatewayURLs = GatewayCrawler.fetchDownloadLinks(coursePage); //todo folderCrawler
+        String courseName = GatewayCrawler.fetchCourseName(coursePage);
         for (String downloadGatewayURL : downloadGatewayURLs) {
-            DownloadableDocument doc = fetchDocument(downloadGatewayURL, coursePage);
+            DownloadableDocument doc = fetchDocument(downloadGatewayURL, courseName);
             if (doc != null) {
                 enqueue(doc);
             } else {
@@ -51,8 +52,7 @@ public class ProducerSlave implements Runnable {
         }
     }
 
-    private DownloadableDocument fetchDocument(String downloadPageURL, HtmlPage coursePage) {
-        String courseName = GatewayCrawler.fetchCourseName(coursePage);
+    private DownloadableDocument fetchDocument(String downloadPageURL, String courseName) {
         try {
             Page downloadPage = browser.getPage(downloadPageURL);
             return DocumentCrawler.fetchDocument(downloadPage, courseName);
