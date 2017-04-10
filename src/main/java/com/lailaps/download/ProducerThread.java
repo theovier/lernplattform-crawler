@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-//todo rename
 public class ProducerThread implements Runnable {
 
     private static final Logger LOG = Logger.getLogger(ProducerThread.class);
@@ -29,27 +28,26 @@ public class ProducerThread implements Runnable {
 
     @Override
     public void run() {
-        fetchDocumentsForCourse(courseURL);
-        cleanUp();
-    }
-
-    private void fetchDocumentsForCourse(String courseURL) {
         try {
             HtmlPage coursePage = browser.getPage(courseURL);
-            List<String> downloadGatewayURLs = GatewayCrawler.fetchDownloadLinks(coursePage);
-
-            //todo insert here List<String> xyz = folderCrawler.fetch
-
-            for (String downloadGatewayURL : downloadGatewayURLs) {
-                DownloadableDocument doc = fetchDocument(downloadGatewayURL, coursePage);
-                if (doc != null) {
-                    enqueue(doc);
-                } else {
-                    LOG.warn("is null: " + downloadGatewayURL);
-                }
-            }
+            fetchDocumentsForCourse(coursePage);
         } catch (IOException e) {
             LOG.error(e); //something wrong with the course page
+        } finally {
+            cleanUp();
+        }
+    }
+
+    private void fetchDocumentsForCourse(HtmlPage coursePage) {
+        List<String> downloadGatewayURLs = GatewayCrawler.fetchDownloadLinks(coursePage);
+        //todo insert here List<String> xyz = folderCrawler.fetch
+        for (String downloadGatewayURL : downloadGatewayURLs) {
+            DownloadableDocument doc = fetchDocument(downloadGatewayURL, coursePage);
+            if (doc != null) {
+                enqueue(doc);
+            } else {
+                LOG.warn("is null: " + downloadGatewayURL);
+            }
         }
     }
 
