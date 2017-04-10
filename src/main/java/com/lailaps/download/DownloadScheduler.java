@@ -2,13 +2,11 @@ package com.lailaps.download;
 
 import com.gargoylesoftware.htmlunit.CookieManager;
 import com.lailaps.PreferencesManager;
-import com.lailaps.crawler.Term;
 import javafx.application.Platform;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -29,15 +27,13 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
     private BlockingQueue<DownloadableDocument> queue;
     private CookieManager cookieManager;
     private boolean isRunning = true;
-    private Term currentTerm;
     private String downloadDirectoryLocation = PreferencesManager.getDirectory();
     private StopWatch stopWatch = new StopWatch();
     private DownloadStatistics statistics = new DownloadStatistics();
 
-    public DownloadScheduler(BlockingQueue queue, CookieManager cookieManager, Term currentTerm) {
+    public DownloadScheduler(BlockingQueue queue, CookieManager cookieManager) {
         this.queue = queue;
         this.cookieManager = cookieManager;
-        this.currentTerm = currentTerm;
     }
 
     @Override
@@ -58,7 +54,7 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
                 .build();
         executor = Executors.newFixedThreadPool(SLAVE_POOL_SIZE, factory);
         downloadDirectoryLocation = PreferencesManager.getDirectory();
-        statistics.setDownloadFolderLocation(downloadDirectoryLocation);
+        statistics.setDownloadFolderLocation(downloadDirectoryLocation); //todo is not anymore "in" the term folder, because there could be several later on.
         stopWatch.start();
     }
 

@@ -58,7 +58,7 @@ public class Director {
         CookieManager loginCookieManager = getLoginCookieManager();
         Term currentTerm = getCurrentTerm();
         prepareProducer(loginCookieManager, currentTerm);
-        prepareConsumer(loginCookieManager, currentTerm);
+        prepareConsumer(loginCookieManager);
     }
 
     private CookieManager getLoginCookieManager() {
@@ -73,8 +73,8 @@ public class Director {
         producer = new DocumentProducer(documentQueue, cookieManager, loginClient.getOverviewPage(), currentTerm);
     }
 
-    private void prepareConsumer(CookieManager cookieManager, Term currentTerm) {
-        consumer = new DownloadScheduler(documentQueue, cookieManager, currentTerm);
+    private void prepareConsumer(CookieManager cookieManager) {
+        consumer = new DownloadScheduler(documentQueue, cookieManager);
     }
 
     private void startDownloading() {
