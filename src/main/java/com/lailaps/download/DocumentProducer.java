@@ -34,8 +34,8 @@ public class DocumentProducer implements Runnable {
         List<CompletableFuture<Void>> producers = new ArrayList<>();
         List<String> courseURLs = CourseCrawler.fetchCourseLinks(overviewPage, term);
         for (String courseURL : courseURLs) {
-            ProducerSlave demo = new ProducerSlave(courseURL, queue, cookieManager);
-            CompletableFuture<Void> producer = CompletableFuture.runAsync(demo);
+            ProducerSlave slave = new ProducerSlave(courseURL, queue, cookieManager);
+            CompletableFuture<Void> producer = CompletableFuture.runAsync(slave);
             producers.add(producer);
         }
         CompletableFuture<Void>[] producerArray =  producers.toArray(new CompletableFuture[producers.size()]);
