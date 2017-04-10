@@ -18,8 +18,6 @@ public class ProducerThread implements Runnable {
     private static final Logger LOG = Logger.getLogger(ProducerThread.class);
 
     private Browser browser = new Browser();
-    private GatewayCrawler gatewayCrawler = new GatewayCrawler();
-    private DocumentCrawler documentCrawler = new DocumentCrawler();
     private BlockingQueue<DownloadableDocument> queue;
     private String courseURL;
 
@@ -38,7 +36,10 @@ public class ProducerThread implements Runnable {
     private void fetchDocumentsForCourse(String courseURL) {
         try {
             HtmlPage coursePage = browser.getPage(courseURL);
-            List<String> downloadGatewayURLs = gatewayCrawler.fetchDownloadLinks(coursePage);
+            List<String> downloadGatewayURLs = GatewayCrawler.fetchDownloadLinks(coursePage);
+
+            //todo insert here List<String> xyz = folderCrawler.fetch
+
             for (String downloadGatewayURL : downloadGatewayURLs) {
                 DownloadableDocument doc = fetchDocument(downloadGatewayURL, coursePage);
                 if (doc != null) {
@@ -53,10 +54,10 @@ public class ProducerThread implements Runnable {
     }
 
     private DownloadableDocument fetchDocument(String downloadPageURL, HtmlPage coursePage) {
-        String courseName = gatewayCrawler.fetchCourseName(coursePage);
+        String courseName = GatewayCrawler.fetchCourseName(coursePage);
         try {
             Page downloadPage = browser.getPage(downloadPageURL);
-            return documentCrawler.fetchDocument(downloadPage, courseName);
+            return DocumentCrawler.fetchDocument(downloadPage, courseName);
         } catch (IOException e) {
             LOG.error(e);
             return null;

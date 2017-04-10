@@ -66,8 +66,7 @@ public class Director {
     }
 
     private Term getCurrentTerm() {
-        TermCrawler crawler = new TermCrawler();
-        return crawler.fetchCurrentTerm(loginClient.getOverviewPage());
+        return TermCrawler.fetchCurrentTerm(loginClient.getOverviewPage());
     }
 
     private void prepareProducer(CookieManager cookieManager, Term currentTerm) {
