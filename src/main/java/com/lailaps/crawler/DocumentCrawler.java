@@ -13,6 +13,7 @@ public class DocumentCrawler {
     private static final String FILENAME_XPATH = "//div[@role='main']//h2";
     private static final String DOUBLE_QUOTE = "\"";
     private static final String DEFAULT_EXTENSION = ".pdf";
+    private static final String ZIP_EXTENSION = ".zip";
 
     public static DownloadableDocument fetchDocument(Page possibleGatewayPage, String courseName) {
         if (possibleGatewayPage.isHtmlPage()) {
@@ -40,6 +41,11 @@ public class DocumentCrawler {
         String extension = fetchFileExtension(filename);
         String name = filename.substring(0, filename.indexOf(extension));
         long size = fetchFileSizeFromResponse(response);
+
+        //todo find better solution for the zip-name hack
+        if (ZIP_EXTENSION.equals(extension)) {
+            name += "-" + size;
+        }
         return new DownloadableDocument(name, downloadPageURL, courseName, extension, size);
     }
 
