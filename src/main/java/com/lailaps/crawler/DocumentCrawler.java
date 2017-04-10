@@ -14,7 +14,7 @@ public class DocumentCrawler extends Crawler {
     private static final String DOUBLE_QUOTE = "\"";
     private static final String DEFAULT_EXTENSION = ".pdf";
 
-    public DownloadableDocument fetchDocument(Page possibleGatewayPage, String courseName) {
+    public static DownloadableDocument fetchDocument(Page possibleGatewayPage, String courseName) {
         if (possibleGatewayPage.isHtmlPage()) {
             HtmlPage gatewayPage = (HtmlPage) possibleGatewayPage;
             return getDocumentFromGateway(gatewayPage, courseName);
@@ -23,7 +23,7 @@ public class DocumentCrawler extends Crawler {
         }
     }
 
-    public DownloadableDocument getDocumentFromGateway(HtmlPage gatewayPage, String courseName) {
+    public static DownloadableDocument getDocumentFromGateway(HtmlPage gatewayPage, String courseName) {
         String pageContent = gatewayPage.asXml();
         String name = fetchFileName(gatewayPage);
         String downloadLink = fetchDownloadLink(pageContent);
@@ -32,7 +32,7 @@ public class DocumentCrawler extends Crawler {
     }
 
     //some files can't be opened in a new tab ('gateway'). the download starts directly by calling the URL.
-    private DownloadableDocument getDocumentWithoutGateway(Page directDownloadPage, String courseName) {
+    private static DownloadableDocument getDocumentWithoutGateway(Page directDownloadPage, String courseName) {
         String downloadPageURL = directDownloadPage.getUrl().toString();
         WebResponse response = directDownloadPage.getWebResponse();
         String contentDispositionHeader = response.getResponseHeaderValue("Content-Disposition");
@@ -43,23 +43,23 @@ public class DocumentCrawler extends Crawler {
         return new DownloadableDocument(name, downloadPageURL, courseName, extension, size);
     }
 
-    private String fetchFileName(HtmlPage currentPage) {
+    private static String fetchFileName(HtmlPage currentPage) {
         HtmlHeading2 filename = currentPage.getFirstByXPath(FILENAME_XPATH);
         return cleanFileName(filename.asText());
     }
 
-    private String cleanFileName(String filename) {
+    private static String cleanFileName(String filename) {
         String clearedName =  filename.replace('/', '&');
         return clearedName.replace(':', ';');
     }
 
-    private String fetchDownloadLink(String content) {
+    private static String fetchDownloadLink(String content) {
         int begin = content.indexOf(DOWNLOAD_START);
         int end = content.indexOf(DOWNLOAD_END, begin);
         return content.substring(begin + DOWNLOAD_START.length(), end);
     }
 
-    private String fetchFileExtension(String link) {
+    private static String fetchFileExtension(String link) {
         int lastDotIndex = link.lastIndexOf('.');
         if (lastDotIndex > 0) {
             return link.substring(lastDotIndex);
@@ -68,14 +68,14 @@ public class DocumentCrawler extends Crawler {
         }
     }
 
-    private String fetchFileNameFromContentDisposition(String contentDisposition) {
+    private static String fetchFileNameFromContentDisposition(String contentDisposition) {
         //Content-Disposition = attachment; filename="Vorlesung 1 - Haeufigkeiten.ipynb"
         int firstDoubleQuoteIndex = contentDisposition.indexOf(DOUBLE_QUOTE);
         int lastDoubleQuoteIndex = contentDisposition.lastIndexOf(DOUBLE_QUOTE);
         return contentDisposition.substring(firstDoubleQuoteIndex + 1, lastDoubleQuoteIndex);
     }
 
-    private long fetchFileSizeFromResponse(WebResponse response) {
+    private static long fetchFileSizeFromResponse(WebResponse response) {
         return response.getContentLength();
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class CourseCrawler extends Crawler {
 
-    public List<String> fetchCourseLinks(HtmlPage overviewPage, Term term) {
+    public static List<String> fetchCourseLinks(HtmlPage overviewPage, Term term) {
         List<String> links = new ArrayList<>();
         List<HtmlElement> courses = fetchCourses(overviewPage, term);
         courses.forEach(course -> {
@@ -17,7 +17,7 @@ public class CourseCrawler extends Crawler {
         return links;
     }
 
-    private List<HtmlElement> fetchCourses(HtmlPage overviewPage, Term term) {
+    private static List<HtmlElement> fetchCourses(HtmlPage overviewPage, Term term) {
         HtmlLabel courseListLabel = overviewPage.getFirstByXPath("//label[@title='" + term + "']");
         HtmlOrderedList courseList = (HtmlOrderedList) courseListLabel.getNextElementSibling().getNextElementSibling(); //todo refactor
         return courseList.getElementsByTagName("a");

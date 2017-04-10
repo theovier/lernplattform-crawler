@@ -12,13 +12,13 @@ public class TermCrawler extends Crawler {
     private static final String SUMMER_TERM = "Sommersemester";
     private static final String WINTER_TERM = "Wintersemester";
 
-    public Term fetchCurrentTerm(HtmlPage overviewPage) {
+    public static Term fetchCurrentTerm(HtmlPage overviewPage) {
         List<Term> terms = fetchTerms(overviewPage);
         if (terms.isEmpty()) throw new IllegalStateException();
         return terms.get(0);
     }
 
-    public List<Term> fetchTerms(HtmlPage overviewPage) {
+    public static List<Term> fetchTerms(HtmlPage overviewPage) {
         List<Term> terms = new ArrayList<>();
         List<HtmlLabel> termLabels = getTermLabels(overviewPage);
         for (HtmlLabel label : termLabels) {
@@ -28,7 +28,7 @@ public class TermCrawler extends Crawler {
         return terms;
     }
 
-    private List<HtmlLabel> getTermLabels(HtmlPage overviewPage) {
+    private static List<HtmlLabel> getTermLabels(HtmlPage overviewPage) {
         List<HtmlLabel> termLabels = new ArrayList<>();
         List<HtmlLabel> labels = fetchLabelsWithAnyTitle(overviewPage);
         for (HtmlLabel label : labels)
@@ -37,11 +37,11 @@ public class TermCrawler extends Crawler {
         return termLabels;
     }
 
-    private List<HtmlLabel> fetchLabelsWithAnyTitle(HtmlPage page) {
+    private static List<HtmlLabel> fetchLabelsWithAnyTitle(HtmlPage page) {
         return (List<HtmlLabel>) page.getByXPath(LABEL_XPATH);
     }
 
-    private boolean isTermLabel(HtmlLabel label) {
+    private static boolean isTermLabel(HtmlLabel label) {
         String text = label.toString();
         return text.contains(WINTER_TERM) || text.contains(SUMMER_TERM);
     }
