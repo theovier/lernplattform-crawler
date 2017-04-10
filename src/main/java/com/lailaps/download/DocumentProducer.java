@@ -16,7 +16,6 @@ public class DocumentProducer implements Runnable {
     private BlockingQueue<DownloadableDocument> queue;
     private HtmlPage overviewPage;
     private CookieManager cookieManager;
-    private CourseCrawler courseCrawler = new CourseCrawler();
     private Term term;
 
     public DocumentProducer(BlockingQueue queue, CookieManager cookieManager, HtmlPage overviewPage, Term term) {
@@ -33,7 +32,7 @@ public class DocumentProducer implements Runnable {
 
     private void produceDocuments() {
         List<CompletableFuture<Void>> producers = new ArrayList<>();
-        List<String> courseURLs = courseCrawler.fetchCourseLinks(overviewPage, term);
+        List<String> courseURLs = CourseCrawler.fetchCourseLinks(overviewPage, term);
         for (String courseURL : courseURLs) {
             ProducerThread demo = new ProducerThread(courseURL, queue, cookieManager);
             CompletableFuture<Void> producer = CompletableFuture.runAsync(demo);
