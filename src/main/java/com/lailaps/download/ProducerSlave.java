@@ -6,6 +6,7 @@ import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.lailaps.Browser;
 import com.lailaps.crawler.DocumentCrawler;
+import com.lailaps.crawler.FolderCrawler;
 import com.lailaps.crawler.GatewayCrawler;
 import org.apache.log4j.Logger;
 import java.io.IOException;
@@ -40,8 +41,10 @@ public class ProducerSlave implements Runnable {
     }
 
     private void fetchDocumentsForCourse(HtmlPage coursePage) {
-        List<String> downloadGatewayURLs = GatewayCrawler.fetchDownloadLinks(coursePage); //todo folderCrawler
         String courseName = GatewayCrawler.fetchCourseName(coursePage);
+        List<String> downloadGatewayURLs = GatewayCrawler.fetchDownloadLinks(coursePage);
+        List<String> downloadFolderURLs = FolderCrawler.fetchDownloadLinks(coursePage);
+        downloadGatewayURLs.addAll(downloadFolderURLs);
         for (String downloadGatewayURL : downloadGatewayURLs) {
             DownloadableDocument doc = fetchDocument(downloadGatewayURL, courseName);
             if (doc != null) {
