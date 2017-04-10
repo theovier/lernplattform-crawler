@@ -6,7 +6,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlHeading2;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.lailaps.download.DownloadableDocument;
 
-public class DocumentCrawler extends Crawler {
+public class DocumentCrawler {
 
     private static final String DOWNLOAD_START = "window.open('";
     private static final String DOWNLOAD_END = "\',";

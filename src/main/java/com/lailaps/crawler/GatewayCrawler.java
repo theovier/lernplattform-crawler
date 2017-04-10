@@ -7,7 +7,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GatewayCrawler extends Crawler {
+public class GatewayCrawler {
 
     private static final String RESOURCEPATH = "https://campusapp01.hshl.de/mod/resource/view.php?id=";
 

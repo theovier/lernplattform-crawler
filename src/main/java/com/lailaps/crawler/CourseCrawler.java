@@ -5,7 +5,7 @@ import com.gargoylesoftware.htmlunit.html.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CourseCrawler extends Crawler {
+public class CourseCrawler {
 
     public static List<String> fetchCourseLinks(HtmlPage overviewPage, Term term) {
         List<String> links = new ArrayList<>();

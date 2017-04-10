@@ -6,7 +6,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TermCrawler extends Crawler {
+public class TermCrawler {
 
     private static final String LABEL_XPATH = "//label[@title]";
     private static final String SUMMER_TERM = "Sommersemester";
