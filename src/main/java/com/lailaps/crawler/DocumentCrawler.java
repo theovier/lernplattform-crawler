@@ -44,6 +44,7 @@ public class DocumentCrawler {
 
         //todo find better solution for the zip-name hack
         if (ZIP_EXTENSION.equals(extension)) {
+            name = clearZIPName(name);
             name += "-" + size;
         }
         return new DownloadableDocument(name, downloadPageURL, courseName, extension, size);
@@ -83,5 +84,14 @@ public class DocumentCrawler {
 
     private static long fetchFileSizeFromResponse(WebResponse response) {
         return response.getContentLength();
+    }
+
+    private static String clearZIPName(String filename) {
+        //server adds the date to every zip file. e.g. filename-20170410.zip
+        if (filename.contains("-")) {
+            return filename.substring(0, filename.lastIndexOf("-"));
+        } else {
+            return filename;
+        }
     }
 }
