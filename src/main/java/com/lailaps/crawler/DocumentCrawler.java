@@ -88,8 +88,9 @@ public class DocumentCrawler {
 
     private static String clearZIPName(String filename) {
         //server adds the date to every zip file. e.g. filename-20170410.zip
-        if (filename.contains("-")) {
-            return filename.substring(0, filename.lastIndexOf("-"));
+        //-20 because of the millennium.
+        if (filename.contains("-20")) {
+            return filename.substring(0, filename.lastIndexOf("-20"));
         } else {
             return filename;
         }
