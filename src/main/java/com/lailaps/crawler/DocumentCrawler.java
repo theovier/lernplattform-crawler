@@ -15,25 +15,25 @@ public class DocumentCrawler {
     private static final String DEFAULT_EXTENSION = ".pdf";
     private static final String ZIP_EXTENSION = ".zip";
 
-    public static DownloadableDocument fetchDocument(Page possibleGatewayPage, String courseName) {
+    public static DownloadableDocument fetchDocument(Page possibleGatewayPage, String courseName, Term term) {
         if (possibleGatewayPage.isHtmlPage()) {
             HtmlPage gatewayPage = (HtmlPage) possibleGatewayPage;
-            return getDocumentFromGateway(gatewayPage, courseName);
+            return getDocumentFromGateway(gatewayPage, courseName, term);
         } else {
-            return getDocumentWithoutGateway(possibleGatewayPage, courseName);
+            return getDocumentWithoutGateway(possibleGatewayPage, courseName, term);
         }
     }
 
-    public static DownloadableDocument getDocumentFromGateway(HtmlPage gatewayPage, String courseName) {
+    public static DownloadableDocument getDocumentFromGateway(HtmlPage gatewayPage, String courseName, Term term) {
         String pageContent = gatewayPage.asXml();
         String name = fetchFileName(gatewayPage);
         String downloadLink = fetchDownloadLink(pageContent);
         String extension = fetchFileExtension(downloadLink);
-        return new DownloadableDocument(name, downloadLink, courseName, extension);
+        return new DownloadableDocument(name, downloadLink, courseName, extension, term);
     }
 
     //some files can't be opened in a new tab ('gateway'). the download starts directly by calling the URL.
-    private static DownloadableDocument getDocumentWithoutGateway(Page directDownloadPage, String courseName) {
+    private static DownloadableDocument getDocumentWithoutGateway(Page directDownloadPage, String courseName, Term term) {
         String downloadPageURL = directDownloadPage.getUrl().toString();
         WebResponse response = directDownloadPage.getWebResponse();
         String contentDispositionHeader = response.getResponseHeaderValue("Content-Disposition");
@@ -47,7 +47,7 @@ public class DocumentCrawler {
             name = clearZIPName(name);
             name += "-" + size;
         }
-        return new DownloadableDocument(name, downloadPageURL, courseName, extension, size);
+        return new DownloadableDocument(name, downloadPageURL, courseName, extension, size, term);
     }
 
     private static String fetchFileName(HtmlPage currentPage) {

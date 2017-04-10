@@ -1,25 +1,31 @@
 package com.lailaps.download;
 
+import com.lailaps.PreferencesManager;
+import com.lailaps.crawler.Term;
+
 import java.io.File;
 
 public class DownloadableDocument {
 
     private String name, downloadLink, courseName, fileExtension;
     private long size = 0L;
+    private final Term correspondingTerm;
 
-    public DownloadableDocument(String name, String downloadLink, String courseName, String fileExtension) {
+    public DownloadableDocument(String name, String downloadLink, String courseName, String fileExtension, Term term) {
         this.name = name;
         this.downloadLink = downloadLink;
         this.courseName = courseName;
         this.fileExtension = fileExtension;
+        this.correspondingTerm = term;
     }
 
-    public DownloadableDocument(String name, String downloadLink, String courseName, String fileExtension, long size) {
+    public DownloadableDocument(String name, String downloadLink, String courseName, String fileExtension, long size, Term term) {
         this.name = name;
         this.downloadLink = downloadLink;
         this.courseName = courseName;
         this.fileExtension = fileExtension;
         this.size = size;
+        this.correspondingTerm = term;
     }
 
     public String getDownloadLink() {
@@ -76,6 +82,6 @@ public class DownloadableDocument {
     }
 
     public String getSaveLocation() {
-        return getFolderName() + File.separator + getName() + getFileExtension();
+        return correspondingTerm.getDirectoryFriendlyName() + File.separator + getFolderName() + File.separator + getName() + getFileExtension();
     }
 }

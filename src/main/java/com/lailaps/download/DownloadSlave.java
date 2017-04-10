@@ -5,6 +5,7 @@ import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.lailaps.Browser;
+import com.lailaps.PreferencesManager;
 import org.apache.commons.io.input.CountingInputStream;
 import org.apache.log4j.Logger;
 import java.io.File;
@@ -27,12 +28,12 @@ public class DownloadSlave implements Runnable, ObservableDownloadSource {
     private BlockingQueue<DownloadableDocument> queue;
     private Browser browser = new Browser();
     private DownloadObserver master;
-    private String downloadDirectory;
+    private final String targetDirectory;
 
     public DownloadSlave(BlockingQueue<DownloadableDocument> queue, CookieManager cookieManager, String targetDirectory) {
         this.queue = queue;
         this.browser.setCookieManager(cookieManager);
-        this.downloadDirectory = targetDirectory;
+        this.targetDirectory = targetDirectory;
     }
 
     public void stop() {
@@ -75,7 +76,7 @@ public class DownloadSlave implements Runnable, ObservableDownloadSource {
     }
 
     private Path getFilePath(DownloadableDocument doc) {
-        String location = downloadDirectory + doc.getSaveLocation();
+        String location = targetDirectory + File.separator + doc.getSaveLocation();
         return Paths.get(location);
     }
 

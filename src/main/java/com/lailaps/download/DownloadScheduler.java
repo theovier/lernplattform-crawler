@@ -30,7 +30,7 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
     private CookieManager cookieManager;
     private boolean isRunning = true;
     private Term currentTerm;
-    private String downloadDirectoryLocation;
+    private String downloadDirectoryLocation = PreferencesManager.getDirectory();
     private StopWatch stopWatch = new StopWatch();
     private DownloadStatistics statistics = new DownloadStatistics();
 
@@ -57,7 +57,7 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
                 .namingPattern("download-slave-%d")
                 .build();
         executor = Executors.newFixedThreadPool(SLAVE_POOL_SIZE, factory);
-        downloadDirectoryLocation = PreferencesManager.getDirectory() + File.separator + currentTerm.getDirectoryFriendlyName() + File.separator;
+        downloadDirectoryLocation = PreferencesManager.getDirectory();
         statistics.setDownloadFolderLocation(downloadDirectoryLocation);
         stopWatch.start();
     }

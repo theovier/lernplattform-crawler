@@ -8,6 +8,7 @@ import com.lailaps.Browser;
 import com.lailaps.crawler.DocumentCrawler;
 import com.lailaps.crawler.FolderCrawler;
 import com.lailaps.crawler.GatewayCrawler;
+import com.lailaps.crawler.Term;
 import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.util.List;
@@ -20,12 +21,14 @@ public class ProducerSlave implements Runnable {
     private Browser browser = new Browser();
     private BlockingQueue<DownloadableDocument> queue;
     private String courseURL;
+    private Term term;
 
 
-    public ProducerSlave(String courseURL, BlockingQueue<DownloadableDocument> queue, CookieManager cookieManager) {
+    public ProducerSlave(String courseURL, BlockingQueue<DownloadableDocument> queue, Term term, CookieManager cookieManager) {
         this.courseURL = courseURL;
-        this.browser.setCookieManager(cookieManager);
         this.queue = queue;
+        this.term = term;
+        this.browser.setCookieManager(cookieManager);
     }
 
     @Override
@@ -58,7 +61,7 @@ public class ProducerSlave implements Runnable {
     private DownloadableDocument fetchDocument(String downloadPageURL, String courseName) {
         try {
             Page downloadPage = browser.getPage(downloadPageURL);
-            return DocumentCrawler.fetchDocument(downloadPage, courseName);
+            return DocumentCrawler.fetchDocument(downloadPage, courseName, term);
         } catch (IOException e) {
             LOG.error(e);
             return null;
