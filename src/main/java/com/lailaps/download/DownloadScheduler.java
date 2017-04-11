@@ -31,7 +31,7 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
     private StopWatch stopWatch = new StopWatch();
     private DownloadStatistics statistics = new DownloadStatistics();
 
-    public DownloadScheduler(BlockingQueue queue, CookieManager cookieManager) {
+    public DownloadScheduler(BlockingQueue<DownloadableDocument> queue, CookieManager cookieManager) {
         this.queue = queue;
         this.cookieManager = cookieManager;
     }
