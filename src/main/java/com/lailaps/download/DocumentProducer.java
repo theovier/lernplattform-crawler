@@ -5,8 +5,8 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.lailaps.crawler.CourseCrawler;
 import com.lailaps.crawler.Term;
 import org.apache.log4j.Logger;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
 
@@ -16,21 +16,31 @@ public class DocumentProducer implements Runnable {
     private BlockingQueue<DownloadableDocument> queue;
     private HtmlPage overviewPage;
     private CookieManager cookieManager;
-    private Term term;
+    private Queue<Term> termQueue;
 
-    public DocumentProducer(BlockingQueue queue, CookieManager cookieManager, HtmlPage overviewPage, Term term) {
+    public DocumentProducer(BlockingQueue<DownloadableDocument> queue, CookieManager cookieManager, HtmlPage overviewPage, List<Term> terms) {
         this.queue = queue;
         this.cookieManager = cookieManager;
         this.overviewPage = overviewPage;
-        this.term = term;
+        this.termQueue = new LinkedList<>(terms);
     }
 
     @Override
     public void run() {
-        produceDocuments();
+        produce();
     }
 
-    private void produceDocuments() {
+    private void produce() {
+        if (termQueue.isEmpty()) {
+            signalProducerStop();
+        } else {
+            Term term = termQueue.poll();
+            produceDocuments(term);
+            LOG.info(term);
+        }
+    }
+
+    private void produceDocuments(Term term) {
         List<CompletableFuture<Void>> producers = new ArrayList<>();
         List<String> courseURLs = CourseCrawler.fetchCourseLinks(overviewPage, term);
         for (String courseURL : courseURLs) {
@@ -38,9 +48,9 @@ public class DocumentProducer implements Runnable {
             CompletableFuture<Void> producer = CompletableFuture.runAsync(slave);
             producers.add(producer);
         }
-        CompletableFuture<Void>[] producerArray =  producers.toArray(new CompletableFuture[producers.size()]);
+        CompletableFuture<Void>[] producerArray = producers.toArray(new CompletableFuture[producers.size()]);
         CompletableFuture<Void> allProducersFinished = CompletableFuture.allOf(producerArray);
-        allProducersFinished.thenRun(this::signalProducerStop);
+        allProducersFinished.thenRun(this::produce);
     }
 
     private void signalProducerStop() {

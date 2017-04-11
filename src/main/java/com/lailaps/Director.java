@@ -8,6 +8,8 @@ import com.lailaps.login.LoginCredentials;
 import com.lailaps.ui.*;
 import javafx.application.Platform;
 import com.gargoylesoftware.htmlunit.CookieManager;
+
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -57,7 +59,10 @@ public class Director {
     private void prepareDownloading() {
         CookieManager loginCookieManager = getLoginCookieManager();
         Term currentTerm = getCurrentTerm();
-        prepareProducer(loginCookieManager, currentTerm);
+
+        List<Term> terms = TermCrawler.fetchTerms(loginClient.getOverviewPage());
+
+        prepareProducer(loginCookieManager, terms);
         prepareConsumer(loginCookieManager);
     }
 
@@ -69,8 +74,8 @@ public class Director {
         return TermCrawler.fetchCurrentTerm(loginClient.getOverviewPage());
     }
 
-    private void prepareProducer(CookieManager cookieManager, Term currentTerm) {
-        producer = new DocumentProducer(documentQueue, cookieManager, loginClient.getOverviewPage(), currentTerm);
+    private void prepareProducer(CookieManager cookieManager, List<Term> terms) {
+        producer = new DocumentProducer(documentQueue, cookieManager, loginClient.getOverviewPage(), terms);
     }
 
     private void prepareConsumer(CookieManager cookieManager) {
