@@ -1,6 +1,7 @@
 package com.lailaps.ui;
 
 import com.lailaps.Director;
+import com.lailaps.Main;
 import com.lailaps.PreferencesManager;
 import com.lailaps.login.LoginCredentials;
 import com.lailaps.login.LoginErrorInterpreter;
@@ -64,7 +65,7 @@ public class LoginScreenController implements Initializable, Controllable {
         dirChooser.setInitialDirectory(new java.io.File(currentDir));
         File file = dirChooser.showDialog(new Stage());
         if (file != null) {
-            currentDir = file.toString();
+            currentDir = file.toString() + File.separator + Main.title;  //TODO enable edit of dirfield?
             directoryField.setText(currentDir);
             PreferencesManager.setDirectory(currentDir);
         }
