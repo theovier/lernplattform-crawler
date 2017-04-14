@@ -18,19 +18,19 @@ import javafx.scene.image.Image ;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 
 public class AboutAlert extends Alert {
 
-    private static final String HEADER = "About lailaps";
-    private static final String HYPERLINK_TEXT = "http://www.github.com";
-    private static final String HYPERLINK_LINK = HYPERLINK_TEXT;
-    private final HostServices hostServices;
+    private final HostServices HOSTSERVICES;
+    private final ResourceBundle BUNDLE;
 
-    public AboutAlert(final HostServices hostServices) {
+    public AboutAlert(final HostServices hostServices, final ResourceBundle bundle) {
         super(AlertType.NONE);
-        this.hostServices = hostServices;
-        setTitle(HEADER);
+        this.HOSTSERVICES = hostServices;
+        this.BUNDLE = bundle;
+        setTitle(BUNDLE.getString("menu.about"));
         initStyle(StageStyle.UTILITY);
         initModality(Modality.NONE);
         setAndHideButton();
@@ -75,22 +75,22 @@ public class AboutAlert extends Alert {
     }
 
     private Node getCreatorLine() {
-        return new Label("created by Theo Harkenbusch");
+        return new Label(BUNDLE.getString("menu.about.author"));
     }
 
     private Node getHyperlinkLine() {
         FlowPane hyperlinkContainer = new FlowPane();
         Hyperlink hyperlink = getHyperlink();
-        Label description = new Label("get the sourcecode at");
+        Label description = new Label(BUNDLE.getString("menu.about.getSource"));
         hyperlinkContainer.getChildren().addAll(description, hyperlink);
         hyperlinkContainer.setAlignment(Pos.CENTER);
         return hyperlinkContainer;
     }
 
     private Hyperlink getHyperlink() {
-        Hyperlink hyperlink = new Hyperlink(HYPERLINK_TEXT);
+        Hyperlink hyperlink = new Hyperlink(BUNDLE.getString("menu.about.source"));
         hyperlink.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
-        hyperlink.setOnAction(e -> hostServices.showDocument(HYPERLINK_LINK));
+        hyperlink.setOnAction(e -> HOSTSERVICES.showDocument(hyperlink.getText()));
         return hyperlink;
     }
 }

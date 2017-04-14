@@ -70,7 +70,7 @@ public class Main extends Application {
     }
 
     private void showAboutAlert() {
-        AboutAlert aboutWindow = new AboutAlert(HOST_SERVICES);
+        AboutAlert aboutWindow = new AboutAlert(HOST_SERVICES, BUNDLE);
         aboutWindow.initOwner(stage);
         aboutWindow.show();
     }
