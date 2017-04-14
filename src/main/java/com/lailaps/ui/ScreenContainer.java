@@ -9,6 +9,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Window;
 import javafx.util.Duration;
@@ -23,6 +24,7 @@ public class ScreenContainer extends StackPane {
     private static final Logger LOG = Logger.getLogger(ScreenContainer.class);
     private static final String LOGIN_SCREEN_FILE = "fxml/login.fxml";
     private static final String DOWNLOAD_SCREEN_FILE = "fxml/download.fxml";
+    private static final String TERM_SCREEN_FILE = "fxml/term.fxml";
     private final Duration FADEOUT_DURATION = new Duration(1000);
     private final Duration FADEIN_DURATION = new Duration(800);
     private HashMap<ScreenType, Node> screens = new HashMap<>();
@@ -35,6 +37,7 @@ public class ScreenContainer extends StackPane {
 
     public void loadAllScreens() {
         loadScreen(ScreenType.LOGIN, LOGIN_SCREEN_FILE);
+        loadScreen(ScreenType.TERM, TERM_SCREEN_FILE);
         loadScreen(ScreenType.DOWNLOAD, DOWNLOAD_SCREEN_FILE);
     }
 

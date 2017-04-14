@@ -36,9 +36,7 @@ public class Director {
             boolean loginSuccess = login(credentials);
             if (loginSuccess) {
                 saveUsername(credentials.getUser());
-                prepareDownloading();
-                startDownloading();
-                showDownloadScreen();
+                showTermScreen();
             }
         }).start();
     }
@@ -56,22 +54,31 @@ public class Director {
         PreferencesManager.setUsername(username);
     }
 
-    private void prepareDownloading() {
-        CookieManager loginCookieManager = getLoginCookieManager();
-        Term currentTerm = getCurrentTerm();
-
+    private void showTermScreen() {
         List<Term> terms = TermCrawler.fetchTerms(loginClient.getOverviewPage());
+        Controllable controller = screenContainer.getScreenController(ScreenType.TERM);
+        if (controller instanceof TermScreenController) {
+            TermScreenController termController = (TermScreenController) controller;
+            termController.setTerms(terms);
+            termController.setDirector(this);
+        }
+        screenContainer.showScreen(ScreenType.TERM);
+    }
 
-        prepareProducer(loginCookieManager, terms);
+    public void startDownloading(List<Term> termsToDownload) {
+        prepareProducerConsumer(termsToDownload);
+        startProducerConsumer();
+        showDownloadScreen();
+    }
+
+    private void prepareProducerConsumer(List<Term> termsToDownload) {
+        CookieManager loginCookieManager = getLoginCookieManager();
+        prepareProducer(loginCookieManager, termsToDownload);
         prepareConsumer(loginCookieManager);
     }
 
     private CookieManager getLoginCookieManager() {
         return loginClient.getBrowserCookieManager();
-    }
-
-    private Term getCurrentTerm() {
-        return TermCrawler.fetchCurrentTerm(loginClient.getOverviewPage());
     }
 
     private void prepareProducer(CookieManager cookieManager, List<Term> terms) {
@@ -82,7 +89,7 @@ public class Director {
         consumer = new DownloadScheduler(documentQueue, cookieManager);
     }
 
-    private void startDownloading() {
+    private void startProducerConsumer() {
         ExecutorService executor = Executors.newFixedThreadPool(2);
         executor.execute(producer);
         executor.execute(consumer);

@@ -20,56 +20,73 @@ public class Main extends Application {
 
     public static String title = "lailaps";
 
+    private Stage stage;
+    private final HostServices HOST_SERVICES = getHostServices();
+    private static final String ICON_FILE = "images/lailaps_32x32.png";
+    private ScreenContainer screenContainer = new ScreenContainer();
+    private MenuItem aboutItem = new MenuItem("_About");
+    private Menu helpMenu = new Menu("_Help", null, aboutItem);
+    private MenuBar menuBar = new MenuBar(helpMenu);
+    private Group root = new Group();
+
     public static void main(String[] args) {
         Application.launch(Main.class, args);
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
-        final HostServices hostServices = getHostServices();
+    public void start(final Stage stage) {
+        this.stage = stage;
+        prepareMenus();
 
-
-        ScreenContainer screenContainer = new ScreenContainer();
         screenContainer.loadAllScreens();
-        screenContainer.showScreen(ScreenType.LOGIN);
 
-        //menu stuff
-        MenuBar menubar = new MenuBar();
-        Menu helpMenu = new Menu("_Help");
-        helpMenu.setMnemonicParsing(true);
-        MenuItem aboutItem = new MenuItem("About");
-        aboutItem.setOnAction( (e) -> {
-            AboutAlert aboutWindow = new AboutAlert(hostServices);
-            aboutWindow.initOwner(stage);
-            aboutWindow.show();
-        });
-        helpMenu.getItems().add(aboutItem);
-        menubar.getMenus().add(helpMenu);
-        menubar.prefWidthProperty().bind(stage.widthProperty());
-        menubar.setPadding(new Insets(0,0,0,0));
+        root.getChildren().addAll(screenContainer, menuBar);
 
-        Group root = new Group();
-        root.getChildren().addAll(screenContainer, menubar);
-
-        stage.setScene(new Scene(root));
-        stage.show();
-
-        Image icon = new Image(getClass().getClassLoader().getResourceAsStream("images/lailaps_32x32.png"));
-        stage.getIcons().add(icon);
         stage.setTitle(title);
-
-
-
-
+        stage.getIcons().add(getIcon());
         stage.setOnCloseRequest(e -> Platform.exit());
+        stage.setScene(new Scene(root));
+
+        screenContainer.showScreen(ScreenType.LOGIN);
+        stage.show();
+    }
+
+    private void prepareMenus() {
+        enableMnemonicParsing();
+        setMenuBarLayout();
+        setMenuItemActions();
+    }
+
+    private void setMenuBarLayout() {
+        menuBar.setPadding(new Insets(0,0,0,0));
+        menuBar.prefWidthProperty().bind(stage.widthProperty());
+    }
+
+    private void setMenuItemActions() {
+        aboutItem.setOnAction( (e) -> showAboutAlert());
+    }
+
+    private void showAboutAlert() {
+        AboutAlert aboutWindow = new AboutAlert(HOST_SERVICES);
+        aboutWindow.initOwner(stage);
+        aboutWindow.show();
+    }
+
+    private void enableMnemonicParsing() {
+        helpMenu.setMnemonicParsing(true);
+        aboutItem.setMnemonicParsing(true);
+    }
+
+    private Image getIcon() {
+        return new Image(getClass().getClassLoader().getResourceAsStream(ICON_FILE));
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         System.exit(0);
     }
 
+    //TODO Term Auswahl nachm Einloggen
+    //TODO wenn Kurs leer -> trotzdem ordner erstellen?
 
-    //TODO own class for screen stuff
-    //TODO ORDNER in LERNPLATTFORM!
 }
