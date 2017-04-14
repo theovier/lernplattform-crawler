@@ -54,7 +54,7 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
                 .build();
         executor = Executors.newFixedThreadPool(SLAVE_POOL_SIZE, factory);
         downloadDirectoryLocation = PreferencesManager.getDirectory();
-        statistics.setDownloadFolderLocation(downloadDirectoryLocation); //todo is not anymore "in" the term folder, because there could be several later on.
+        statistics.setDownloadFolderLocation(downloadDirectoryLocation);
         stopWatch.start();
     }
 

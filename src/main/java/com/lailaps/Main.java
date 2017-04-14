@@ -86,7 +86,6 @@ public class Main extends Application {
         System.exit(0);
     }
 
-    //TODO Term Auswahl nachm Einloggen
     //TODO wenn Kurs leer -> trotzdem ordner erstellen?
 
 }
