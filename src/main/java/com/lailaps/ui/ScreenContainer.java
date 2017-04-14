@@ -40,7 +40,6 @@ public class ScreenContainer extends StackPane {
     }
 
     public void loadAllScreens() {
-        //Locale.setDefault(new Locale("en", "EN"));
         loadScreen(ScreenType.LOGIN, LOGIN_SCREEN_FILE);
         loadScreen(ScreenType.TERM, TERM_SCREEN_FILE);
         loadScreen(ScreenType.DOWNLOAD, DOWNLOAD_SCREEN_FILE);
