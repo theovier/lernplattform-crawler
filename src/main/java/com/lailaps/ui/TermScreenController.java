@@ -24,6 +24,7 @@ public class TermScreenController implements Initializable, Controllable, AutoRe
     private ScreenContainer parent;
     private ObservableList<TermCheckBox> termCheckBoxes = FXCollections.observableArrayList();
     private Director director;
+    private ResourceBundle bundle;
 
     @FXML
     private BorderPane pane;
@@ -36,6 +37,7 @@ public class TermScreenController implements Initializable, Controllable, AutoRe
 
     @Override
     public void initialize(final URL url, final ResourceBundle rb) {
+        this.bundle = rb;
         determineTimeToBindSizes();
         listView.setItems(termCheckBoxes);
     }
@@ -52,7 +54,8 @@ public class TermScreenController implements Initializable, Controllable, AutoRe
     private void highlightMostRecentTerm() {
         if (!termCheckBoxes.isEmpty()) {
             TermCheckBox currentTerm = termCheckBoxes.get(0);
-            currentTerm.setText(currentTerm.getText() + " (current term)"); //todo anmerkung aus unsichtbarem lokalisierten label ziehen?
+            String highlightAddition = String.format("(%s)", bundle.getString("term.current"));
+            currentTerm.setText(currentTerm.getText() + " " + highlightAddition);
             currentTerm.setSelected(true);
         }
     }
