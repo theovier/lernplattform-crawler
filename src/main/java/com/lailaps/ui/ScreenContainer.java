@@ -18,6 +18,8 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class ScreenContainer extends StackPane {
 
@@ -36,15 +38,16 @@ public class ScreenContainer extends StackPane {
     }
 
     public void loadAllScreens() {
-        loadScreen(ScreenType.LOGIN, LOGIN_SCREEN_FILE);
-        loadScreen(ScreenType.TERM, TERM_SCREEN_FILE);
-        loadScreen(ScreenType.DOWNLOAD, DOWNLOAD_SCREEN_FILE);
+        ResourceBundle bundle = ResourceBundle.getBundle("languages.UIResources");
+        loadScreen(ScreenType.LOGIN, LOGIN_SCREEN_FILE, bundle);
+        loadScreen(ScreenType.TERM, TERM_SCREEN_FILE, bundle);
+        loadScreen(ScreenType.DOWNLOAD, DOWNLOAD_SCREEN_FILE, bundle);
     }
 
-    public boolean loadScreen(ScreenType name, String resource) {
+    public boolean loadScreen(ScreenType name, String resource, ResourceBundle bundle) {
         try {
             URL screenLocation = getClass().getClassLoader().getResource(resource);
-            FXMLLoader loader = new FXMLLoader(screenLocation);
+            FXMLLoader loader = new FXMLLoader(screenLocation, bundle);
             Parent root = loader.load();
             Controllable controller = loader.getController();
             controller.setParentScreen(this);
