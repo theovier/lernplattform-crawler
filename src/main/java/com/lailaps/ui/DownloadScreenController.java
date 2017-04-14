@@ -59,6 +59,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
         }
     }
 
+    @Override
     public void determineTimeToBindSizes() {
         pane.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
             if (oldScene == null && newScene != null) {
