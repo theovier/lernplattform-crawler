@@ -94,7 +94,7 @@ public class TermScreenController implements Initializable, Controllable, AutoRe
     private void handleDownloadButtonAction(final ActionEvent e) {
         List<Term> selectedTerms = getSelectedTerms();
         if (selectedTerms.isEmpty()) {
-            showErrorPopup("Error", "Term Selection can't be blank.","Please select a term to download");
+            parent.showErrorPopup("Error", "Term Selection can't be blank.","Please select a term to download");
         } else {
             director.startDownloading(getSelectedTerms());
         }
@@ -110,13 +110,7 @@ public class TermScreenController implements Initializable, Controllable, AutoRe
         return selectedTerms;
     }
 
-    private void showErrorPopup(String title, String header, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+
 
     @FXML
     private void handleSelectAllAction(final ActionEvent e) {

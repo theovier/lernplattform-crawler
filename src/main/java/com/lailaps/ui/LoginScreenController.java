@@ -86,9 +86,9 @@ public class LoginScreenController implements Initializable, Controllable {
 
     private void startLogin() {
         if (!hasUsernameEntered()) {
-           showErrorPopup("Error.", "Username can't be blank.", "Please enter a username.");
+           parent.showErrorPopup("Error.", "Username can't be blank.", "Please enter a username.");
         } else if (!hasPasswordEntered()) {
-           showErrorPopup("Error.", "Password can't be blank.", "Please enter a password.");
+           parent.showErrorPopup("Error.", "Password can't be blank.", "Please enter a password.");
         } else {
             login();
         }
@@ -100,14 +100,6 @@ public class LoginScreenController implements Initializable, Controllable {
 
     private boolean hasPasswordEntered() {
         return passwordField.getText().length() > 0;
-    }
-
-    private void showErrorPopup(String title, String header, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
     private void login() {
@@ -126,6 +118,6 @@ public class LoginScreenController implements Initializable, Controllable {
     public void showLoginError(Exception e) {
         throbber.setVisible(false);
         String error = LoginErrorInterpreter.getErrorMsg(e);
-        showErrorPopup("login failed.", error, "please try again.");
+        parent.showErrorPopup("login failed.", error, "please try again.");
     }
 }

@@ -130,4 +130,12 @@ public class ScreenContainer extends StackPane {
     public Controllable getScreenController(ScreenType name) {
         return screenControllers.get(name);
     }
+
+    public void showErrorPopup(String title, String header, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }
