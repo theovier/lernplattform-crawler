@@ -14,26 +14,30 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class FinishedDownloadAlert extends Alert {
 
     private static final Logger LOG = Logger.getLogger(FinishedDownloadAlert.class);
-    private static final String HEADER = "lailaps finished downloading";
     private final Insets GRID_PADDING = new Insets(20, 150, 10, 10);
     private final int GRID_HGAP = 50;
     private final int GRID_VGAP = 10;
 
-    private ButtonType buttonTypeShowFolder = new ButtonType("Show Folder");
-    private ButtonType buttonTypeOK = new ButtonType("OK", ButtonBar.ButtonData.CANCEL_CLOSE);
-    private DownloadStatistics statistics;
+    private ButtonType buttonTypeShowFolder;
+    private ButtonType buttonTypeOK;
+    private final DownloadStatistics STATISTICS;
+    private final ResourceBundle BUNDLE;
 
-    public FinishedDownloadAlert(DownloadStatistics statistics) {
+    public FinishedDownloadAlert(final DownloadStatistics statistics, final ResourceBundle bundle) {
         super(AlertType.INFORMATION);
-        this.statistics = statistics;
+        this.STATISTICS = statistics;
+        this.BUNDLE = bundle;
     }
 
     public void initContent() {
-        setTitle(HEADER);
+        buttonTypeShowFolder = new ButtonType(BUNDLE.getString("downloadScreen.showFolder"));
+        buttonTypeOK = new ButtonType(BUNDLE.getString("misc.ok"), ButtonBar.ButtonData.CANCEL_CLOSE);
+        setTitle(BUNDLE.getString("downloadScreen.header"));
         setHeaderText(null);
         getDialogPane().setContent(createContent());
         setButtons();
@@ -41,7 +45,7 @@ public class FinishedDownloadAlert extends Alert {
 
     private Node createContent() {
         GridPane grid = initGrid();
-        List<Pair> relevantStatistics = statistics.getDisplayableStats();
+        List<Pair> relevantStatistics = STATISTICS.getDisplayableStats();
         for (int i = 0; i < relevantStatistics.size(); i++) {
             Pair stat = relevantStatistics.get(i);
             Label description = new Label("" + stat.getKey());
@@ -73,7 +77,7 @@ public class FinishedDownloadAlert extends Alert {
 
     private void openFolder() {
         try {
-            File folder = new File(statistics.getDownloadFolderLocation());
+            File folder = new File(STATISTICS.getDownloadFolderLocation());
             Desktop.getDesktop().open(folder);
         } catch (IOException e) {
             LOG.info(e);

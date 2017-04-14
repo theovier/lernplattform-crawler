@@ -11,7 +11,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuBar;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -22,8 +21,8 @@ import java.util.ResourceBundle;
 public class DownloadScreenController implements Initializable, Controllable, AutoResizable, DownloadObserver {
 
     private ScreenContainer parent;
-
     private ObservableList<ProgressDownloadIndicator> downloadIndicators = FXCollections.observableArrayList();
+    private ResourceBundle bundle;
 
     @FXML
     private BorderPane pane;
@@ -33,6 +32,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.bundle = resources;
         determineTimeToBindSizes();
         listView.setItems(downloadIndicators);
     }
@@ -102,7 +102,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
 
     @Override
     public void onDownloadSkipped(DownloadableDocument skippedDocument) {
-        SkippedDownloadIndicator skippingIndicator = new SkippedDownloadIndicator(skippedDocument);
+        SkippedDownloadIndicator skippingIndicator = new SkippedDownloadIndicator(skippedDocument, bundle);
         skippingIndicator.bindProgressBarWidthProperty(listView);
         downloadIndicators.add(skippingIndicator);
     }
@@ -122,7 +122,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
 
     @Override
     public void onFinishedDownloading(DownloadStatistics statistics) {
-        FinishedDownloadAlert alert = new FinishedDownloadAlert(statistics);
+        FinishedDownloadAlert alert = new FinishedDownloadAlert(statistics, bundle);
         alert.initContent();
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.initOwner(parent.getCurrentWindow());

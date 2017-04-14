@@ -5,18 +5,21 @@ import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
 public class DownloadStatistics {
-    private static final String TIME_FORMAT = "%02d:%02d min";
-    private static final String DESCRIPTION_TIME = "download time:";
-    private static final String DESCRIPTION_DOWNLOAD_COUNT = "new documents downloaded:";
-    private static final String DESCRIPTION_SKIPPED_COUNT = "documents already existed:";
-    private static final String DESCRIPTION_FAILED_COUNT = "failed to download documents:";
+    private final ResourceBundle BUNDLE = ResourceBundle.getBundle("languages.UIResources");
+    private final String TIME_FORMAT = "%02d:%02d min";
+    private final String DESCRIPTION_TIME = BUNDLE.getString("download.statistics.time");
+    private final String DESCRIPTION_DOWNLOAD_COUNT = BUNDLE.getString("download.statistics.successCounter");
+    private final String DESCRIPTION_SKIPPED_COUNT = BUNDLE.getString("download.statistics.skippedCounter");
+    private final String DESCRIPTION_FAILED_COUNT = BUNDLE.getString("download.statistics.failedCounter");
 
     private int downloadCount, skippedCount, failedCount;
     private String downloadFolderLocation, formattedElapsedTime;
     private long elapsedTime;
+
 
     public void incrementDownloadCount() {
         downloadCount++;
