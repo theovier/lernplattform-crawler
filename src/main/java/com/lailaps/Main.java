@@ -15,6 +15,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.util.ResourceBundle;
+
 
 public class Main extends Application {
 
@@ -22,10 +24,11 @@ public class Main extends Application {
 
     private Stage stage;
     private final HostServices HOST_SERVICES = getHostServices();
+    private final ResourceBundle BUNDLE = ResourceBundle.getBundle("languages.UIResources");
     private static final String ICON_FILE = "images/lailaps_32x32.png";
-    private ScreenContainer screenContainer = new ScreenContainer();
-    private MenuItem aboutItem = new MenuItem("_About");
-    private Menu helpMenu = new Menu("_Help", null, aboutItem);
+    private ScreenContainer screenContainer = new ScreenContainer(BUNDLE);
+    private MenuItem aboutItem = new MenuItem(BUNDLE.getString("menu.about"));
+    private Menu helpMenu = new Menu(BUNDLE.getString("menu.help"), null, aboutItem);
     private MenuBar menuBar = new MenuBar(helpMenu);
     private Group root = new Group();
 

@@ -32,19 +32,21 @@ public class ScreenContainer extends StackPane {
     private HashMap<ScreenType, Node> screens = new HashMap<>();
     private HashMap<ScreenType, Controllable> screenControllers = new HashMap<>();
     private ScreenType currentScreenType;
+    private ResourceBundle bundle;
 
-    public ScreenContainer() {
+    public ScreenContainer(final ResourceBundle bundle) {
         super();
+        this.bundle = bundle;
     }
 
     public void loadAllScreens() {
-        ResourceBundle bundle = ResourceBundle.getBundle("languages.UIResources");
-        loadScreen(ScreenType.LOGIN, LOGIN_SCREEN_FILE, bundle);
-        loadScreen(ScreenType.TERM, TERM_SCREEN_FILE, bundle);
-        loadScreen(ScreenType.DOWNLOAD, DOWNLOAD_SCREEN_FILE, bundle);
+        //Locale.setDefault(new Locale("en", "EN"));
+        loadScreen(ScreenType.LOGIN, LOGIN_SCREEN_FILE);
+        loadScreen(ScreenType.TERM, TERM_SCREEN_FILE);
+        loadScreen(ScreenType.DOWNLOAD, DOWNLOAD_SCREEN_FILE);
     }
 
-    public boolean loadScreen(ScreenType name, String resource, ResourceBundle bundle) {
+    public boolean loadScreen(ScreenType name, String resource) {
         try {
             URL screenLocation = getClass().getClassLoader().getResource(resource);
             FXMLLoader loader = new FXMLLoader(screenLocation, bundle);
