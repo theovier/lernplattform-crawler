@@ -23,7 +23,7 @@
       <HBox prefHeight="20.0" prefWidth="650.0" BorderPane.alignment="CENTER">
          <children>
             <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" onAction="#handleDownloadButtonAction" prefHeight="25.0" prefWidth="105.0" text="%term_download_button_text" />
+            <Button mnemonicParsing="false" onAction="#handleDownloadButtonAction" prefHeight="25.0" prefWidth="105.0" text="%term.download.buttonText" />
             <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
          </children>
          <padding>
@@ -40,7 +40,7 @@
    <top>
       <VBox prefHeight="57.0" prefWidth="650.0" BorderPane.alignment="CENTER">
          <children>
-            <Label text="%term_select_info">
+            <Label text="%term.select.info">
                <VBox.margin>
                   <Insets left="50.0" top="35.0" />
                </VBox.margin>
@@ -48,7 +48,7 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </Label>
-            <CheckBox fx:id="selectAllCheckBox" mnemonicParsing="false" onAction="#handleSelectAllAction" text="%term_selectAll">
+            <CheckBox fx:id="selectAllCheckBox" mnemonicParsing="false" onAction="#handleSelectAllAction" text="%term.selectAll">
                <VBox.margin>
                   <Insets left="107.0" top="15.0" />
                </VBox.margin>
