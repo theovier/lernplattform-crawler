@@ -1,14 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 
 <BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="315.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lailaps.ui.DownloadScreenController">
     <center>
-        <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <ListView fx:id="listView" prefHeight="198.0" prefWidth="555.0" BorderPane.alignment="CENTER">
             <BorderPane.margin>
-                <Insets bottom="40.0" left="40.0" right="55.0" top="40.0" />
+                <Insets bottom="25.0" left="40.0" right="55.0" top="15.0" />
             </BorderPane.margin></ListView>
     </center>
+   <top>
+      <HBox prefHeight="43.0" prefWidth="650.0" BorderPane.alignment="CENTER">
+         <children>
+            <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <Label fx:id="headline" text="Downloading to XYZ">
+               <HBox.margin>
+                  <Insets top="15.0" />
+               </HBox.margin>
+            </Label>
+            <ProgressIndicator fx:id="throbber">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </ProgressIndicator>
+            <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+         </children>
+         <BorderPane.margin>
+            <Insets top="40.0" />
+         </BorderPane.margin>
+      </HBox>
+   </top>
 </BorderPane>

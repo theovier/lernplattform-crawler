@@ -10,7 +10,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -28,11 +30,18 @@ public class DownloadScreenController implements Initializable, Controllable, Au
     private BorderPane pane;
 
     @FXML
+    private Label headline;
+
+    @FXML
+    private ProgressIndicator throbber;
+
+    @FXML
     private ListView<ProgressDownloadIndicator> listView;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.bundle = resources;
+        headline.setText(bundle.getString("downloadScreen.headline"));
         determineTimeToBindSizes();
         listView.setItems(downloadIndicators);
     }
@@ -122,6 +131,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
 
     @Override
     public void onFinishedDownloading(DownloadStatistics statistics) {
+        throbber.setVisible(false);
         FinishedDownloadAlert alert = new FinishedDownloadAlert(statistics, bundle);
         alert.initContent();
         alert.initModality(Modality.APPLICATION_MODAL);
