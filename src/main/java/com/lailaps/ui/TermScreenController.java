@@ -8,10 +8,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
-import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -109,8 +107,6 @@ public class TermScreenController implements Initializable, Controllable, AutoRe
         }
         return selectedTerms;
     }
-
-
 
     @FXML
     private void handleSelectAllAction(final ActionEvent e) {
