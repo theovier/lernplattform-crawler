@@ -132,6 +132,7 @@ public class DownloadScreenController implements Initializable, Controllable, Au
     @Override
     public void onFinishedDownloading(DownloadStatistics statistics) {
         throbber.setVisible(false);
+        headline.setText(bundle.getString("downloadScreen.finished"));
         FinishedDownloadAlert alert = new FinishedDownloadAlert(statistics, bundle);
         alert.initContent();
         alert.initModality(Modality.APPLICATION_MODAL);

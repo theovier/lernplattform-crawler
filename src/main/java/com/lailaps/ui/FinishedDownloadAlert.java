@@ -37,7 +37,7 @@ public class FinishedDownloadAlert extends Alert {
     public void initContent() {
         buttonTypeShowFolder = new ButtonType(BUNDLE.getString("downloadScreen.showFolder"));
         buttonTypeOK = new ButtonType(BUNDLE.getString("misc.ok"), ButtonBar.ButtonData.CANCEL_CLOSE);
-        setTitle(BUNDLE.getString("downloadScreen.header"));
+        setTitle(BUNDLE.getString("download.statistics.header"));
         setHeaderText(null);
         getDialogPane().setContent(createContent());
         setButtons();
