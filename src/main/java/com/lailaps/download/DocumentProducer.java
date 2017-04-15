@@ -36,7 +36,6 @@ public class DocumentProducer implements Runnable {
         } else {
             Term term = termQueue.poll();
             produceDocuments(term);
-            LOG.info(term);
         }
     }
 
