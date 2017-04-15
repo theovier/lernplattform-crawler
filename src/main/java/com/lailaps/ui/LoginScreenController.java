@@ -23,6 +23,7 @@ public class LoginScreenController implements Initializable, Controllable {
     private DirectoryChooser dirChooser = new DirectoryChooser();
     private String currentDir = PreferencesManager.getDirectory();
     private ScreenContainer parent;
+    private ResourceBundle bundle;
 
     @FXML
     private TextField userField, directoryField;
@@ -39,6 +40,7 @@ public class LoginScreenController implements Initializable, Controllable {
 
     @Override
     public void initialize(final URL url, final ResourceBundle rb) {
+        this.bundle = rb;
         Platform.runLater(()->setInitialFocus());
         userField.setText(PreferencesManager.getUsername());
         directoryField.setText(currentDir);
@@ -86,9 +88,17 @@ public class LoginScreenController implements Initializable, Controllable {
 
     private void startLogin() {
         if (!hasUsernameEntered()) {
-           parent.showErrorPopup("Error.", "Username can't be blank.", "Please enter a username.");
+           parent.showErrorPopup(
+                   bundle.getString("misc.error"),
+                   bundle.getString("login.error.blank.username"),
+                   bundle.getString("login.error.blank.username.subtitle")
+           );
         } else if (!hasPasswordEntered()) {
-           parent.showErrorPopup("Error.", "Password can't be blank.", "Please enter a password.");
+            parent.showErrorPopup(
+                    bundle.getString("misc.error"),
+                    bundle.getString("login.error.blank.password"),
+                    bundle.getString("login.error.blank.password.subtitle")
+            );
         } else {
             login();
         }
@@ -117,7 +127,9 @@ public class LoginScreenController implements Initializable, Controllable {
 
     public void showLoginError(Exception e) {
         throbber.setVisible(false);
-        String error = LoginErrorInterpreter.getErrorMsg(e);
-        parent.showErrorPopup("login failed.", error, "please try again.");
+        String errorTitle = bundle.getString("login.error.header");
+        String message = LoginErrorInterpreter.getErrorMsg(e, bundle);
+        String errorSubtitle = LoginErrorInterpreter.getErrorSubtitle(e, bundle);
+        parent.showErrorPopup(errorTitle, message, errorSubtitle);
     }
 }

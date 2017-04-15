@@ -4,22 +4,30 @@ package com.lailaps.login;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 public class LoginErrorInterpreter {
 
     private static final Logger LOG = Logger.getLogger(LoginErrorInterpreter.class);
-    private static final String MSG_WRONG_CREDENTIALS = "wrong login credentials";
-    private static final String MSG_CONNECTION_PROBLEMS = "connection problems";
-    private static final String MSG_DEFAULT = "an error occurred";
 
-    public static String getErrorMsg(Exception e) {
+    public static String getErrorMsg(Exception e, ResourceBundle bundle) {
         LOG.debug(e);
         if (e instanceof WrongCredentialsException) {
-            return MSG_WRONG_CREDENTIALS;
+            return bundle.getString("login.error.credentials");
         } else if (e instanceof IOException) {
-            return MSG_CONNECTION_PROBLEMS;
+            return bundle.getString("login.error.io");
         } else {
-            return MSG_DEFAULT + " " + e.getMessage();
+            return bundle.getString("login.error.default");
+        }
+    }
+
+    public static String getErrorSubtitle(Exception e, ResourceBundle bundle) {
+        if (e instanceof WrongCredentialsException) {
+            return bundle.getString("login.error.credentials.subtitle");
+        } else if (e instanceof IOException) {
+            return bundle.getString("login.error.io.subtitle");
+        } else {
+            return bundle.getString(e.getMessage());
         }
     }
 }
