@@ -36,6 +36,9 @@ public class LoginScreenController implements Initializable, Controllable {
     @FXML
     private ProgressIndicator throbber;
 
+    @FXML
+    private Button loginButton;
+
 
     @Override
     public void initialize(final URL url, final ResourceBundle rb) {
@@ -113,6 +116,7 @@ public class LoginScreenController implements Initializable, Controllable {
 
     private void login() {
         throbber.setVisible(true);
+        loginButton.setDisable(true);
         LoginCredentials credentials = createCredentials();
         Director director = new Director(this);
         director.start(credentials);
@@ -126,6 +130,7 @@ public class LoginScreenController implements Initializable, Controllable {
 
     public void showLoginError(Exception e) {
         throbber.setVisible(false);
+        loginButton.setDisable(false);
         String errorTitle = bundle.getString("login.error.header");
         String message = LoginErrorInterpreter.getErrorMsg(e, bundle);
         String errorSubtitle = LoginErrorInterpreter.getErrorSubtitle(e, bundle);
