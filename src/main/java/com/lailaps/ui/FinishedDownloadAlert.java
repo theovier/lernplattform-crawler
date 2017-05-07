@@ -65,7 +65,12 @@ public class FinishedDownloadAlert extends Alert {
     }
 
     private void setButtons() {
-        getButtonTypes().setAll(buttonTypeShowFolder, buttonTypeOK);
+        if (Desktop.isDesktopSupported()) {
+            //we are able to browse to the folder, so show the button.
+            getButtonTypes().setAll(buttonTypeShowFolder, buttonTypeOK);
+        } else {
+            getButtonTypes().setAll(buttonTypeOK);
+        }
     }
 
     public void displayAndWait() {
@@ -76,11 +81,13 @@ public class FinishedDownloadAlert extends Alert {
     }
 
     private void openFolder() {
-        try {
-            File folder = new File(STATISTICS.getDownloadFolderLocation());
-            Desktop.getDesktop().open(folder);
-        } catch (IOException e) {
-            LOG.info(e);
-        }
+        File folder = new File(STATISTICS.getDownloadFolderLocation());
+        new Thread(() -> {
+            try {
+                Desktop.getDesktop().open(folder);
+            } catch (IOException e) {
+                LOG.error(e);
+            }
+        }).start();
     }
 }
