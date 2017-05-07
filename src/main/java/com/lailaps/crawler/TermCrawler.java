@@ -4,13 +4,12 @@ import com.gargoylesoftware.htmlunit.html.HtmlLabel;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TermCrawler {
 
     private static final String LABEL_XPATH = "//label[@title]";
-    private static final String SUMMER_TERM = "Sommersemester";
-    private static final String WINTER_TERM = "Wintersemester";
 
     public static Term fetchCurrentTerm(HtmlPage overviewPage) {
         List<Term> terms = fetchTerms(overviewPage);
@@ -25,6 +24,7 @@ public class TermCrawler {
             Term term = new Term(label);
             terms.add(term);
         }
+        Collections.sort(terms, Collections.reverseOrder());
         return terms;
     }
 
@@ -43,7 +43,7 @@ public class TermCrawler {
 
     private static boolean isTermLabel(HtmlLabel label) {
         String text = label.toString();
-        return text.contains(WINTER_TERM) || text.contains(SUMMER_TERM);
+        return text.contains(Term.WINTER_TERM) || text.contains(Term.SUMMER_TERM);
     }
 
 }
