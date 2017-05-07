@@ -11,12 +11,6 @@ public class TermCrawler {
 
     private static final String LABEL_XPATH = "//label[@title]";
 
-    public static Term fetchCurrentTerm(HtmlPage overviewPage) {
-        List<Term> terms = fetchTerms(overviewPage);
-        if (terms.isEmpty()) throw new IllegalStateException();
-        return terms.get(0);
-    }
-
     public static List<Term> fetchTerms(HtmlPage overviewPage) {
         List<Term> terms = new ArrayList<>();
         List<HtmlLabel> termLabels = getTermLabels(overviewPage);
