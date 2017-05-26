@@ -95,7 +95,10 @@ public class TermScreenController implements Initializable, Controllable, AutoRe
     private void handleDownloadButtonAction(final ActionEvent e) {
         List<Term> selectedTerms = getSelectedTerms();
         if (selectedTerms.isEmpty()) {
-            parent.showErrorPopup("Error", "Term Selection can't be blank.","Please select a term to download");
+            parent.showErrorPopup(
+                    bundle.getString("term.error.title"),
+                    bundle.getString("term.error.blank.header"),
+                    bundle.getString("term.error.blank.msg"));
         } else {
             director.startDownloading(getSelectedTerms());
         }
