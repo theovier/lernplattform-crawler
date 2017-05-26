@@ -28,7 +28,7 @@
                     </items>
                 </ChoiceBox>
                 <ProgressIndicator fx:id="throbber" layoutX="34.0" layoutY="117.0" visible="false" />
-                <Label layoutX="127.0" layoutY="158.0" prefHeight="17.0" prefWidth="270.0" text="%login.save.location" />
+                <Label disable="true" layoutX="127.0" layoutY="158.0" prefHeight="17.0" prefWidth="270.0" text="%login.save.location" />
             </children>
         </Pane>
     </children>
