@@ -65,7 +65,8 @@ public class LoginClient {
     }
 
     private void checkForLoginError() throws WrongCredentialsException {
-        if (currentPage.asText().contains("Authentication failed"))
+        if (currentPage.asText().contains("Authentication failed") ||
+                currentPage.asText().contains("Auto-login failed"))
             throw new WrongCredentialsException();
     }
 
