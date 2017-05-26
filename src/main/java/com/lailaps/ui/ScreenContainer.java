@@ -135,7 +135,6 @@ public class ScreenContainer extends StackPane {
         return screenControllers.get(name);
     }
 
-    //todo get also from resourcebundle
     public void showErrorPopup(String titleKey, String headerKey, String messageKey) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(titleKey);
