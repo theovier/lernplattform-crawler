@@ -31,7 +31,7 @@ public class LoginScreenController implements Initializable, Controllable {
     private PasswordField passwordField;
 
     @FXML
-    private ChoiceBox <String> emailList;
+    private ComboBox <String> emailList;
     
     @FXML
     private ProgressIndicator throbber;
