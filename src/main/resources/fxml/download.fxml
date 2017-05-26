@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 
+<?import java.net.URL?>
 <BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="315.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lailaps.ui.DownloadScreenController">
     <center>
         <ListView fx:id="listView" prefHeight="198.0" prefWidth="555.0" BorderPane.alignment="CENTER">
@@ -36,4 +37,9 @@
          </BorderPane.margin>
       </HBox>
    </top>
+
+    <stylesheets>
+        <URL value="@/css/download.css" />
+    </stylesheets>
+
 </BorderPane>
