@@ -22,6 +22,10 @@ public class PreferencesManager {
         return prefs.get(PREF_DIR, DEFAULT_DIR);
     }
 
+    public static String getDefaultDirectory() {
+        return DEFAULT_DIR;
+    }
+
     public static String getUsername() {
         return prefs.get(PREF_USER, DEFAULT_USER);
     }

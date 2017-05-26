@@ -66,10 +66,16 @@ public class LoginScreenController implements Initializable, Controllable {
 
     @FXML
     private void handleDirChooseButtonAction(final ActionEvent e) {
-        dirChooser.setInitialDirectory(new java.io.File(currentDir));
+        File lastUsedDirectory = new File(currentDir);
+        if (lastUsedDirectory.exists() && lastUsedDirectory.canWrite()) {
+            dirChooser.setInitialDirectory(lastUsedDirectory);
+        } else {
+            File defaultDirectory = new File(PreferencesManager.getDefaultDirectory());
+            dirChooser.setInitialDirectory(defaultDirectory);
+        }
         File file = dirChooser.showDialog(new Stage());
         if (file != null) {
-            currentDir = file.toString() + File.separator + Main.title;  //TODO enable edit of dirfield?
+            currentDir = file.toString() + File.separator + Main.title;
             directoryField.setText(currentDir);
             PreferencesManager.setDirectory(currentDir);
         }
