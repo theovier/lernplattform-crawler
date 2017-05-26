@@ -4,6 +4,7 @@
 <?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TextField?>
@@ -16,9 +17,9 @@
             <children>
                 <TextField fx:id="userField" layoutX="125.0" layoutY="68.0" onAction="#onEnterPressed" prefWidth="170" promptText="%login.user.promptText" />
                 <PasswordField fx:id="passwordField" layoutX="125.0" layoutY="118.0" onAction="#onEnterPressed" prefWidth="170" promptText="%login.password.promptText" />
-                <Button fx:id="loginButton" layoutX="125.0" layoutY="168.0" maxHeight="25.0" minWidth="75.0" mnemonicParsing="false" onAction="#handleLoginButtonAction" prefHeight="25.0" text="%login.fetch.buttonText" />
-                <TextField fx:id="directoryField" disable="true" editable="false" layoutX="125.0" layoutY="208.0" prefWidth="270.0" text="C:\Users\Theo\Desktop" />
-                <Button fx:id="dirChooseButton" layoutX="400.0" layoutY="208.0" minWidth="75.0" mnemonicParsing="false" onAction="#handleDirChooseButtonAction" text="%login.browse.buttonText" />
+                <Button fx:id="loginButton" layoutX="127.0" layoutY="228.0" maxHeight="25.0" minWidth="75.0" mnemonicParsing="false" onAction="#handleLoginButtonAction" prefHeight="25.0" text="%login.fetch.buttonText" />
+                <TextField fx:id="directoryField" disable="true" editable="false" layoutX="125.0" layoutY="178.0" prefWidth="270.0" text="C:\Users\Theo\Desktop" />
+                <Button fx:id="dirChooseButton" layoutX="404.0" layoutY="178.0" minWidth="75.0" mnemonicParsing="false" onAction="#handleDirChooseButtonAction" text="%login.browse.buttonText" />
                 <ChoiceBox fx:id="emailList" layoutX="300.0" layoutY="68.0" prefWidth="150.0" value="@stud.hshl.de">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
@@ -27,6 +28,7 @@
                     </items>
                 </ChoiceBox>
                 <ProgressIndicator fx:id="throbber" layoutX="34.0" layoutY="117.0" visible="false" />
+                <Label layoutX="127.0" layoutY="158.0" prefHeight="17.0" prefWidth="270.0" text="%login.save.location" />
             </children>
         </Pane>
     </children>
