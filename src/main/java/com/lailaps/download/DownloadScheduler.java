@@ -27,7 +27,7 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
     private BlockingQueue<DownloadableDocument> queue;
     private CookieManager cookieManager;
     private boolean isRunning = true;
-    private String downloadDirectoryLocation = PreferencesManager.getDirectory();
+    private final static String DOWNLOAD_DIRECTORY_LOCATION = PreferencesManager.getDirectory();
     private StopWatch stopWatch = new StopWatch();
     private DownloadStatistics statistics = new DownloadStatistics();
 
@@ -53,14 +53,13 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
                 .namingPattern("download-slave-%d")
                 .build();
         executor = Executors.newFixedThreadPool(SLAVE_POOL_SIZE, factory);
-        downloadDirectoryLocation = PreferencesManager.getDirectory();
-        statistics.setDownloadFolderLocation(downloadDirectoryLocation);
+        statistics.setDownloadFolderLocation(DOWNLOAD_DIRECTORY_LOCATION);
         stopWatch.start();
     }
 
     private void startDownloadSlaves() {
         for (int i = 0; i < SLAVE_POOL_SIZE; i++) {
-            DownloadSlave slave = new DownloadSlave(queue, cookieManager, downloadDirectoryLocation);
+            DownloadSlave slave = new DownloadSlave(queue, cookieManager, DOWNLOAD_DIRECTORY_LOCATION);
             slave.addObserver(this);
             slaves.add(slave);
             executor.execute(slave);
