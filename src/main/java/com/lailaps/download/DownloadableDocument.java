@@ -88,7 +88,7 @@ public class DownloadableDocument {
 
     @Override
     public String toString() {
-        return courseName + ": " + name + fileExtension + " (" + resourceID + ")";
+        return courseName + ": " + name + fileExtension;
     }
 
     public String getSaveLocation() {
