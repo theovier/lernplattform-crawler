@@ -1,13 +1,13 @@
 package com.lailaps.download;
 
-import com.lailaps.PreferencesManager;
 import com.lailaps.crawler.Term;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 
 public class DownloadableDocument {
 
-    private String name, downloadLink, courseName, fileExtension;
+    private String name, downloadLink, courseName, fileExtension, resourceID;
     private long size = 0L;
     private final Term correspondingTerm;
 
@@ -17,6 +17,7 @@ public class DownloadableDocument {
         this.courseName = courseName;
         this.fileExtension = fileExtension;
         this.correspondingTerm = term;
+        this.resourceID = extractResourceID(downloadLink);
     }
 
     public DownloadableDocument(String name, String downloadLink, String courseName, String fileExtension, long size, Term term) {
@@ -26,6 +27,11 @@ public class DownloadableDocument {
         this.fileExtension = fileExtension;
         this.size = size;
         this.correspondingTerm = term;
+        this.resourceID = extractResourceID(downloadLink);
+    }
+
+    private String extractResourceID(String downloadLink) {
+        return StringUtils.substringBetween(downloadLink, ".php/", "/");
     }
 
     public String getDownloadLink() {
@@ -46,6 +52,10 @@ public class DownloadableDocument {
 
     public long getSize() {
         return size;
+    }
+
+    public String getResourceID() {
+        return this.resourceID;
     }
 
     public void setSize(long downloadSize) {
