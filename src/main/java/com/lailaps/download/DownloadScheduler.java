@@ -2,13 +2,18 @@ package com.lailaps.download;
 
 import com.gargoylesoftware.htmlunit.CookieManager;
 import com.lailaps.PreferencesManager;
+import com.sun.deploy.util.OrderedHashSet;
 import javafx.application.Platform;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,6 +35,7 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
     private final static String DOWNLOAD_DIRECTORY_LOCATION = PreferencesManager.getDirectory();
     private StopWatch stopWatch = new StopWatch();
     private DownloadStatistics statistics = new DownloadStatistics();
+    private ResourceIDSafekeeper safekeeper = new ResourceIDSafekeeper(DOWNLOAD_DIRECTORY_LOCATION);
 
     public DownloadScheduler(BlockingQueue<DownloadableDocument> queue, CookieManager cookieManager) {
         this.queue = queue;
@@ -43,8 +49,8 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
         while (isRunning) {
             isRunning = isQueueStillRelevant();
         }
-        cleanUp();
         stopAllDownloadSlaves();
+        cleanUp();
         notifyObserversEnd(statistics);
     }
 
@@ -54,12 +60,13 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
                 .build();
         executor = Executors.newFixedThreadPool(SLAVE_POOL_SIZE, factory);
         statistics.setDownloadFolderLocation(DOWNLOAD_DIRECTORY_LOCATION);
+        safekeeper.loadIDsFromFile();
         stopWatch.start();
     }
 
     private void startDownloadSlaves() {
         for (int i = 0; i < SLAVE_POOL_SIZE; i++) {
-            DownloadSlave slave = new DownloadSlave(queue, cookieManager, DOWNLOAD_DIRECTORY_LOCATION);
+            DownloadSlave slave = new DownloadSlave(queue, cookieManager, DOWNLOAD_DIRECTORY_LOCATION, safekeeper);
             slave.addObserver(this);
             slaves.add(slave);
             executor.execute(slave);
@@ -73,6 +80,7 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
     private void cleanUp() {
         stopWatch.stop();
         statistics.setElapsedTime(stopWatch.getTime());
+        safekeeper.saveIDsToFile();
     }
 
     private void stopAllDownloadSlaves() {
@@ -112,6 +120,7 @@ public class DownloadScheduler implements Runnable, DownloadObserver, Observable
     @Override
     public void onDownloadSuccess(DownloadableDocument downloadedDocument) {
         statistics.incrementDownloadCount();
+        safekeeper.add(downloadedDocument.getResourceID());
         notifyObserversSuccess(downloadedDocument);
     }
 

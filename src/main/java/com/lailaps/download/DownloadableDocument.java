@@ -30,6 +30,21 @@ public class DownloadableDocument {
         this.resourceID = extractResourceID(downloadLink);
     }
 
+    //rename constructor (adds its resourceID to the name)
+    private DownloadableDocument(DownloadableDocument copy) {
+        this.name = copy.name + String.format(" (%s)", copy.resourceID);
+        this.downloadLink = copy.downloadLink;
+        this.courseName = copy.courseName;
+        this.fileExtension = copy.fileExtension;
+        this.size = copy.size;
+        this.correspondingTerm = copy.correspondingTerm;
+        this.resourceID = copy.resourceID;
+    }
+
+    public static DownloadableDocument getRenamedDocument(DownloadableDocument copy) {
+        return new DownloadableDocument(copy);
+    }
+
     private String extractResourceID(String downloadLink) {
         return StringUtils.substringBetween(downloadLink, ".php/", "/");
     }

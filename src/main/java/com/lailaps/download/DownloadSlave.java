@@ -5,7 +5,6 @@ import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.lailaps.Browser;
-import com.lailaps.PreferencesManager;
 import org.apache.commons.io.input.CountingInputStream;
 import org.apache.log4j.Logger;
 import java.io.File;
@@ -28,12 +27,15 @@ public class DownloadSlave implements Runnable, ObservableDownloadSource {
     private BlockingQueue<DownloadableDocument> queue;
     private Browser browser = new Browser();
     private DownloadObserver master;
+    private final ResourceIDSafekeeper safekeeper;
     private final String targetDirectory;
 
-    public DownloadSlave(BlockingQueue<DownloadableDocument> queue, CookieManager cookieManager, String targetDirectory) {
+    public DownloadSlave(BlockingQueue<DownloadableDocument> queue, CookieManager cookieManager, String targetDirectory,
+                         ResourceIDSafekeeper safekeeper) {
         this.queue = queue;
         this.browser.setCookieManager(cookieManager);
         this.targetDirectory = targetDirectory;
+        this.safekeeper = safekeeper;
     }
 
     public void stop() {
@@ -70,8 +72,12 @@ public class DownloadSlave implements Runnable, ObservableDownloadSource {
         boolean alreadyExists = Files.exists(target);
         if (!alreadyExists) {
             download(doc, target);
-        } else {
+        } else if (safekeeper.hasID(doc.getResourceID())) {
             notifyObserversSkipped(doc);
+        } else {
+            //the document has the same name as a file already in that folder, but a different Resource-ID, so rename and download it.
+            DownloadableDocument renamedDocument = DownloadableDocument.getRenamedDocument(doc);
+            download(renamedDocument);
         }
     }
 
