@@ -2,17 +2,11 @@ package com.lailaps.download;
 
 import com.gargoylesoftware.htmlunit.CookieManager;
 import com.lailaps.PreferencesManager;
-import com.sun.deploy.util.OrderedHashSet;
 import javafx.application.Platform;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
