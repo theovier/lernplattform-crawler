@@ -47,7 +47,7 @@ public class ResourceIDSafekeeper {
     private void unhideSaveFile() {
         try {
             Files.setAttribute(saveFile.toPath(), "dos:hidden", false);
-        } catch (IOException e) {
+        } catch (IOException | UnsupportedOperationException e) {
             LOG.error(e);
         }
     }
@@ -55,7 +55,7 @@ public class ResourceIDSafekeeper {
     private void hideSaveFile() {
         try {
             Files.setAttribute(saveFile.toPath(), "dos:hidden", true);
-        } catch (IOException e) {
+        } catch (IOException | UnsupportedOperationException e) {
             LOG.error(e);
         }
     }
