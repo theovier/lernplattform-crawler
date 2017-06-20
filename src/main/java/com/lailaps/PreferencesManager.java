@@ -1,5 +1,6 @@
 package com.lailaps;
 
+import java.io.File;
 import java.util.prefs.Preferences;
 
 public class PreferencesManager {
@@ -7,7 +8,8 @@ public class PreferencesManager {
     private static Preferences prefs = Preferences.userNodeForPackage(PreferencesManager.class);
     private static final String PREF_DIR = "directory";
     private static final String PREF_USER = "";
-    private static final String DEFAULT_DIR = System.getProperty("user.home");
+    private static final String DEFAULT_DIR = System.getProperty("user.home") + File.separator + Main.title;
+    private static final String HOME_DIR = System.getProperty("user.home");
     private static final String DEFAULT_USER = "";
 
     public static void setDirectory(String directory) {
@@ -22,8 +24,8 @@ public class PreferencesManager {
         return prefs.get(PREF_DIR, DEFAULT_DIR);
     }
 
-    public static String getDefaultDirectory() {
-        return DEFAULT_DIR;
+    public static String getHomeDirectory() {
+        return HOME_DIR;
     }
 
     public static String getUsername() {

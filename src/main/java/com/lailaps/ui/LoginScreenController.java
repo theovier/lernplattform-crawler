@@ -70,8 +70,10 @@ public class LoginScreenController implements Initializable, Controllable {
         if (lastUsedDirectory.exists() && lastUsedDirectory.canWrite()) {
             dirChooser.setInitialDirectory(lastUsedDirectory);
         } else {
-            File defaultDirectory = new File(PreferencesManager.getDefaultDirectory());
-            dirChooser.setInitialDirectory(defaultDirectory);
+            //we can't display the default dir, because the folder is non existing yet
+            //so display home dir.
+            File homeDirectory = new File(PreferencesManager.getHomeDirectory());
+            dirChooser.setInitialDirectory(homeDirectory);
         }
         File file = dirChooser.showDialog(new Stage());
         if (file != null) {
