@@ -2,6 +2,7 @@ package com.lailaps.download;
 
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -45,18 +46,22 @@ public class ResourceIDSafekeeper {
     }
 
     private void unhideSaveFile() {
-        try {
-            Files.setAttribute(saveFile.toPath(), "dos:hidden", false);
-        } catch (IOException | UnsupportedOperationException e) {
-            LOG.error(e);
+        if (SystemUtils.IS_OS_WINDOWS) {
+            try {
+                Files.setAttribute(saveFile.toPath(), "dos:hidden", false);
+            } catch (IOException e) {
+                LOG.error(e);
+            }
         }
     }
 
     private void hideSaveFile() {
-        try {
-            Files.setAttribute(saveFile.toPath(), "dos:hidden", true);
-        } catch (IOException | UnsupportedOperationException e) {
-            LOG.error(e);
+        if (SystemUtils.IS_OS_WINDOWS){
+            try {
+                Files.setAttribute(saveFile.toPath(), "dos:hidden", true);
+            } catch (IOException e) {
+                LOG.error(e);
+            }
         }
     }
 
