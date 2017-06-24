@@ -36,7 +36,7 @@ If you don't have Java installed yet, don't worry. You can grab it here: [Downlo
 
 ### Download the precompiled jar
 
-If you don't want to compile the source code yourself or you don't know how to do it, here is a [download link](http://theovier.com) to an already
+If you don't want to compile the source code yourself or you don't know how to do it, here is a [download link](http://theovier.com/download) to an already
 compiled version of the program. Just download the .jar file and execute it by double clicking on it.
 Alternatively you can open it using the command prompt
 
